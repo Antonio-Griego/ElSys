@@ -1,4 +1,4 @@
-package CabinControl;
+package ElSys;
 
 public class CabinStatus
 {

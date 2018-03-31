@@ -1,4 +1,4 @@
-package ControlPanel;
+package ElSys;
 
 public class ControlPanel
 {
