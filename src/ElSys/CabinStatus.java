@@ -27,4 +27,14 @@ public class CabinStatus
   {
     return cabinMode;
   }
+
+  public void setMode(final CabinMode mode)
+  {
+    cabinMode = mode;
+  }
+
+  public void setDirection(final CabinDirection cabinDirection)
+  {
+    this.cabinDirection = cabinDirection;
+  }
 }

@@ -15,7 +15,7 @@ public class SimPhysLocation
    *
    * @param floors The maximum number of floors in the building.
    */
-  SimPhysLocation(int floors)
+  public SimPhysLocation(int floors)
   {
     this.floors = floors;
     this.location = 0.0;
