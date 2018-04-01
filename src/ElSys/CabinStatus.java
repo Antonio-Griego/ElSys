@@ -5,12 +5,15 @@ import ElSys.Enums.CabinMode;
 
 public class CabinStatus
 {
-  private int currentFloor = -1;
-  private CabinDirection cabinDirection = CabinDirection.NOT_MOVING;
-  private CabinMode cabinMode = CabinMode.STANDARD;
+  private final int currentFloor;
+  private final CabinDirection cabinDirection;
+  private final CabinMode cabinMode;
 
-  CabinStatus()
+  CabinStatus(final int currentFloor, final CabinDirection cabinDirection, final CabinMode cabinMode)
   {
+    this.currentFloor = currentFloor;
+    this.cabinDirection = cabinDirection;
+    this. cabinMode = cabinMode;
   }
 
   public int getFloor()
@@ -26,15 +29,5 @@ public class CabinStatus
   public CabinMode getMode()
   {
     return cabinMode;
-  }
-
-  public void setMode(final CabinMode mode)
-  {
-    cabinMode = mode;
-  }
-
-  public void setDirection(final CabinDirection cabinDirection)
-  {
-    this.cabinDirection = cabinDirection;
   }
 }

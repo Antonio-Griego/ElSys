@@ -2,6 +2,7 @@ package ElSys.Enums;
 
 public enum CabinMode
 {
-  STANDARD,
-  EMERGENCY
+  NORMAL,
+  EMERGENCY,
+  MAINTENACE
 }

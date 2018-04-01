@@ -4,5 +4,5 @@ public enum CabinDirection
 {
   UP,
   DOWN,
-  NOT_MOVING
+  STOPPED
 }

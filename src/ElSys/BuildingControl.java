@@ -2,24 +2,20 @@ package ElSys;
 
 import java.util.ArrayList;
 
-public class BuildingControl
+public class BuildingControl extends Thread
 {
-  private SimPhysLocation simPhysLocation;
   private ControlPanel controlPanel;
-  private ArrayList<Cabin> cabins;
-  private final int numberOfFloors;
+  private Cabin [] cabins;
 
-  BuildingControl(int numberOfFloors, SimPhysLocation simPhysLocation)
+  BuildingControl(int numberOfFloors, int numElevators)
   {
-    this.simPhysLocation = simPhysLocation;
-    this.controlPanel = new ControlPanel();
-    this.cabins = new ArrayList();
-    this.numberOfFloors = numberOfFloors;
-
-    for(int i = 0; i < numberOfFloors; i++)
+    cabins = new Cabin[numElevators];
+    
+    for(int i = 0; i < numElevators)
     {
-      cabins.add(new Cabin(numberOfFloors, simPhysLocation));
+    
     }
+    
   }
 
   public void run()
