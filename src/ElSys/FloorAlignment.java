@@ -11,11 +11,11 @@ public class FloorAlignment
 
   public int getCurrentFloor()
   {
-    return simPhysLocation.getCurrentFloor();
+    return 0;
   }
 
   public int getDistanceToAlign()
   {
-    return simPhysLocation.getPhysicalLocation();
+    return (int)simPhysLocation.getPhysicalLocation();
   }
 }
