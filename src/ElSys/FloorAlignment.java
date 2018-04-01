@@ -14,8 +14,8 @@ public class FloorAlignment
     return 0;
   }
 
-  public int getDistanceToAlign()
+  public double getDistanceToAlign()
   {
-    return (int)simPhysLocation.getPhysicalLocation();
+    return simPhysLocation.getPhysicalLocation();
   }
 }
