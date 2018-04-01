@@ -2,15 +2,15 @@ package ElSys;
 
 public class MotorControl
 {
-  SimPhysLocation simPhysLocation;
+  private SimPhysLocation simPhysLocation;
 
   MotorControl(SimPhysLocation simPhysLocation)
   {
     this.simPhysLocation = simPhysLocation;
   }
 
-  void moveElevator(int newFloor)
+  void moveElevator(double distance)
   {
-    simPhysLocation.move(newFloor);
+    simPhysLocation.move(distance);
   }
 }

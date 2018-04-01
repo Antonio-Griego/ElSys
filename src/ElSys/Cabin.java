@@ -31,6 +31,7 @@ public class Cabin extends Thread
   {
     this.cabinRequests = new CabinRequests(simButtons);
     this.motion = new Motion(simPhysLocation);
+    cabinMode = CabinMode.NORMAL;
   }
 
   /**
@@ -48,7 +49,7 @@ public class Cabin extends Thread
   //@Override
   public void run()
   {
-    if (cabinMode == CabinMode.EMERGENCY) motion.setDirection(CabinDirection.STOPPED);
+    if (cabinMode == CabinMode.EMERGENCY || cabinMode == CabinMode.MAINTENACE) motion.setDirection(CabinDirection.STOPPED);
     else normalRun();
   }
 
@@ -153,6 +154,6 @@ public class Cabin extends Thread
 
   private void stopCabin()
   {
-    motion.stop();
+    motion.stopElevator();
   }
 }

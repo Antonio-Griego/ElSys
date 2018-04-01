@@ -28,7 +28,7 @@ public class BuildingControl extends Thread
         buttons[j] = new SimButton(rand);
       }
       
-      cabins[i] = new Cabin()
+      cabins[i] = new Cabin(buttons, simPhysLocation);
     }
     
   }

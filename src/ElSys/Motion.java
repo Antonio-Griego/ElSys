@@ -2,16 +2,21 @@ package ElSys;
 
 import ElSys.Enums.CabinDirection;
 
-public class Motion
+public class Motion extends Thread
 {
+  private final double MAX_SPEED = 0.2;
+  private boolean move;
   private FloorAlignment floorAlignment;
   private MotorControl motorControl;
-  private CabinDirection cabinDirection = CabinDirection.NOT_MOVING;
+  private CabinDirection cabinDirection = CabinDirection.STOPPED;
 
+  
+  
   Motion(SimPhysLocation simPhysLocation)
   {
     floorAlignment = new FloorAlignment(simPhysLocation);
     motorControl = new MotorControl(simPhysLocation);
+    move = true;
   }
 
   public void setDirection(CabinDirection cabinDirection)
@@ -29,13 +34,28 @@ public class Motion
     return floorAlignment.getCurrentFloor();
   }
 
-  public void stop()
-  {
-    System.out.println("STOP!");
-  }
-
   public boolean isAligned()
   {
-    return false;
+    return (floorAlignment.getDistanceToAlign() == 0);
+  }
+  
+  public void stopElevator()
+  {
+    move = false;
+    
+    alignWithFloor();
+  }
+  
+  public void run()
+  {
+    if(move && cabinDirection != CabinDirection.STOPPED)
+    {
+      motorControl.moveElevator(MAX_SPEED);
+    }
+  }
+  
+  private void alignWithFloor()
+  {
+    motorControl.moveElevator(floorAlignment.getDistanceToAlign());
   }
 }
