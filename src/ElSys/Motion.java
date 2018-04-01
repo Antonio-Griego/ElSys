@@ -42,8 +42,12 @@ public class Motion extends Thread
   public void stopElevator()
   {
     move = false;
-    
     alignWithFloor();
+  }
+  
+  public void moveElevator()
+  {
+    move = true;
   }
   
   public void run()

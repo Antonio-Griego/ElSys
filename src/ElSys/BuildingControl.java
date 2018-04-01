@@ -30,7 +30,7 @@ public class BuildingControl extends Thread
       
       cabins[i] = new Cabin(buttons, simPhysLocation);
     }
-    
+    this.start();
   }
 
   public void run()
