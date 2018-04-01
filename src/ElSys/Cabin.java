@@ -13,27 +13,23 @@ import java.util.stream.Collectors;
  * This class is also responsible for the logic required in processing requests and determining which request to proceed
  * towards first.
  */
-public class Cabin //extends Thread
+public class Cabin extends Thread
 {
-
-  private CabinStatus cabinStatus;
   private CabinRequests cabinRequests;
   private Motion motion;
-  private final int numberOfFloors;
+  private CabinMode cabinMode;
 
   private final Queue<FloorRequest> requests = new LinkedList<>();
 
   /**
    * Create a new cabin with {@code numberOfFloors} floors using the {@link SimPhysLocation} specified.
    *
-   * @param numberOfFloors Number of floors that the cabin will service.
+   * @param simButtons the simulated buttons that will be used.
    * @param simPhysLocation {@link SimPhysLocation} that will be used.
    */
-  public Cabin(final int numberOfFloors, final SimPhysLocation simPhysLocation)
+  public Cabin(final SimButton[] simButtons, final SimPhysLocation simPhysLocation)
   {
-    this.cabinStatus = new CabinStatus();
-    this.numberOfFloors = numberOfFloors;
-    this.cabinRequests = new CabinRequests(numberOfFloors);
+    this.cabinRequests = new CabinRequests(simButtons);
     this.motion = new Motion(simPhysLocation);
   }
 
@@ -52,7 +48,7 @@ public class Cabin //extends Thread
   //@Override
   public void run()
   {
-    if (cabinStatus.getMode() == CabinMode.EMERGENCY) motion.setDirection(CabinDirection.NOT_MOVING);
+    if (cabinMode == CabinMode.EMERGENCY) motion.setDirection(CabinDirection.STOPPED);
     else normalRun();
   }
 
@@ -70,7 +66,7 @@ public class Cabin //extends Thread
    */
   public CabinStatus getStatus()
   {
-    return cabinStatus;
+    return new CabinStatus(motion.getFloor(), motion.getDirection(), cabinMode);
   }
 
   /**
@@ -80,7 +76,7 @@ public class Cabin //extends Thread
    */
   public void updateMode(final CabinMode mode)
   {
-    cabinStatus.setMode(mode);
+    this.cabinMode = mode;
   }
 
   /**
@@ -88,7 +84,7 @@ public class Cabin //extends Thread
    */
   public boolean hasArrived()
   {
-    return motion.getDirection() == CabinDirection.NOT_MOVING;
+    return motion.getDirection() == CabinDirection.STOPPED;
   }
 
   /**
@@ -110,7 +106,7 @@ public class Cabin //extends Thread
   private void normalRun()
   {
     requests.addAll(cabinRequests.updateRequests());
-    if (motion.getDirection() == CabinDirection.NOT_MOVING) notMovingRun();
+    if (motion.getDirection() == CabinDirection.STOPPED) notMovingRun();
     else movingRun();
   }
 
@@ -146,7 +142,6 @@ public class Cabin //extends Thread
                     CabinDirection.DOWN;
 
     motion.setDirection(dir);
-    cabinStatus.setDirection(dir);
   }
 
   private FloorRequest getNextRequest()
@@ -159,6 +154,5 @@ public class Cabin //extends Thread
   private void stopCabin()
   {
     motion.stop();
-    cabinStatus.setDirection(CabinDirection.NOT_MOVING);
   }
 }

@@ -17,9 +17,9 @@ public class CabinRequests
 {
   private ArrayList<Button> cabinButtons = new ArrayList<>();
 
-  public CabinRequests(final int numberOfFloors)
+  public CabinRequests(SimButton [] simButtons)
   {
-    Collections.nCopies(numberOfFloors, null).forEach(n -> cabinButtons.add(new Button()));
+    Collections.nCopies(simButtons.length, null).forEach(n -> cabinButtons.add(new Button(simButtons[cabinButtons.size()])));
   }
 
   public List<FloorRequest> updateRequests()
@@ -39,7 +39,7 @@ public class CabinRequests
 
   public void satisfyRequest(final FloorRequest req)
   {
-    cabinButtons.get(req.getFloor()).reset();
+    cabinButtons.get(req.getFloor()).setLight(ButtonLight.OFF);
   }
 
   private List<FloorRequest> generateFloorRequests(final Set<Button> activeButtons)
