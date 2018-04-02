@@ -1,16 +1,15 @@
-import ControlPanel.ControlPanel;
+import ElSys.ControlPanel.ControlPanel;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class Main extends Application
 {
-  int floors = 10;
-  int cabins = 4;
 
   @Override
   public void start(Stage primaryStage) throws Exception
   {
-    ControlPanel controlPanel = new ControlPanel(floors, cabins);
+    //Used to load GUI (testing only)
+    ControlPanel controlPanel = new ControlPanel(4, 4);
   }
 
   public static void main(String[] args)
