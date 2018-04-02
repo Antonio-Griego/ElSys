@@ -3,7 +3,7 @@ package ElSys;
 public class FloorAlignment
 {
   private SimPhysLocation simPhysLocation;
-  private int floor, MAX = 9, MIN = 0;
+  private int floor;
 
   FloorAlignment(SimPhysLocation simPhysLocation)
   {
@@ -26,19 +26,6 @@ public class FloorAlignment
 
   public boolean reachedEndOfShaft()
   {
-    // return simPhysLocation.reachedEndOfShaft();
-
-    // the above code will work once simPhysLocation has reachedEndOfShaft method,
-    // if not, the below code will work.
-
-    floor = getCurrentFloor();
-    if (floor == MAX || floor == MIN)
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
+    return simPhysLocation.reachedEndOfShaft();
   }
 }

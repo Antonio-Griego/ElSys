@@ -14,7 +14,7 @@ public class Motion extends Thread
   {
     floorAlignment = new FloorAlignment(simPhysLocation);
     motorControl = new MotorControl(simPhysLocation);
-    moving = true;
+    moving = false;
   }
 
   public void setDirection(CabinDirection cabinDirection)
@@ -35,16 +35,6 @@ public class Motion extends Thread
   public boolean isAligned()
   {
     return (floorAlignment.getDistanceToAlign() == 0);
-  }
-  
-  public boolean isMoving()
-  {
-    return moving;
-  }
-  
-  public void moveElevator()
-  {
-    moving = true;
   }
   
   public void stopElevator()

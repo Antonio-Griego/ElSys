@@ -85,7 +85,7 @@ public class Cabin extends Thread
    */
   public boolean hasArrived()
   {
-    return motion.getDirection() == CabinDirection.STOPPED;
+    return motion.isAligned() && motion.getDirection() == CabinDirection.STOPPED;
   }
 
   /**
