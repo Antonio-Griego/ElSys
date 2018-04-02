@@ -10,14 +10,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane alignment="CENTER_LEFT" styleClass="floorGrid" stylesheets="@../css/styleSheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="floorRoot" alignment="CENTER_LEFT" styleClass="floorGrid" stylesheets="@../css/styleSheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="floorNumber" layoutX="142.0" layoutY="12.0" text="1">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <Polygon fill="WHITE" scaleX="0.2" scaleY="0.2" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" styleClass="directionalTriangle" GridPane.columnIndex="1">
+      <Polygon fx:id="upArrow" fill="WHITE" scaleX="0.2" scaleY="0.2" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" styleClass="inactive-arrow" GridPane.columnIndex="1">
          <effect>
             <DropShadow />
          </effect>
@@ -30,7 +30,7 @@
             <Double fx:value="-60.0" />
          </points>
       </Polygon>
-      <Polygon fill="WHITE" rotate="180.0" scaleX="0.2" scaleY="0.2" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" styleClass="directionalTriangle" GridPane.columnIndex="2">
+      <Polygon fx:id="downArrow" fill="WHITE" rotate="180.0" scaleX="0.2" scaleY="0.2" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" styleClass="inactive-arrow" GridPane.columnIndex="2">
          <effect>
             <DropShadow />
          </effect>
