@@ -5,18 +5,16 @@ import ElSys.Enums.CabinDirection;
 public class Motion extends Thread
 {
   private final double MAX_SPEED = 0.2;
-  private boolean move;
+  private boolean moving;
   private FloorAlignment floorAlignment;
   private MotorControl motorControl;
   private CabinDirection cabinDirection = CabinDirection.STOPPED;
-
   
-  
-  Motion(SimPhysLocation simPhysLocation)
+  public Motion(SimPhysLocation simPhysLocation)
   {
     floorAlignment = new FloorAlignment(simPhysLocation);
     motorControl = new MotorControl(simPhysLocation);
-    move = true;
+    moving = true;
   }
 
   public void setDirection(CabinDirection cabinDirection)
@@ -39,22 +37,38 @@ public class Motion extends Thread
     return (floorAlignment.getDistanceToAlign() == 0);
   }
   
-  public void stopElevator()
+  public boolean isMoving()
   {
-    move = false;
-    alignWithFloor();
+    return moving;
   }
   
   public void moveElevator()
   {
-    move = true;
+    moving = true;
+  }
+  
+  public void stopElevator()
+  {
+    moving = false;
+    alignWithFloor();
   }
   
   public void run()
   {
-    if(move && cabinDirection != CabinDirection.STOPPED)
+    while(true)
     {
-      motorControl.moveElevator(MAX_SPEED);
+      if (moving && cabinDirection != CabinDirection.STOPPED)
+      {
+        if(cabinDirection == CabinDirection.UP)
+        {
+          motorControl.moveElevator(MAX_SPEED);
+        }
+        
+        else
+        {
+          motorControl.moveElevator(-MAX_SPEED);
+        }
+      }
     }
   }
   

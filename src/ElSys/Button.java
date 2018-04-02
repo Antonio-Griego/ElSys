@@ -16,7 +16,7 @@ public class Button
   public void setLight(ButtonLight buttonLight)
   {
     this.buttonLight = buttonLight;
-    
+    simButton.setLight(buttonLight == ButtonLight.ON);
     if(buttonLight == ButtonLight.OFF)
     {
       isPressed = false;

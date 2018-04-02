@@ -35,6 +35,9 @@ public class BuildingControl extends Thread
 
   public void run()
   {
-    System.out.println("buildingControl.run()");
+    while(true)
+    {
+    
+    }
   }
 }

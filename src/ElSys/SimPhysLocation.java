@@ -62,4 +62,9 @@ public class SimPhysLocation
   {
     return location;
   }
+  
+  public boolean reachedEndOfShaft()
+  {
+    return (location == 0 || location == (double) floors);
+  }
 }

@@ -19,7 +19,7 @@ public class SimButton
    *
    * @param random Random number generator object.
    */
-  SimButton(Random random)
+  public SimButton(Random random)
   {
     this.isPressed = false;
     this.buttonLight = ButtonLight.OFF;
