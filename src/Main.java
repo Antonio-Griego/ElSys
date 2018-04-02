@@ -1,18 +1,15 @@
+import ElSys.ControlPanel.ControlPanel;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application
 {
+
   @Override
   public void start(Stage primaryStage) throws Exception
   {
-    Parent root = FXMLLoader.load(getClass().getResource("GUI/GUI.fxml"));
-    primaryStage.setTitle("Hello World");
-    primaryStage.setScene(new Scene(root, 300, 275));
-    primaryStage.show();
+    //Used to load GUI (testing only)
+    ControlPanel controlPanel = new ControlPanel(4, 4);
   }
 
   public static void main(String[] args)

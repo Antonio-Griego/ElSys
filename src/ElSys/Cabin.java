@@ -67,7 +67,7 @@ public class Cabin extends Thread
    */
   public CabinStatus getStatus()
   {
-    return new CabinStatus(motion.getFloor(), motion.getDirection(), cabinMode);
+    return new CabinStatus(motion.getFloor(), motion.getDirection(), cabinMode, requests);
   }
 
   /**

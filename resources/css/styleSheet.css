@@ -1,0 +1,57 @@
+
+.inactive-floor
+{
+    -fx-background-color: #e0d8d8;
+    -fx-background-radius: 30px;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-max-width: 30px;
+    -fx-max-height: 30px;
+}
+
+.active-floor
+{
+    -fx-background-color: white;
+    -fx-background-radius: 30px;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-max-width: 30px;
+    -fx-max-height: 30px;
+}
+
+.inactive-cabin-button
+{
+    -fx-background-color: #e0d8d8;
+    -fx-background-radius: 35px;
+    -fx-min-width: 35px;
+    -fx-min-height: 35px;
+    -fx-max-width: 35px;
+    -fx-max-height: 35px;
+}
+
+.active-cabin-button
+{
+    -fx-background-color:  white;
+    -fx-background-radius: 35px;
+    -fx-min-width: 35px;
+    -fx-min-height: 35px;
+    -fx-max-width: 35px;
+    -fx-max-height: 35px;
+}
+
+.inactive-arrow {
+    -fx-fill: #e0d8d8;
+    -fx-fill-height: 25px;
+}
+
+.active-arrow {
+    -fx-fill: white;
+    -fx-fill-height: 25px;
+}
+
+
+.floorGrid
+{
+    -fx-border-width: 1 0 1 0;
+    -fx-border-color: black;
+}

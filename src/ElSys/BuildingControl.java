@@ -1,5 +1,6 @@
 package ElSys;
 
+import ElSys.ControlPanel.ControlPanel;
 import ElSys.Enums.BuildingState;
 
 import java.util.Random;
