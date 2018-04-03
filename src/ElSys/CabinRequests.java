@@ -25,7 +25,7 @@ public class CabinRequests
   public List<FloorRequest> updateRequests()
   {
     final Set<Button> activeButtons = cabinButtons.stream()
-            .filter(button -> (button.isPressed() && button.getLight() != ButtonLight.ON))
+            .filter(button -> (button.isPressed() || button.getLight() == ButtonLight.ON))
             .collect(Collectors.toSet());
     
 

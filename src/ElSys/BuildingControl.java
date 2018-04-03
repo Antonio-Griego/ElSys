@@ -36,7 +36,7 @@ public class BuildingControl extends Thread
     
     CabinStatus [] cabinStatuses = getStatuses();
     
-    controlPanel = new ControlPanel(cabinStatuses, buildingState);
+//    controlPanel = new ControlPanel(cabinStatuses, buildingState);
     
     this.start();
   }

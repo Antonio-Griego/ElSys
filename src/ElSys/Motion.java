@@ -66,7 +66,6 @@ public class Motion extends Thread
         {
           motorControl.moveElevator(-MAX_SPEED);
         }
-        System.out.println(floorAlignment.getCurrentFloor());
       }
   
       if(floorAlignment.reachedEndOfShaft())

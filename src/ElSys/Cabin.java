@@ -18,7 +18,8 @@ public class Cabin extends Thread
   private CabinRequests cabinRequests;
   private Motion motion;
   private CabinMode cabinMode;
-
+  private boolean arrived;
+  
   private final Queue<FloorRequest> requests = new LinkedList<>();
 
   /**
@@ -51,8 +52,11 @@ public class Cabin extends Thread
   {
     while (true)
     {
-      if (cabinMode == CabinMode.EMERGENCY || cabinMode == CabinMode.MAINTENACE) motion.setDirection(CabinDirection.STOPPED);
-      else normalRun();
+      if(!arrived)
+      {
+        if (cabinMode == CabinMode.EMERGENCY || cabinMode == CabinMode.MAINTENACE) motion.setDirection(CabinDirection.STOPPED);
+        else normalRun();
+      }
       
 //      printRequests();
     }
@@ -72,7 +76,7 @@ public class Cabin extends Thread
    * Add request to the queue to be considered once the elevator has stopped.
    * @param floorRequest Request to be later considered.
    */
-  public void addRequest(final FloorRequest floorRequest)
+  synchronized public void addRequest(final FloorRequest floorRequest)
   {
     requests.add(floorRequest);
   }
@@ -80,7 +84,7 @@ public class Cabin extends Thread
   /**
    * Get the status of the cabin, i.e. the cabin's current physical state.
    */
-  public CabinStatus getStatus()
+  synchronized public CabinStatus getStatus()
   {
     return new CabinStatus(motion.getFloor(), motion.getDirection(), cabinMode, requests);
   }
@@ -90,7 +94,7 @@ public class Cabin extends Thread
    *
    * Mode in this sense corresponds to the overall operating mode of the cabin, e.g. normal, emergency.
    */
-  public void updateMode(final CabinMode mode)
+  synchronized public void updateMode(final CabinMode mode)
   {
     this.cabinMode = mode;
   }
@@ -98,17 +102,17 @@ public class Cabin extends Thread
   /**
    * Whether the cabin is currently stationed at a floor.
    */
-  public boolean hasArrived()
+  synchronized public boolean hasArrived()
   {
-    return motion.isAligned() && motion.getDirection() == CabinDirection.STOPPED;
+    return arrived;
   }
 
   /**
    * Indicate to the cabin that it has arrived at a floor.
    */
-  public void setArrival(final boolean hasArrived)
+  synchronized public void setArrival(final boolean arrived)
   {
-    if (hasArrived) stopCabin();
+    this.arrived = arrived;
   }
 
   /**
@@ -140,7 +144,8 @@ public class Cabin extends Thread
     if (atFloorRequests.isEmpty()) return;
     requests.removeAll(atFloorRequests);
     atFloorRequests.forEach(cabinRequests::satisfyRequest);
-    setArrival(true);
+    motion.stopElevator();
+    arrived = true;
   }
 
   private void notMovingRun()

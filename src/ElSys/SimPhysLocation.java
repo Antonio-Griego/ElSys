@@ -9,6 +9,7 @@ public class SimPhysLocation
 {
   private final int floors;
   private double location; // unit of distance = floors
+  private int lastFloor;
 
   /**
    * Constructor method.
@@ -19,6 +20,7 @@ public class SimPhysLocation
   {
     this.floors = floors;
     this.location = 0.0;
+    lastFloor = (int) location;
   }
 
   /**
@@ -48,6 +50,8 @@ public class SimPhysLocation
     {
       location += distance;
     }
+    
+    printStatus();
   }
 
   /**
@@ -66,5 +70,15 @@ public class SimPhysLocation
   public boolean reachedEndOfShaft()
   {
     return (location == 0 || location == (double) floors-1);
+  }
+  
+  private void printStatus()
+  {
+    int currentFloor = (int) (location + 0.5);
+    if(currentFloor != lastFloor)
+    {
+      lastFloor = currentFloor;
+      System.out.println("Elevator is currently on floor "+currentFloor);
+    }
   }
 }
