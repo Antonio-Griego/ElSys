@@ -4,6 +4,8 @@ import ElSys.ControlPanel.ControlPanel;
 import ElSys.Enums.BuildingState;
 import ElSys.Enums.CabinMode;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 public class BuildingControl extends Thread
@@ -36,21 +38,20 @@ public class BuildingControl extends Thread
     
     CabinStatus [] cabinStatuses = getStatuses();
     
-//    controlPanel = new ControlPanel(cabinStatuses, buildingState);
+    controlPanel = new ControlPanel(cabinStatuses, buildingState);
     
     this.start();
   }
 
   public void run()
   {
-    CabinStatus[] cabinStatuses;
     CabinMode [] cabinModes;
+    Queue<FloorRequest> floorRequests = new LinkedList<>();
     
     while(true)
     {
-      //controlPanel.getFloorRequests();
+      //floorRequests = controlPanel.getFloorRequests();
       //buildingState = controlPanel.getBuildingState();
-      cabinStatuses = getStatuses();
       //cabinModes = controlPanel.getElevatorModes();
       
 //      for(int i = 0; i < cabins.length; i++)
@@ -58,6 +59,10 @@ public class BuildingControl extends Thread
 //        cabins[i].updateMode(cabinModes[i]);
 //      }
 //
+//      for(FloorRequest request : floorRequests)
+//      {
+//        cabins[0].addRequest(request);
+//      }
       
       if(buildingState == BuildingState.NORMAL)
       {
@@ -78,6 +83,8 @@ public class BuildingControl extends Thread
           cabins[i].updateMode(CabinMode.EMERGENCY);
         }
       }
+      
+//      controlPanel.update(getStatuses(), buildingState);
     }
   }
   
