@@ -13,7 +13,12 @@ public class BuildingControl extends Thread
   private ControlPanel controlPanel;
   private Cabin [] cabins;
   private BuildingState buildingState;
-
+  
+  /**
+   * Instantiates the BuildingControl
+   * @param numberOfFloors
+   * @param numElevators
+   */
   public BuildingControl(int numberOfFloors, int numElevators)
   {
     buildingState = BuildingState.NORMAL;
@@ -87,6 +92,8 @@ public class BuildingControl extends Thread
       }
       
       controlPanel.update(getStatuses(), buildingState);
+      
+//      stillRunning();
     }
   }
   
@@ -101,5 +108,26 @@ public class BuildingControl extends Thread
     }
     
     return cabinStatuses;
+  }
+  
+  
+  /**
+   * For debugging
+   */
+  private double lastCheck = 0;
+  private void stillRunning()
+  {
+    double currentTime = System.currentTimeMillis();
+    if(lastCheck == 0)
+    {
+      lastCheck = currentTime;
+      System.out.println("BuildingControl Running");
+    }
+    
+    if(currentTime - lastCheck >= 5000)
+    {
+      System.out.println("BuildingControl Running");
+      lastCheck = currentTime;
+    }
   }
 }

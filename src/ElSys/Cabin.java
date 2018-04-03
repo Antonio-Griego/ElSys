@@ -58,18 +58,9 @@ public class Cabin extends Thread
         else normalRun();
       }
       
+//      stillRunning();
 //      printRequests();
     }
-  }
-  
-  private void printRequests()
-  {
-    for(FloorRequest request : requests)
-    {
-      System.out.println("There is a request for floor "+request.getFloor());
-    }
-    
-    System.out.println();
   }
 
   /**
@@ -175,5 +166,35 @@ public class Cabin extends Thread
   private void stopCabin()
   {
     motion.stopElevator();
+  }
+  
+  /**
+   * For debugging
+   */
+  private double lastCheck = 0;
+  private void stillRunning()
+  {
+    double currentTime = System.currentTimeMillis();
+    if(lastCheck == 0)
+    {
+      lastCheck = currentTime;
+      System.out.println("Cabin Running");
+    }
+    
+    if(currentTime - lastCheck >= 5000)
+    {
+      System.out.println("Cabin Running");
+      lastCheck = currentTime;
+    }
+  }
+  
+  private void printRequests()
+  {
+    for(FloorRequest request : requests)
+    {
+      System.out.println("There is a request for floor "+request.getFloor());
+    }
+    
+    System.out.println();
   }
 }

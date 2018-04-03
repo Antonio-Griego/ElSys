@@ -12,15 +12,15 @@ public class CabinStatus
   private final int currentFloor;
   private final CabinDirection cabinDirection;
   private final CabinMode cabinMode;
-  private final Queue<FloorRequest> floorRequests;
+  private final Queue<FloorRequest> cabinRequests;
 
   CabinStatus(final int currentFloor, final CabinDirection cabinDirection,
-              final CabinMode cabinMode, Queue<FloorRequest> floorRequests)
+              final CabinMode cabinMode, Queue<FloorRequest> cabinRequests)
   {
     this.currentFloor = currentFloor;
     this.cabinDirection = cabinDirection;
     this.cabinMode = cabinMode;
-    this.floorRequests = floorRequests;
+    this.cabinRequests = cabinRequests;
   }
 
   public int getFloor()
@@ -38,5 +38,5 @@ public class CabinStatus
     return cabinMode;
   }
 
-  public Queue<FloorRequest> getFloorRequests(){ return floorRequests;}
+  public Queue<FloorRequest> getCabinRequests(){ return cabinRequests;}
 }

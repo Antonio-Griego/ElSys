@@ -17,13 +17,46 @@ public class Motion extends Thread
     moving = false;
     this.start();
   }
-
-  public void setDirection(CabinDirection cabinDirection)
+  
+  public void run()
+  {
+    while(true)
+    {
+      try{
+        Thread.sleep(500);
+      } catch (InterruptedException e)
+      {
+        e.printStackTrace();
+      }
+      
+      if (cabinDirection != CabinDirection.STOPPED)
+      {
+        if(cabinDirection == CabinDirection.UP)
+        {
+          motorControl.moveElevator(MAX_SPEED);
+        }
+        
+        else
+        {
+          motorControl.moveElevator(-MAX_SPEED);
+        }
+      }
+      
+      if(floorAlignment.reachedEndOfShaft())
+      {
+        cabinDirection = CabinDirection.STOPPED;
+      }
+      
+      //      stillRunning();
+    }
+  }
+  
+  synchronized public void setDirection(CabinDirection cabinDirection)
   {
     this.cabinDirection = cabinDirection;
   }
 
-  public CabinDirection getDirection()
+  synchronized public CabinDirection getDirection()
   {
     return this.cabinDirection;
   }
@@ -44,39 +77,28 @@ public class Motion extends Thread
     cabinDirection = CabinDirection.STOPPED;
   }
   
-  public void run()
-  {
-    while(true)
-    {
-      try{
-        Thread.sleep(1000);
-      } catch (InterruptedException e)
-      {
-        e.printStackTrace();
-      }
-      
-      if (cabinDirection != CabinDirection.STOPPED)
-      {
-        if(cabinDirection == CabinDirection.UP)
-        {
-          motorControl.moveElevator(MAX_SPEED);
-        }
-        
-        else
-        {
-          motorControl.moveElevator(-MAX_SPEED);
-        }
-      }
-  
-      if(floorAlignment.reachedEndOfShaft())
-      {
-        cabinDirection = CabinDirection.STOPPED;
-      }
-    }
-  }
-  
   private void alignWithFloor()
   {
     motorControl.moveElevator(floorAlignment.getDistanceToAlign());
+  }
+  
+  /**
+   * For debugging
+   */
+  private double lastCheck = 0;
+  private void stillRunning()
+  {
+    double currentTime = System.currentTimeMillis();
+    if(lastCheck == 0)
+    {
+      lastCheck = currentTime;
+      System.out.println("Motor Running");
+    }
+    
+    if(currentTime - lastCheck >= 5000)
+    {
+      System.out.println("Motor Running");
+      lastCheck = currentTime;
+    }
   }
 }
