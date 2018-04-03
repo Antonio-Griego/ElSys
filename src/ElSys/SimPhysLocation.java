@@ -81,8 +81,9 @@ public class SimPhysLocation
     int currentFloor = (int) (location + 0.5);
     if(currentFloor != lastFloor)
     {
+      if(currentFloor < lastFloor) System.out.println("Elevator is going DOWN to floor "+currentFloor);
+      else System.out.println("Elevator is going UP to floor "+currentFloor);
       lastFloor = currentFloor;
-      System.out.println("Elevator is currently on floor "+currentFloor);
     }
   }
 }
