@@ -15,6 +15,7 @@ public class Motion extends Thread
     floorAlignment = new FloorAlignment(simPhysLocation);
     motorControl = new MotorControl(simPhysLocation);
     moving = false;
+    this.start();
   }
 
   public void setDirection(CabinDirection cabinDirection)
@@ -27,27 +28,34 @@ public class Motion extends Thread
     return this.cabinDirection;
   }
 
-  public int getFloor()
+  synchronized public int getFloor()
   {
     return floorAlignment.getCurrentFloor();
   }
 
-  public boolean isAligned()
+  synchronized public boolean isAligned()
   {
     return (floorAlignment.getDistanceToAlign() == 0);
   }
   
-  public void stopElevator()
+  synchronized public void stopElevator()
   {
-    moving = false;
     alignWithFloor();
+    cabinDirection = CabinDirection.STOPPED;
   }
   
   public void run()
   {
     while(true)
     {
-      if (moving && cabinDirection != CabinDirection.STOPPED)
+      try{
+        Thread.sleep(100);
+      } catch (InterruptedException e)
+      {
+        e.printStackTrace();
+      }
+      
+      if (cabinDirection != CabinDirection.STOPPED)
       {
         if(cabinDirection == CabinDirection.UP)
         {
@@ -58,6 +66,12 @@ public class Motion extends Thread
         {
           motorControl.moveElevator(-MAX_SPEED);
         }
+        System.out.println(floorAlignment.getCurrentFloor());
+      }
+  
+      if(floorAlignment.reachedEndOfShaft())
+      {
+        cabinDirection = CabinDirection.STOPPED;
       }
     }
   }

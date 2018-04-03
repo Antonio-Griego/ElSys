@@ -11,6 +11,7 @@ public class FloorRequest
     {
         this.floor = floor;
         this.cabinDirection = cabinDirection;
+        System.out.println("A request has been made for floor " + floor);
     }
 
     public int getFloor()

@@ -65,6 +65,6 @@ public class SimPhysLocation
   
   public boolean reachedEndOfShaft()
   {
-    return (location == 0 || location == (double) floors);
+    return (location == 0 || location == (double) floors-1);
   }
 }

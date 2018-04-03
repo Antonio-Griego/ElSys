@@ -52,7 +52,7 @@ public class SimButton
 
   /**
    * This method returns the pressed status of the button: true = pressed,
-   * false = not pressed. If the button is NOT pressed, there is a 10% chance
+   * false = not pressed. If the button is NOT pressed, there is a 0.000001% chance
    * that the button will change state and become pressed.
    *
    * @return True = button is pressed; False = button is not pressed
@@ -62,7 +62,7 @@ public class SimButton
     // change state if and only if isPressed = false
     if(!isPressed)
     {
-      isPressed = (random.nextDouble() <= 0.1);
+      isPressed = (random.nextDouble() <= 0.00000001);
     }
 
     return isPressed;

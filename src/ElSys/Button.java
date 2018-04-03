@@ -31,7 +31,6 @@ public class Button
   public boolean isPressed()
   {
     isPressed = simButton.isPressed();
-    if(isPressed) buttonLight = ButtonLight.ON;
     return isPressed;
   }
 }

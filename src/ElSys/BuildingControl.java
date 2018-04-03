@@ -31,6 +31,7 @@ public class BuildingControl extends Thread
       }
       
       cabins[i] = new Cabin(buttons, simPhysLocation);
+      cabins[i].start();
     }
     
     CabinStatus [] cabinStatuses = getStatuses();
@@ -47,15 +48,16 @@ public class BuildingControl extends Thread
     
     while(true)
     {
-      controlPanel.getFloorRequests();
-      buildingState = controlPanel.getBuildingState();
+      //controlPanel.getFloorRequests();
+      //buildingState = controlPanel.getBuildingState();
       cabinStatuses = getStatuses();
-      cabinModes = controlPanel.getElevatorModes();
+      //cabinModes = controlPanel.getElevatorModes();
       
-      for(int i = 0; i < cabins.length; i++)
-      {
-        cabins[i].updateMode(cabinModes[i]);
-      }
+//      for(int i = 0; i < cabins.length; i++)
+//      {
+//        cabins[i].updateMode(cabinModes[i]);
+//      }
+//
       
       if(buildingState == BuildingState.NORMAL)
       {
@@ -73,7 +75,7 @@ public class BuildingControl extends Thread
       {
         for(int i = 0; i < cabins.length; i++)
         {
-          if(cabinStatuses[i].getMode() != cabinModes[i]) cabins[i].updateMode(CabinMode.EMERGENCY);
+          cabins[i].updateMode(CabinMode.EMERGENCY);
         }
       }
     }

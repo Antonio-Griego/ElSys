@@ -30,7 +30,7 @@ public class Cabin extends Thread
   public Cabin(final SimButton[] simButtons, final SimPhysLocation simPhysLocation)
   {
     this.cabinRequests = new CabinRequests(simButtons);
-    this.motion = new Motion(simPhysLocation);
+    motion = new Motion(simPhysLocation);
     cabinMode = CabinMode.NORMAL;
   }
 
@@ -49,8 +49,23 @@ public class Cabin extends Thread
   //@Override
   public void run()
   {
-    if (cabinMode == CabinMode.EMERGENCY || cabinMode == CabinMode.MAINTENACE) motion.setDirection(CabinDirection.STOPPED);
-    else normalRun();
+    while (true)
+    {
+      if (cabinMode == CabinMode.EMERGENCY || cabinMode == CabinMode.MAINTENACE) motion.setDirection(CabinDirection.STOPPED);
+      else normalRun();
+      
+//      printRequests();
+    }
+  }
+  
+  private void printRequests()
+  {
+    for(FloorRequest request : requests)
+    {
+      System.out.println("There is a request for floor "+request.getFloor());
+    }
+    
+    System.out.println();
   }
 
   /**

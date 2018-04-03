@@ -4,6 +4,8 @@ import ElSys.CabinStatus;
 import ElSys.Enums.BuildingState;
 import ElSys.Enums.CabinMode;
 import ElSys.FloorRequest;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -51,7 +53,7 @@ public class ControlPanel
   {
     this.totalFloors = totalFloors;
     this.numCabins = numCabins;
-
+    
     addCabins(numCabins);
     addFloors();
     view = new ControlPanelView(cabins);
