@@ -72,6 +72,10 @@ public class SimPhysLocation
     return (location == 0 || location == (double) floors-1);
   }
   
+  
+  /**
+   * For Debugging
+   */
   private void printStatus()
   {
     int currentFloor = (int) (location + 0.5);
