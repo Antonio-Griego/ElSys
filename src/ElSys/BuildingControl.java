@@ -46,7 +46,7 @@ public class BuildingControl extends Thread
   public void run()
   {
     CabinMode [] cabinModes;
-    Queue<FloorRequest> floorRequests = new LinkedList<>();
+    Queue<FloorRequest> floorRequests;
     
     while(true)
     {
@@ -71,6 +71,8 @@ public class BuildingControl extends Thread
           if(cabins[i].hasArrived())
           {
             System.out.println("Elevator "+(i+1)+" arrived on floor "+cabins[i].getStatus().getFloor());
+            System.out.println("Doors Opening");
+            System.out.println("Doors Closing");
             cabins[i].setArrival(false);
           }
         }
