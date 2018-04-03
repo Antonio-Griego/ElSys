@@ -50,19 +50,19 @@ public class BuildingControl extends Thread
     
     while(true)
     {
-      //floorRequests = controlPanel.getFloorRequests();
-      //buildingState = controlPanel.getBuildingState();
-      //cabinModes = controlPanel.getElevatorModes();
+      floorRequests = controlPanel.getFloorRequests();
+      buildingState = controlPanel.getBuildingState();
+      cabinModes = controlPanel.getElevatorModes();
       
-//      for(int i = 0; i < cabins.length; i++)
-//      {
-//        cabins[i].updateMode(cabinModes[i]);
-//      }
-//
-//      for(FloorRequest request : floorRequests)
-//      {
-//        cabins[0].addRequest(request);
-//      }
+      for(int i = 0; i < cabins.length; i++)
+      {
+        cabins[i].updateMode(cabinModes[i]);
+      }
+
+      for(FloorRequest request : floorRequests)
+      {
+        cabins[0].addRequest(request);
+      }
       
       if(buildingState == BuildingState.NORMAL)
       {
@@ -84,7 +84,7 @@ public class BuildingControl extends Thread
         }
       }
       
-//      controlPanel.update(getStatuses(), buildingState);
+      controlPanel.update(getStatuses(), buildingState);
     }
   }
   
