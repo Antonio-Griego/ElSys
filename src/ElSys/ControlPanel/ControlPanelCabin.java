@@ -4,6 +4,7 @@ import ElSys.CabinStatus;
 import ElSys.Enums.CabinDirection;
 import ElSys.Enums.CabinMode;
 import ElSys.FloorRequest;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,7 @@ import javafx.scene.shape.Polygon;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
 public class ControlPanelCabin
@@ -26,7 +28,10 @@ public class ControlPanelCabin
   private ArrayList<Button> cabinButtons = new ArrayList<>();
 
   @FXML
-  Button buttonOne, buttonTwo, buttonThree, buttonFour, floorOne, floorTwo, floorThree, floorFour;
+  Button buttonOne, buttonTwo, buttonThree, buttonFour, buttonFive, buttonSix,
+          buttonSeven, buttonEight, buttonNine, buttonTen,
+          floorOne, floorTwo, floorThree, floorFour, floorFive, floorSix, floorSeven,
+          floorEight, floorNine, floorTen;
 
   @FXML
   Polygon upArrow, downArrow;
@@ -39,6 +44,7 @@ public class ControlPanelCabin
     addButtons();
   }
 
+  //TODO refactor to contain view
   ControlPanelCabin(CabinStatus cabinStatus, int cabinNumber)
   {
     loadView(cabinNumber);
@@ -55,6 +61,12 @@ public class ControlPanelCabin
     floors.add(floorTwo);
     floors.add(floorThree);
     floors.add(floorFour);
+    floors.add(floorFive);
+    floors.add(floorSix);
+    floors.add(floorSeven);
+    floors.add(floorEight);
+    floors.add(floorNine);
+    floors.add(floorTen);
   }
 
   private void addButtons()
@@ -63,6 +75,12 @@ public class ControlPanelCabin
     cabinButtons.add(buttonTwo);
     cabinButtons.add(buttonThree);
     cabinButtons.add(buttonFour);
+    cabinButtons.add(buttonFive);
+    cabinButtons.add(buttonSix);
+    cabinButtons.add(buttonSeven);
+    cabinButtons.add(buttonEight);
+    cabinButtons.add(buttonNine);
+    cabinButtons.add(buttonTen);
 
     cabinButtons.forEach(button -> button.setOnAction(this::buttonPressed));
   }
@@ -93,13 +111,15 @@ public class ControlPanelCabin
 
   protected void update(CabinStatus cabinStatus)
   {
+//    List<FloorRequest> floorRequests = new ArrayList<>(cabinStatus.getFloorRequests());
+
     updateFloors(cabinStatus.getFloor());
     updateDirection(cabinStatus.getDirection());
-    updateButtons(cabinStatus.getFloorRequests());
+//    updateButtons(floorRequests);
     mode = cabinStatus.getMode();
   }
 
-  private void updateButtons(Queue<FloorRequest> floorRequests)
+  private void updateButtons(List<FloorRequest> floorRequests)
   {
     cabinButtons.forEach(button -> updateButtonLight(button, false));
 
@@ -112,16 +132,14 @@ public class ControlPanelCabin
 
   private void updateButtonLight(Button button, boolean turnOn)
   {
-    if(turnOn)
-    {
-      button.getStyleClass().clear();
-      button.getStyleClass().add("active-cabin-button");
-    }
-    else
-    {
-      button.getStyleClass().clear();
-      button.getStyleClass().add("inactive-cabin-button");
-    }
+      if (turnOn)
+      {
+        Platform.runLater(()->button.getStyleClass().add("active-cabin-button"));
+      }
+      else
+      {
+        Platform.runLater(()->button.getStyleClass().add("inactive-cabin-button"));
+      }
   }
 
   private void updateDirection(CabinDirection newDirection)
@@ -148,40 +166,51 @@ public class ControlPanelCabin
 
   private void updateDirectionLight(Polygon arrow, boolean turnOn)
   {
-    if(turnOn)
+    if (turnOn)
     {
-      arrow.getStyleClass().clear();
-      arrow.getStyleClass().add("active-arrow");
+
+      Platform.runLater(() -> arrow.getStyleClass().add("active-arrow"));
     }
     else
     {
-      arrow.getStyleClass().clear();
-      arrow.getStyleClass().add("inactive-arrow");
+
+      Platform.runLater(() -> arrow.getStyleClass().add("inactive-arrow"));
     }
+
   }
 
   private void updateFloors(int floor)
   {
     if(floor != currentFloor)
     {
-      updateFloorLight(floors.get(currentFloor-1), false);
-      updateFloorLight(floors.get(floor-1), true);
+
+      updateFloorLight(floors.get(currentFloor), false);
+      updateFloorLight(floors.get(floor), true);
+
       currentFloor = floor;
     }
   }
 
   private void updateFloorLight(Button button, boolean turnOn)
   {
-    if(turnOn)
+
+    if (turnOn)
     {
-      button.getStyleClass().clear();
-      button.getStyleClass().add("active-floor");
+      Platform.runLater(() ->
+                        {
+                          button.getStyleClass().clear();
+                          button.getStyleClass().add("active-floor");
+                        });
     }
     else
     {
-      button.getStyleClass().clear();
-      button.getStyleClass().add("inactive-floor");
+      Platform.runLater(() ->
+                        {
+                          button.getStyleClass().clear();
+                          button.getStyleClass().add("inactive-floor");
+                        });
     }
+
   }
 
   protected Tab getTab(){return tab;}

@@ -41,7 +41,7 @@ public class ControlPanel
     this.buildingState = buildingState;
     numCabins = cabinStatuses.length;
     //TODO: allow variable floors
-    totalFloors = 4;
+    totalFloors = 10;
 
     addCabins();
     addFloors();
@@ -92,8 +92,7 @@ public class ControlPanel
     }
 
   /**
-   * @return A Request object containing the request Direction [UP, DOWN] and the
-   * floor number of the request if one has been made. Otherwise, returns null.
+   * @return A Queue containing Requests.
    */
   public Queue<FloorRequest> getFloorRequests()
   {
@@ -120,6 +119,7 @@ public class ControlPanel
     return modes;
   }
 
+  //TODO: Need a way of updating cabin buttons.
   public void update(CabinStatus[] cabinStatuses, BuildingState buildingState)
   {
     this.cabinStatuses = cabinStatuses;
@@ -154,7 +154,7 @@ public class ControlPanel
 
     private ControlPanelView(ArrayList<ControlPanelCabin> cabins)
     {
-      FXMLLoader loader =  new FXMLLoader(getClass().getResource("/view/ControlPanel.fxml"));
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ControlPanel.fxml"));
       loader.setController(this);
       Stage stage = new Stage();
       Scene scene;

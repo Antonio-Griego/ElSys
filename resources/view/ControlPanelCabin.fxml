@@ -14,7 +14,7 @@
          <children>
             <HBox alignment="CENTER" spacing="15.0">
                <children>
-                  <Button fx:id="floorOne" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="1" textAlignment="CENTER" wrapText="true">
+                  <Button fx:id="floorOne" contentDisplay="CENTER" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="1" textAlignment="CENTER" wrapText="true">
                      <effect>
                         <DropShadow />
                      </effect>
@@ -22,7 +22,7 @@
                         <Font size="12.0" />
                      </font>
                   </Button>
-                  <Button fx:id="floorTwo" layoutX="30.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="2" textAlignment="CENTER" wrapText="true">
+                  <Button fx:id="floorTwo" contentDisplay="CENTER" layoutX="30.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="2" textAlignment="CENTER" wrapText="true">
                      <effect>
                         <DropShadow />
                      </effect>
@@ -30,7 +30,7 @@
                         <Font size="12.0" />
                      </font>
                   </Button>
-                  <Button fx:id="floorThree" layoutX="30.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="3" textAlignment="CENTER" wrapText="true">
+                  <Button fx:id="floorThree" contentDisplay="CENTER" layoutX="30.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="3" textAlignment="CENTER" wrapText="true">
                      <effect>
                         <DropShadow />
                      </effect>
@@ -38,7 +38,55 @@
                         <Font size="12.0" />
                      </font>
                   </Button>
-                  <Button fx:id="floorFour" layoutX="65.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="4" textAlignment="CENTER" wrapText="true">
+                  <Button fx:id="floorFour" contentDisplay="CENTER" layoutX="65.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="4" textAlignment="CENTER" wrapText="true">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="floorFive" contentDisplay="CENTER" layoutX="268.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="5" textAlignment="CENTER" wrapText="true">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="floorSix" contentDisplay="CENTER" layoutX="178.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="6" textAlignment="CENTER" wrapText="true">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="floorSeven" contentDisplay="CENTER" layoutX="133.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="7" textAlignment="CENTER" wrapText="true">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="floorEight" contentDisplay="CENTER" layoutX="223.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="8" textAlignment="CENTER" wrapText="true">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="floorNine" contentDisplay="CENTER" layoutX="313.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="9" textAlignment="CENTER" wrapText="true">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="floorTen" alignment="CENTER" contentDisplay="CENTER" layoutX="358.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="10" textAlignment="CENTER" wrapText="true">
                      <effect>
                         <DropShadow />
                      </effect>
@@ -56,7 +104,33 @@
             </HBox>
             <GridPane alignment="CENTER" vgap="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <HBox alignment="CENTER" spacing="10.0" GridPane.columnIndex="1">
+                  <Polygon fx:id="upArrow" fill="WHITE" scaleX="0.3" scaleY="0.3" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" styleClass="inactive-arrow" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <points>
+                        <Double fx:value="-50.0" />
+                        <Double fx:value="40.0" />
+                        <Double fx:value="50.0" />
+                        <Double fx:value="40.0" />
+                        <Double fx:value="0.0" />
+                        <Double fx:value="-60.0" />
+                     </points>
+                  </Polygon>
+                  <Polygon fx:id="downArrow" fill="WHITE" layoutX="73.0" layoutY="35.0" rotate="180.0" scaleX="0.3" scaleY="0.3" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" styleClass="inactive-arrow" GridPane.rowIndex="2">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <points>
+                        <Double fx:value="-50.0" />
+                        <Double fx:value="40.0" />
+                        <Double fx:value="50.0" />
+                        <Double fx:value="40.0" />
+                        <Double fx:value="0.0" />
+                        <Double fx:value="-60.0" />
+                     </points>
+                  </Polygon>
+                  <HBox alignment="CENTER" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <children>
                         <Label text="3">
                            <font>
@@ -73,7 +147,7 @@
                         <Insets />
                      </GridPane.margin>
                   </HBox>
-                  <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="10.0" GridPane.columnIndex="2">
+                  <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
                      <children>
                         <Label text="4">
                            <font>
@@ -87,7 +161,7 @@
                         </Button>
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
                      <children>
                         <Label text="1">
                            <font>
@@ -101,7 +175,7 @@
                         </Button>
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="5">
                      <children>
                         <Label text="2">
                            <font>
@@ -115,40 +189,102 @@
                         </Button>
                      </children>
                   </HBox>
-                  <Polygon fx:id="upArrow" fill="WHITE" scaleX="0.3" scaleY="0.3" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" styleClass="inactive-arrow" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
-                     <effect>
-                        <DropShadow />
-                     </effect>
-                     <points>
-                        <Double fx:value="-50.0" />
-                        <Double fx:value="40.0" />
-                        <Double fx:value="50.0" />
-                        <Double fx:value="40.0" />
-                        <Double fx:value="0.0" />
-                        <Double fx:value="-60.0" />
-                     </points>
-                  </Polygon>
-                  <Polygon fx:id="downArrow" fill="WHITE" layoutX="73.0" layoutY="35.0" rotate="180.0" scaleX="0.3" scaleY="0.3" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" styleClass="inactive-arrow" GridPane.rowIndex="1">
-                     <effect>
-                        <DropShadow />
-                     </effect>
-                     <points>
-                        <Double fx:value="-50.0" />
-                        <Double fx:value="40.0" />
-                        <Double fx:value="50.0" />
-                        <Double fx:value="40.0" />
-                        <Double fx:value="0.0" />
-                        <Double fx:value="-60.0" />
-                     </points>
-                  </Polygon>
+                  <HBox alignment="CENTER" layoutX="210.0" layoutY="233.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                     <children>
+                        <Label text="5">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="buttonFive" mnemonicParsing="false" styleClass="inactive-cabin-button" stylesheets="@../css/styleSheet.css">
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" layoutX="210.0" layoutY="188.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                     <children>
+                        <Label text="6">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="buttonSix" mnemonicParsing="false" styleClass="inactive-cabin-button" stylesheets="@../css/styleSheet.css">
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" layoutX="110.0" layoutY="233.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <children>
+                        <Label text="7">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="buttonSeven" mnemonicParsing="false" styleClass="inactive-cabin-button" stylesheets="@../css/styleSheet.css">
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" layoutX="110.0" layoutY="188.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                     <children>
+                        <Label text="8">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="buttonEight" mnemonicParsing="false" styleClass="inactive-cabin-button" stylesheets="@../css/styleSheet.css">
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" layoutX="10.0" layoutY="8.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <children>
+                        <Label text="9">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="buttonNine" mnemonicParsing="false" styleClass="inactive-cabin-button" stylesheets="@../css/styleSheet.css">
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" layoutX="10.0" layoutY="8.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <children>
+                        <Label text="10">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="buttonTen" mnemonicParsing="false" styleClass="inactive-cabin-button" stylesheets="@../css/styleSheet.css">
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </Button>
+                     </children>
+                  </HBox>
                </children>
                <columnConstraints>
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                </columnConstraints>
                <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />

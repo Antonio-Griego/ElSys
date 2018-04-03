@@ -36,7 +36,7 @@ public class BuildingControl extends Thread
     
     CabinStatus [] cabinStatuses = getStatuses();
     
-//    controlPanel = new ControlPanel(cabinStatuses, buildingState);
+    controlPanel = new ControlPanel(cabinStatuses, buildingState);
     
     this.start();
   }
@@ -48,16 +48,17 @@ public class BuildingControl extends Thread
     
     while(true)
     {
-      //controlPanel.getFloorRequests();
-      //buildingState = controlPanel.getBuildingState();
+      controlPanel.getFloorRequests();
+      buildingState = controlPanel.getBuildingState();
       cabinStatuses = getStatuses();
-      //cabinModes = controlPanel.getElevatorModes();
+      cabinModes = controlPanel.getElevatorModes();
+
       
-//      for(int i = 0; i < cabins.length; i++)
-//      {
-//        cabins[i].updateMode(cabinModes[i]);
-//      }
-//
+      for(int i = 0; i < cabins.length; i++)
+      {
+        cabins[i].updateMode(cabinModes[i]);
+      }
+
       
       if(buildingState == BuildingState.NORMAL)
       {
@@ -78,6 +79,8 @@ public class BuildingControl extends Thread
           cabins[i].updateMode(CabinMode.EMERGENCY);
         }
       }
+
+      controlPanel.update(cabinStatuses, buildingState);
     }
   }
   

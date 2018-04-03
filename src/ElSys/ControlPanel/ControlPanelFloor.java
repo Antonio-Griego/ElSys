@@ -2,6 +2,7 @@ package ElSys.ControlPanel;
 
 import ElSys.Enums.CabinDirection;
 import ElSys.FloorRequest;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,8 +15,8 @@ import java.io.IOException;
 
 public class ControlPanelFloor
 {
-  ControlPanelFloorView view;
-  ControlPanel controlPanel;
+  private ControlPanelFloorView view;
+  private ControlPanel controlPanel;
   private final int floorNumber;
   private FloorRequest floorRequest;
 
@@ -89,13 +90,11 @@ public class ControlPanelFloor
     {
       if(turnOn)
       {
-        arrow.getStyleClass().clear();
-        arrow.getStyleClass().add("active-arrow");
+        Platform.runLater(()->arrow.getStyleClass().add("active-arrow"));
       }
       else
       {
-        arrow.getStyleClass().clear();
-        arrow.getStyleClass().add("inactive-arrow");
+        Platform.runLater(()->arrow.getStyleClass().add("inactive-arrow"));
       }
     }
 

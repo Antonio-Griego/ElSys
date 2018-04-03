@@ -7,6 +7,8 @@
     -fx-min-height: 30px;
     -fx-max-width: 30px;
     -fx-max-height: 30px;
+    -fx-alignment: center;
+
 }
 
 .active-floor
@@ -17,6 +19,9 @@
     -fx-min-height: 30px;
     -fx-max-width: 30px;
     -fx-max-height: 30px;
+    -fx-alignment: center;
+
+
 }
 
 .inactive-cabin-button
