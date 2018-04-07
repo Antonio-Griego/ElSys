@@ -53,14 +53,11 @@ public class Cabin extends Thread
   {
     while (true)
     {
-      if(!hasArrived)
+      if (cabinMode == CabinMode.EMERGENCY || cabinMode == CabinMode.MAINTENACE)
       {
-        if (cabinMode == CabinMode.EMERGENCY || cabinMode == CabinMode.MAINTENACE)
-        {
-          motion.setDirection(CabinDirection.STOPPED);
-        }
-        else normalRun();
+        // handle special cases
       }
+      else normalRun();
       
 //      stillRunning();
 //      printRequests();
@@ -90,7 +87,7 @@ public class Cabin extends Thread
    */
   synchronized public boolean hasArrived()
   {
-    return motion.getDestination() == motion.getFloor() && motion.isAligned();
+    return hasArrived && motion.getDestination() == motion.getFloor() && motion.isAligned();
   }
 
   /**
