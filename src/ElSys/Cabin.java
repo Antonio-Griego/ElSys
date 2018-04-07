@@ -1,5 +1,6 @@
 package ElSys;
 
+import ElSys.Enums.ButtonLight;
 import ElSys.Enums.CabinDirection;
 import ElSys.Enums.CabinMode;
 
@@ -15,12 +16,12 @@ import java.util.stream.Collectors;
  */
 public class Cabin extends Thread
 {
-  private CabinRequests cabinRequests;
-  private Motion motion;
+  private final CabinRequests cabinRequests;
+  private final Motion motion;
+  private final Set<FloorRequest> requests = new HashSet<>(); // uses set uniqueness to stop duplicate requests.
+
+  private boolean hasArrived;
   private CabinMode cabinMode;
-  private boolean arrived;
-  
-  private final Queue<FloorRequest> requests = new LinkedList<>();
 
   /**
    * Create a new cabin with {@code numberOfFloors} floors using the {@link SimPhysLocation} specified.
@@ -52,9 +53,12 @@ public class Cabin extends Thread
   {
     while (true)
     {
-      if(!arrived)
+      if(!hasArrived)
       {
-        if (cabinMode == CabinMode.EMERGENCY || cabinMode == CabinMode.MAINTENACE) motion.setDirection(CabinDirection.STOPPED);
+        if (cabinMode == CabinMode.EMERGENCY || cabinMode == CabinMode.MAINTENACE)
+        {
+          motion.setDirection(CabinDirection.STOPPED);
+        }
         else normalRun();
       }
       
@@ -64,20 +68,11 @@ public class Cabin extends Thread
   }
 
   /**
-   * Add request to the queue to be considered once the elevator has stopped.
-   * @param floorRequest Request to be later considered.
-   */
-  synchronized public void addRequest(final FloorRequest floorRequest)
-  {
-    requests.add(floorRequest);
-  }
-
-  /**
    * Get the status of the cabin, i.e. the cabin's current physical state.
    */
   synchronized public CabinStatus getStatus()
   {
-    return new CabinStatus(motion.getFloor(), motion.getDirection(), cabinMode, requests);
+    return new CabinStatus(motion.getFloor(), motion.getDirection(), cabinMode, requests, motion.getDestination());
   }
 
   /**
@@ -95,7 +90,7 @@ public class Cabin extends Thread
    */
   synchronized public boolean hasArrived()
   {
-    return arrived;
+    return motion.getDestination() == motion.getFloor() && motion.isAligned();
   }
 
   /**
@@ -103,15 +98,24 @@ public class Cabin extends Thread
    */
   synchronized public void setArrival(final boolean arrived)
   {
-    this.arrived = arrived;
+    this.hasArrived = arrived;
   }
 
   /**
-   * Get the number of requests that the cabin is currently processing.
+   * Set the cabins destination, returning if destination is reachable, i.e. the cabin can stop in time.
    */
-  public int getNumRequests()
+  public boolean setDestination(final Integer destination)
   {
-    return requests.size();
+    return motion.setDestination(destination);
+  }
+
+  /**
+   * Clear cabin's requests.
+   */
+  public void clearRequests()
+  {
+    // Treat cleared requests as satisfied, i.e. turn their lights off and remove them
+    processSatisfiedRequests(requests);
   }
 
   private void normalRun()
@@ -123,49 +127,43 @@ public class Cabin extends Thread
 
   private void movingRun()
   {
-    final Set<FloorRequest> atFloorRequests = requests.stream()
-            .filter(fr -> fr.getFloor() == motion.getFloor())
-            .collect(Collectors.toSet());
+    if (motion.isAligned() && motion.getFloor() == motion.getDestination())
+    {
+      motion.stopElevator();
 
-    processSatisfiedRequests(atFloorRequests);
+      final Set<FloorRequest> satisfied = getCurrentlySatisfiedRequests();
+      processSatisfiedRequests(satisfied);
+
+      motion.setDestination(null);
+    }
   }
 
-  private void processSatisfiedRequests(Set<FloorRequest> atFloorRequests)
+  private Set<FloorRequest> getCurrentlySatisfiedRequests()
   {
-    if (atFloorRequests.isEmpty()) return;
-    requests.removeAll(atFloorRequests);
-    atFloorRequests.forEach(cabinRequests::satisfyRequest);
-    motion.stopElevator();
-    arrived = true;
+    return requests.stream()
+            .filter(r -> r.getFloor() == motion.getDestination())
+            .collect(Collectors.toSet());
+  }
+
+  private void processSatisfiedRequests(final Set<FloorRequest> satisfied)
+  {
+    satisfied.forEach(fr -> cabinRequests.setButtonLight(ButtonLight.OFF, fr.getFloor()));
+    requests.removeAll(satisfied);
   }
 
   private void notMovingRun()
   {
-    final FloorRequest nextRequest = getNextRequest();
-    if (nextRequest == null) return;
-    moveTowardRequest(nextRequest);
+    // Not moving, so just start going towards next destination, door code will probably go here.
+    moveTowardDestination(motion.getDestination());
   }
 
-  private void moveTowardRequest(final FloorRequest nextRequest)
+  private void moveTowardDestination(final int destination)
   {
-    final CabinDirection dir =
-            nextRequest.getDirection() != null ? nextRequest.getDirection() :
-            nextRequest.getFloor() - motion.getFloor() > 0 ? CabinDirection.UP :
-                    CabinDirection.DOWN;
+    final CabinDirection dir = destination - motion.getFloor() > 0 ?
+            CabinDirection.UP :
+            CabinDirection.DOWN;
 
     motion.setDirection(dir);
-  }
-
-  private FloorRequest getNextRequest()
-  {
-    return requests.stream()
-            .min(Comparator.comparingInt(r -> Math.abs(motion.getFloor() - r.getFloor())))
-            .orElse(null);
-  }
-
-  private void stopCabin()
-  {
-    motion.stopElevator();
   }
   
   /**

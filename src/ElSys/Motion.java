@@ -6,6 +6,7 @@ public class Motion extends Thread
 {
   private final double MAX_SPEED = 0.2;
   private boolean moving;
+  private Integer destination;
   private FloorAlignment floorAlignment;
   private MotorControl motorControl;
   private CabinDirection cabinDirection = CabinDirection.STOPPED;
@@ -59,6 +60,17 @@ public class Motion extends Thread
   synchronized public CabinDirection getDirection()
   {
     return this.cabinDirection;
+  }
+
+  synchronized public boolean setDestination(final Integer destination)
+  {
+    this.destination = destination;
+    return true;
+  }
+
+  synchronized public Integer getDestination()
+  {
+    return destination;
   }
 
   synchronized public int getFloor()

@@ -66,7 +66,7 @@ public class BuildingControl extends Thread
 
       for(FloorRequest request : floorRequests)
       {
-        cabins[0].addRequest(request);
+//        cabins[0].addRequest(request);
       }
       
       if(buildingState == BuildingState.NORMAL)
