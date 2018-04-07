@@ -5,6 +5,7 @@ import ElSys.SimButton;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 class CabinRequestsTest
@@ -29,12 +30,7 @@ class CabinRequestsTest
 
     IntStream.range(0, numFloors).forEach(i -> cr.setButtonLight(ButtonLight.ON, i));
 
-    final List<FloorRequest> results = cr.updateRequests();
-
-    boolean err = IntStream.range(0, numFloors)
-            .filter(idx -> results.get(idx).getFloor() != idx)
-            .count() > 0;
-
-    assert !err && results.size() == numFloors;
+    final Set<FloorRequest> results = cr.updateRequests();
+    assert results.size() == numFloors;
   }
 }
