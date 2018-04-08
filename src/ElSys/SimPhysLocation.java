@@ -72,6 +72,11 @@ public class SimPhysLocation
     return (location == 0 || location == (double) floors-1);
   }
   
+  public int getAlignedFloor()
+  {
+    if(location - (int) location != 0) return -1;
+    else return (int) location;
+  }
   
   /**
    * For Debugging

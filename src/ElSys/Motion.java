@@ -15,7 +15,7 @@ public class Motion extends Thread
   
   public Motion(SimPhysLocation simPhysLocation)
   {
-    estimatedLocation = (double) floorAlignment.getAlignedFloor();
+    estimatedLocation = (double) floorAlignment.getCurrentFloor();
     floorAlignment = new FloorAlignment(simPhysLocation);
     motorControl = new MotorControl(simPhysLocation);
     this.start();
@@ -25,32 +25,23 @@ public class Motion extends Thread
   {
     while(true)
     {
-      try{
-        Thread.sleep(500);
-      } catch (InterruptedException e)
-      {
-        e.printStackTrace();
-      }
-      
       if (cabinDirection != CabinDirection.STOPPED)
       {
         if(cabinDirection == CabinDirection.UP)
         {
-          motorControl.moveElevator(MAX_SPEED);
-          estimatedLocation += MAX_SPEED;
+          moveElevator(MAX_SPEED);
         }
         
         else
         {
-          motorControl.moveElevator(-MAX_SPEED);
-          estimatedLocation -= MAX_SPEED;
+          moveElevator(-MAX_SPEED);
         }
       }
       
       if(floorAlignment.reachedEndOfShaft())
       {
         cabinDirection = CabinDirection.STOPPED;
-        estimatedLocation = floorAlignment.getAlignedFloor();
+        estimatedLocation = floorAlignment.getCurrentFloor();
       }
       
       //      stillRunning();
@@ -85,7 +76,7 @@ public class Motion extends Thread
 
   synchronized public boolean isAligned()
   {
-    return (floorAlignment.getDistanceToAlign() == 0);
+    return floorAlignment.isAligned();
   }
   
   synchronized public void stopElevator()
@@ -94,9 +85,15 @@ public class Motion extends Thread
     cabinDirection = CabinDirection.STOPPED;
   }
   
+  private void moveElevator(double distance)
+  {
+    motorControl.moveElevator(distance);
+    estimatedLocation += distance;
+  }
+  
   private void alignWithFloor(int floorToAlignWith)
   {
-    while(floorAlignment.getAlignedFloor() == -1)
+    while(!floorAlignment.isAligned())
     {
     
     }

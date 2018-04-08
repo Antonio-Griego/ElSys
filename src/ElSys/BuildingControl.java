@@ -4,9 +4,7 @@ import ElSys.ControlPanel.ControlPanel;
 import ElSys.Enums.BuildingState;
 import ElSys.Enums.CabinMode;
 
-import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Random;
 
 public class BuildingControl extends Thread
 {
@@ -16,35 +14,14 @@ public class BuildingControl extends Thread
   
   /**
    * Instantiates the BuildingControl
-   * @param numberOfFloors
-   * @param numElevators
+   * @param cabins
+   * @param controlPanel
    */
-  public BuildingControl(int numberOfFloors, int numElevators)
+  public BuildingControl(Cabin [] cabins, ControlPanel controlPanel)
   {
     buildingState = BuildingState.NORMAL;
-    cabins = new Cabin[numElevators];
-    
-    SimButton [] buttons = new SimButton[numberOfFloors];
-    SimPhysLocation simPhysLocation;
-    Random rand = new Random();
-    
-    for(int i = 0; i < numElevators; i++)
-    {
-      simPhysLocation = new SimPhysLocation(numberOfFloors);
-      
-      for(int j = 0; j < numberOfFloors; j++)
-      {
-        buttons[j] = new SimButton(rand);
-      }
-      
-      cabins[i] = new Cabin(buttons, simPhysLocation);
-      cabins[i].start();
-    }
-    
-    CabinStatus [] cabinStatuses = getStatuses();
-    
-    controlPanel = new ControlPanel(cabinStatuses, buildingState);
-    
+    this.cabins = cabins;
+    this.controlPanel = controlPanel;
     this.start();
   }
 
