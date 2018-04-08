@@ -5,19 +5,19 @@ import ElSys.Enums.CabinDirection;
 public class Motion extends Thread
 {
   private final double MAX_SPEED = 0.2;
-  private final double STOPPING_DISTANCE = 0.1;
+  private final double STOPPING_DISTANCE = 0.2;
   private double estimatedLocation;
-  private double speed;
-  private Integer destination;
+  private double speed = 0;
+  private Integer destination = 0;
   private FloorAlignment floorAlignment;
   private MotorControl motorControl;
   private CabinDirection cabinDirection = CabinDirection.STOPPED;
   
   public Motion(SimPhysLocation simPhysLocation)
   {
-    estimatedLocation = (double) floorAlignment.getCurrentFloor();
     floorAlignment = new FloorAlignment(simPhysLocation);
     motorControl = new MotorControl(simPhysLocation);
+    estimatedLocation = (double) floorAlignment.getCurrentFloor();
     this.start();
   }
   
@@ -27,23 +27,31 @@ public class Motion extends Thread
     {
       if (cabinDirection != CabinDirection.STOPPED)
       {
+        if(speed != MAX_SPEED) speed += 0.1;
         if(cabinDirection == CabinDirection.UP)
         {
-          moveElevator(MAX_SPEED);
+          moveElevator(speed);
         }
         
         else
         {
-          moveElevator(-MAX_SPEED);
+          moveElevator(-speed);
+        }
+  
+        if(floorAlignment.reachedEndOfShaft())
+        {
+          cabinDirection = CabinDirection.STOPPED;
+          estimatedLocation = floorAlignment.getCurrentFloor();
+        }
+  
+        if(Math.abs(estimatedLocation - destination) <= STOPPING_DISTANCE)
+        {
+          stopElevator();
+          System.out.println(isAligned());
         }
       }
       
-      if(floorAlignment.reachedEndOfShaft())
-      {
-        cabinDirection = CabinDirection.STOPPED;
-        estimatedLocation = floorAlignment.getCurrentFloor();
-      }
-      
+      else speed = 0;
       //      stillRunning();
     }
   }
@@ -60,8 +68,16 @@ public class Motion extends Thread
 
   synchronized public boolean setDestination(final Integer destination)
   {
-    this.destination = destination;
-    return true;
+    if(destination != null)
+    {
+      if (Math.abs(destination - estimatedLocation) <= STOPPING_DISTANCE)
+      {
+        this.destination = destination;
+        return true;
+      }
+    }
+    
+    return false;
   }
 
   synchronized public Integer getDestination()
@@ -81,7 +97,7 @@ public class Motion extends Thread
   
   synchronized public void stopElevator()
   {
-    alignWithFloor(floorAlignment.getCurrentFloor()+1);
+    alignWithFloor();
     cabinDirection = CabinDirection.STOPPED;
   }
   
@@ -91,11 +107,16 @@ public class Motion extends Thread
     estimatedLocation += distance;
   }
   
-  private void alignWithFloor(int floorToAlignWith)
+  private void alignWithFloor()
   {
-    while(!floorAlignment.isAligned())
+    if (!floorAlignment.isAligned())
     {
-    
+      while (!floorAlignment.isAligned())
+      {
+        if (cabinDirection == CabinDirection.UP) moveElevator(0.1);
+        
+        else moveElevator(-0.1);
+      }
     }
   }
   

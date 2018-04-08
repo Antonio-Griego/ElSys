@@ -12,12 +12,18 @@ public class MotorControl
   void moveElevator(double distance)
   {
     double step = distance/60;
-    double t = 1000/60;
+    long t = 1000/60;
 
     for (int i=0; i<60; i++)
     {
       simPhysLocation.move(step);
-      sleep(t);
+      try
+      {
+        Thread.sleep(t);
+      } catch (InterruptedException e)
+      {
+        e.printStackTrace();
+      }
     }
   }
 }

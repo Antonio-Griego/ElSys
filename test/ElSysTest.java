@@ -4,6 +4,6 @@ public class ElSysTest
 {
   ElSysTest()
   {
-    BuildingControl buildingControl = new BuildingControl(10, 1);
+    //BuildingControl buildingControl = new BuildingControl(10, 1);
   }
 }
