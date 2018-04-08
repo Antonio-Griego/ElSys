@@ -5,7 +5,9 @@ import ElSys.Enums.CabinDirection;
 public class Motion extends Thread
 {
   private final double MAX_SPEED = 0.2;
-  private boolean moving;
+  private final double STOPPING_DISTANCE = 0.1;
+  private double estimatedLocation;
+  private double speed;
   private Integer destination;
   private FloorAlignment floorAlignment;
   private MotorControl motorControl;
@@ -13,9 +15,9 @@ public class Motion extends Thread
   
   public Motion(SimPhysLocation simPhysLocation)
   {
+    estimatedLocation = (double) floorAlignment.getAlignedFloor();
     floorAlignment = new FloorAlignment(simPhysLocation);
     motorControl = new MotorControl(simPhysLocation);
-    moving = false;
     this.start();
   }
   
@@ -35,17 +37,20 @@ public class Motion extends Thread
         if(cabinDirection == CabinDirection.UP)
         {
           motorControl.moveElevator(MAX_SPEED);
+          estimatedLocation += MAX_SPEED;
         }
         
         else
         {
           motorControl.moveElevator(-MAX_SPEED);
+          estimatedLocation -= MAX_SPEED;
         }
       }
       
       if(floorAlignment.reachedEndOfShaft())
       {
         cabinDirection = CabinDirection.STOPPED;
+        estimatedLocation = floorAlignment.getAlignedFloor();
       }
       
       //      stillRunning();
@@ -85,13 +90,16 @@ public class Motion extends Thread
   
   synchronized public void stopElevator()
   {
-    alignWithFloor();
+    alignWithFloor(floorAlignment.getCurrentFloor()+1);
     cabinDirection = CabinDirection.STOPPED;
   }
   
-  private void alignWithFloor()
+  private void alignWithFloor(int floorToAlignWith)
   {
-    motorControl.moveElevator(floorAlignment.getDistanceToAlign());
+    while(floorAlignment.getAlignedFloor() == -1)
+    {
+    
+    }
   }
   
   /**

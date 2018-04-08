@@ -28,4 +28,9 @@ public class FloorAlignment
   {
     return simPhysLocation.reachedEndOfShaft();
   }
+  
+  public int getAlignedFloor()
+  {
+    return (int)simPhysLocation.getPhysicalLocation();
+  }
 }
