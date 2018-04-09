@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-//Floors will have buttons and door status
-//Cabins will have interior buttons,location, direction
 public class ControlPanel
 {
   private ControlPanelView view;
@@ -117,7 +115,7 @@ public class ControlPanel
     return modes;
   }
 
-  //TODO: Need a way of updating cabin buttons.
+  //TODO: Must be able to update floor requests from lobby
   public void update(CabinStatus[] cabinStatuses, BuildingState buildingState)
   {
     this.cabinStatuses = cabinStatuses;
