@@ -36,7 +36,7 @@ public class SimPhysLocation
    *
    * @param distance The distance in floor units to move the elevator.
    */
-  public void move(double distance)
+  public synchronized void move(double distance)
   {
     if(location + distance < 0)
     {
@@ -55,24 +55,24 @@ public class SimPhysLocation
   }
 
   /**
-   * This method returns the physical location of the elevator in floor units,
-   * i.e., a value of 0.0 indicates the elevator is on floor 1 and 5.5
-   * indicates the elevator is on floor 6.5 (halfway between floor 6 and 7).
+   * This method returns true if the elevator cabin is either at the TOP or
+   * the BOTTOM of the elevator shaft.
    *
-   * @return The physical location of the elevator in floor units in the range
-   *         of [0.0, (N-1)] (for an N story building).
+   * @return True : The elevator is at the top or bottom.
+   *         False : The elevator is NOT at the top or bottom.
    */
-  public double getPhysicalLocation()
-  {
-    return location;
-  }
-  
-  public boolean reachedEndOfShaft()
+  public synchronized boolean reachedEndOfShaft()
   {
     return (location == 0 || location == (double) floors-1);
   }
-  
-  public int getAlignedFloor()
+
+  /**
+   * This method returns an integer representing the floor if is aligned with
+   * a floor or -1 if it is somewhere in between floors.
+   *
+   * @return The current floor, or -1 if in between floors.
+   */
+  public synchronized int getAlignedFloor()
   {
     if(location - (int) location != 0) return -1;
     else return (int) location;
