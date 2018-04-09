@@ -126,8 +126,6 @@ public class Cabin extends Thread
   {
     if (motion.isAligned() && motion.getFloor() == motion.getDestination())
     {
-      motion.stopElevator();
-
       final Set<FloorRequest> satisfied = getCurrentlySatisfiedRequests();
       processSatisfiedRequests(satisfied);
 

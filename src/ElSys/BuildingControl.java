@@ -45,7 +45,7 @@ public class BuildingControl extends Thread
       }
       //TODO address invalid destinations
       requestRouter.update(cabinStatuses, floorRequests, buildingState);
-      int[] destinations = requestRouter.getDestinations();
+      Integer[] destinations = requestRouter.getDestinations();
       for(int i = 0; i < cabins.length; i++)
       {
         cabins[i].setDestination(destinations[i]);
