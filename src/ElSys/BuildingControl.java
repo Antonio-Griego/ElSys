@@ -11,17 +11,19 @@ public class BuildingControl extends Thread
   private ControlPanel controlPanel;
   private Cabin [] cabins;
   private BuildingState buildingState;
+  private RequestRouter requestRouter;
   
   /**
    * Instantiates the BuildingControl
    * @param cabins
    * @param controlPanel
    */
-  public BuildingControl(Cabin [] cabins, ControlPanel controlPanel)
+  public BuildingControl(Cabin[] cabins, ControlPanel controlPanel)
   {
     buildingState = BuildingState.NORMAL;
     this.cabins = cabins;
     this.controlPanel = controlPanel;
+    this.requestRouter = new RequestRouter();
     this.start();
   }
 
@@ -35,15 +37,18 @@ public class BuildingControl extends Thread
       floorRequests = controlPanel.getFloorRequests();
       buildingState = controlPanel.getBuildingState();
       cabinModes = controlPanel.getElevatorModes();
+      CabinStatus[] cabinStatuses = getStatuses();
       
       for(int i = 0; i < cabins.length; i++)
       {
         cabins[i].updateMode(cabinModes[i]);
       }
-
-      for(FloorRequest request : floorRequests)
+      //TODO address invalid destinations
+      requestRouter.update(cabinStatuses, floorRequests, buildingState);
+      int[] destinations = requestRouter.getDestinations();
+      for(int i = 0; i < cabins.length; i++)
       {
-//        cabins[0].addRequest(request);
+        cabins[i].setDestination(destinations[i]);
       }
       
       if(buildingState == BuildingState.NORMAL)
