@@ -43,13 +43,23 @@
             <Double fx:value="-60.0" />
          </points>
       </Polygon>
-      <Label text="Door: " GridPane.columnIndex="3" />
-      <TextField fx:id="doorState" text="Closed" GridPane.columnIndex="4" />
+      <Label text="Door: " GridPane.columnIndex="4" />
+      <TextField fx:id="doorState" text="Closed" GridPane.columnIndex="5" />
+      <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="3">
+         <children>
+            <Label text="Cabin Arrival:" />
+            <TextField alignment="CENTER" prefWidth="25.0" text="--" />
+         </children>
+         <padding>
+            <Insets left="25.0" />
+         </padding>
+      </HBox>
    </children>
    <columnConstraints>
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="64.0" minWidth="10.0" prefWidth="55.0" />
-      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="55.0" minWidth="8.0" prefWidth="55.0" />
-      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="55.0" minWidth="8.0" prefWidth="55.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="55.0" minWidth="8.0" prefWidth="35.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="55.0" minWidth="8.0" prefWidth="35.0" />
+      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="150.0" />
       <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="108.0" minWidth="10.0" prefWidth="65.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
    </columnConstraints>
