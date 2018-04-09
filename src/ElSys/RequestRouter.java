@@ -3,9 +3,8 @@ package ElSys;
 import ElSys.Enums.BuildingState;
 import ElSys.Enums.CabinDirection;
 
-import java.util.ArrayList;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by caleb on 4/8/2018.
@@ -29,22 +28,19 @@ public class RequestRouter {
     public Integer[] getDestinations(){
         //TODO make this not suck
         Integer [] destinations = new Integer[cabinStatuses.length];
-        Set<FloorRequest> cabinRequests;
+        Set<FloorRequest> validRequests;
         for(int i = 0; i < cabinStatuses.length; i++){
-          cabinRequests = cabinStatuses[i].getCabinRequests();
+          validRequests = getValidRequests(cabinStatuses[i]);
           destinations[i] = null;
-          for(FloorRequest r : cabinRequests)
+          for(FloorRequest r : validRequests)
           {
-            if(cabinStatuses[i].getDirection() == CabinDirection.UP)
+            if(destinations[i] == null) destinations[i] = r.getFloor();
+            
+            else
             {
-              if(destinations[i] == null) destinations[i] = r.getFloor();
-              
-              else
+              if(Math.abs(cabinStatuses[i].getFloor() - r.getFloor()) < Math.abs(cabinStatuses[i].getFloor() - destinations[i]))
               {
-                if(cabinStatuses[i].getDirection() == CabinDirection.UP)
-                {
-                  if(r.getFloor() - cabinStatuses[i].getFloor() > 0 )
-                }
+                destinations[i] = r.getFloor();
               }
             }
           }
@@ -52,5 +48,24 @@ public class RequestRouter {
           //if(!floorRequests.isEmpty()) destinations[i] = floorRequests.poll().getFloor();
         }
         return destinations;
+    }
+    
+    private Set<FloorRequest> getValidRequests(CabinStatus cabinStatus)
+    {
+      if(cabinStatus.getDirection() == CabinDirection.UP)
+      {
+        return cabinStatus.getCabinRequests().stream()
+            .filter(r -> r.getFloor() - cabinStatus.getFloor() > 0)
+            .collect(Collectors.toSet());
+      }
+      
+      else if(cabinStatus.getDirection() == CabinDirection.DOWN)
+      {
+        return cabinStatus.getCabinRequests().stream()
+            .filter(r -> r.getFloor() - cabinStatus.getFloor() < 0)
+            .collect(Collectors.toSet());
+      }
+      
+      else return cabinStatus.getCabinRequests();
     }
 }
