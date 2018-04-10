@@ -5,6 +5,10 @@ import ElSys.Enums.CabinDirection;
 import ElSys.Enums.CabinMode;
 import ElSys.FloorRequest;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +25,7 @@ import java.util.Set;
 public class ControlPanelCabin
 {
   private int currentFloor = 0;
+  private IntegerProperty currFloor = new SimpleIntegerProperty(0);
   private CabinMode mode;
   private CabinDirection currDirection = CabinDirection.STOPPED;
   private ControlPanelCabinView view;
@@ -38,6 +43,7 @@ public class ControlPanelCabin
   ControlPanelCabin(CabinStatus cabinStatus, int cabinNumber)
   {
     view = new ControlPanelCabinView(cabinNumber, this);
+    currFloor.addListener((obs, oldVal, newVal) -> view.updateFloorLight((int)oldVal,(int)newVal));
     update(cabinStatus);
   }
 
@@ -50,6 +56,10 @@ public class ControlPanelCabin
   {
     return mode;
   }
+
+  protected int getCurrentFloor(){return currFloor.get();}
+
+  protected void setCurrentFloor(int floor){currFloor.set(floor);}
 
   private void modeChanged(ActionEvent event)
   {
@@ -100,11 +110,7 @@ public class ControlPanelCabin
 
   private void updateFloors(int floor)
   {
-    if (floor != currentFloor)
-    {
-      Platform.runLater(() -> view.updateFloorLight(currentFloor, floor));
-      currentFloor = floor;
-    }
+    currFloor.set(floor);
   }
 
   private void updateMode(CabinMode mode)
@@ -196,7 +202,7 @@ public class ControlPanelCabin
     {
       Button button = ((Button) event.getSource());
       boolean newRequest = addFloorRequest(cabinButtons.indexOf(button));
-      
+
       if(newRequest)
       {
         updateButtonLight(button, true);
@@ -240,8 +246,13 @@ public class ControlPanelCabin
       Button prev = floors.get(prevFloor);
       Button curr = floors.get(currentFloor);
 
-      prev.getStyleClass().add("inactive-floor");
-      curr.getStyleClass().add("active-floor");
+      Platform.runLater(()->
+                        {
+                          prev.getStyleClass().clear();
+                          curr.getStyleClass().clear();
+                          prev.getStyleClass().add("inactive-floor");
+                          curr.getStyleClass().add("active-floor");
+                        });
     }
 
     private void updateModeGroup(CabinMode mode)
@@ -267,7 +278,7 @@ public class ControlPanelCabin
 
       for (FloorRequest request : floorRequests)
       {
-        Button button = cabinButtons.get(request.getFloor() - 1);
+        Button button = cabinButtons.get(request.getFloor());
         view.updateButtonLight(button, true);
       }
     }
