@@ -13,17 +13,19 @@ public class SimButton
   private boolean isPressed;
   private ButtonLight buttonLight;
   private Random random;
+  private int floor;
 
   /**
    * Constructor method.
    *
    * @param random Random number generator object.
    */
-  public SimButton(Random random)
+  public SimButton(Random random, int floor)
   {
     this.isPressed = false;
     this.buttonLight = ButtonLight.OFF;
     this.random = random;
+    this.floor = floor;
   }
 
   /**
@@ -40,14 +42,14 @@ public class SimButton
     {
       if(buttonLight != ButtonLight.ON)
       {
-        System.out.println("ButtonLight = ON");
+        System.out.println("Floor "+floor+": ButtonLight = ON");
       }
       this.buttonLight = ButtonLight.ON;
-      isPressed = true;
     }
+    
     else
     {
-      System.out.println("ButtonLight = OFF");
+      System.out.println("Floor "+floor+": ButtonLight = OFF");
       this.buttonLight = ButtonLight.OFF;
       isPressed = false;
     }

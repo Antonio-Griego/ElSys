@@ -12,14 +12,14 @@ public class TestDriver extends Application
   @Override
   public void start(Stage primaryStage)
   {
-    new CabinTest();
-    new CabinRequestsTest();
-    new FloorRequestTest();
+//    new CabinTest();
+//    new CabinRequestsTest();
+//    new FloorRequestTest();
 
 //    new ElSysTest();
 //
 //    new ControlPanelTest();
 //
-//    new MotionTest();
+    new MotionTest();
   }
 }

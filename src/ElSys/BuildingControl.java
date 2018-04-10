@@ -22,7 +22,7 @@ public class BuildingControl extends Thread
   {
     buildingState = BuildingState.NORMAL;
     this.cabins = cabins;
-    this.controlPanel = controlPanel;
+//    this.controlPanel = controlPanel;
     this.requestRouter = new RequestRouter();
     this.start();
   }
@@ -30,22 +30,25 @@ public class BuildingControl extends Thread
   public void run()
   {
     CabinMode [] cabinModes;
-    Queue<FloorRequest> floorRequests;
+    Queue<FloorRequest> floorRequests = null;
     
     while(true)
     {
-      floorRequests = controlPanel.getFloorRequests();
-      buildingState = controlPanel.getBuildingState();
-      cabinModes = controlPanel.getElevatorModes();
+//      floorRequests = controlPanel.getFloorRequests();
+//      buildingState = controlPanel.getBuildingState();
+//      cabinModes = controlPanel.getElevatorModes();
+
       CabinStatus[] cabinStatuses = getStatuses();
       
-      for(int i = 0; i < cabins.length; i++)
-      {
-        cabins[i].updateMode(cabinModes[i]);
-      }
+//      for(int i = 0; i < cabins.length; i++)
+//      {
+//        cabins[i].updateMode(cabinModes[i]);
+//      }
       //TODO address invalid destinations
+      
       requestRouter.update(cabinStatuses, floorRequests, buildingState);
       Integer[] destinations = requestRouter.getDestinations();
+      
       for(int i = 0; i < cabins.length; i++)
       {
         cabins[i].setDestination(destinations[i]);
@@ -73,7 +76,7 @@ public class BuildingControl extends Thread
         }
       }
       
-      controlPanel.update(getStatuses(), buildingState);
+//      controlPanel.update(getStatuses(), buildingState);
       
 //      stillRunning();
     }

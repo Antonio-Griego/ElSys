@@ -36,6 +36,10 @@ public class Cabin extends Thread
     cabinMode = CabinMode.NORMAL;
   }
 
+  public void updateRequests()
+  {
+    cabinRequests.updateRequests();
+  }
   /**
    * Based on current mode, updates state based on current requests.
    *
@@ -69,7 +73,11 @@ public class Cabin extends Thread
    */
   synchronized public CabinStatus getStatus()
   {
-    return new CabinStatus(motion.getFloor(), motion.getDirection(), cabinMode, requests, motion.getDestination());
+    return new CabinStatus(motion.getFloor(),
+        motion.getDirection(),
+        CabinMode.NORMAL,
+        new HashSet<>(requests),
+        motion.getDestination());
   }
 
   /**
@@ -149,14 +157,20 @@ public class Cabin extends Thread
   private void notMovingRun()
   {
     // Not moving, so just start going towards next destination, door code will probably go here.
-    moveTowardDestination(motion.getDestination());
+    if(motion.getDestination() != null)
+    {
+      moveTowardDestination(motion.getDestination());
+    }
   }
 
-  private void moveTowardDestination(final int destination)
+  private void moveTowardDestination(final Integer destination)
   {
-    final CabinDirection dir = destination - motion.getFloor() > 0 ?
-            CabinDirection.UP :
-            CabinDirection.DOWN;
+    CabinDirection dir = CabinDirection.STOPPED;
+    
+    if(destination != null)
+    {
+      dir = destination - motion.getFloor() > 0 ? CabinDirection.UP : CabinDirection.DOWN;
+    }
 
     motion.setDirection(dir);
   }

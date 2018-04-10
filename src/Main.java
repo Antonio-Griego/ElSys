@@ -26,7 +26,7 @@ public class Main extends Application
     
       for(int j = 0; j < FLOORS; j++)
       {
-        buttons[j] = new SimButton(rand);
+        buttons[j] = new SimButton(rand, j);
       }
     
       cabins[i] = new Cabin(buttons, simPhysLocation);
@@ -39,7 +39,7 @@ public class Main extends Application
     {
       cabinStatuses[i] = cabins[i].getStatus();
     }
-  
+    
     ControlPanel controlPanel = new ControlPanel(cabinStatuses, BuildingState.NORMAL);
     buildingControl = new BuildingControl(cabins, controlPanel);
   }

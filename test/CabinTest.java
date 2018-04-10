@@ -22,7 +22,7 @@ class CabinTest
   
     for(int i = 0; i < buttons.length; i++)
     {
-      buttons[i] = new SimButton(random);
+      buttons[i] = new SimButton(random, i);
     }
     
     final Cabin cabin = new Cabin(buttons, new SimPhysLocation(10));

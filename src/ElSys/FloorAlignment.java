@@ -2,32 +2,43 @@ package ElSys;
 
 import java.lang.*;
 
-public class FloorAlignment
+public class FloorAlignment extends Thread
 {
   private SimPhysLocation simPhysLocation;
   private int floor;
-  private worker w;
+//  private worker w;
 
   FloorAlignment(SimPhysLocation simPhysLocation)
   {
     this.simPhysLocation = simPhysLocation;
-    w = new worker(simPhysLocation);
+    this.start();
+//    w = new worker(simPhysLocation);
   }
-
-  // when called, grabs the most current floor from worker thread and returns it
-  public int getCurrentFloor()
+  
+  public void run()
   {
-    floor = w.floor;
+    Integer currentFloor;
+    while(true)
+    {
+      currentFloor = simPhysLocation.getAlignedFloor();
+      if(currentFloor != null)
+      {
+        floor = currentFloor;
+      }
+    }
+  }
+  
+  synchronized public int getCurrentFloor()
+  {
     return floor;
   }
 
-  public boolean isAligned()
+  synchronized public boolean isAligned()
   {
-    if (simPhysLocation.getAlignedFloor() == -1){return false;}
-    else {return true;}
+    return (simPhysLocation.getAlignedFloor() != null);
   }
 
-  public boolean reachedEndOfShaft()
+  synchronized public boolean reachedEndOfShaft()
   {
     return simPhysLocation.reachedEndOfShaft();
   }
@@ -35,32 +46,32 @@ public class FloorAlignment
 
 // worker thread to constantly check if alligned with a floor
 // since only this thread sets floor, there should be no concurrency issues.
-class worker extends Thread
-{
-  private SimPhysLocation simPhysLocation;
-  public int floor;
-
-  worker(SimPhysLocation simPhysLocation)
-  {
-    this.simPhysLocation = simPhysLocation;
-    start();
-  }
-
-  public void run()
-  {
-    while (true)
-    {
-      work();
-    }
-  }
-
-  public void work()
-  {
-    int location = simPhysLocation.getAlignedFloor();
-    if (location == -1){}
-    else
-    {
-      floor = location;
-    }
-  }
-}
+//class worker extends Thread
+//{
+//  private SimPhysLocation simPhysLocation;
+//  public int floor;
+//
+//  worker(SimPhysLocation simPhysLocation)
+//  {
+//    this.simPhysLocation = simPhysLocation;
+//    this.start();
+//  }
+//
+//  public void run()
+//  {
+//    while (true)
+//    {
+//      work();
+//    }
+//  }
+//
+//  public void work()
+//  {
+//    int location = simPhysLocation.getAlignedFloor();
+//    if (location == -1){}
+//    else
+//    {
+//      floor = location;
+//    }
+//  }
+//}

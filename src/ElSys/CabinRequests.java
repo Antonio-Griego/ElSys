@@ -49,6 +49,8 @@ public class CabinRequests
 
   private Set<FloorRequest> generateFloorRequests(final Set<Button> activeButtons)
   {
+    activeButtons.stream()
+        .forEach(b -> b.setLight(ButtonLight.ON));
     return activeButtons.stream()
             .map(b -> new FloorRequest(cabinButtons.indexOf(b), null))
             .collect(Collectors.toSet());
