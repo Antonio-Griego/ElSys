@@ -12,7 +12,7 @@ public class BuildingControl extends Thread
   private Cabin [] cabins;
   private BuildingState buildingState;
   private RequestRouter requestRouter;
-  
+  private CabinStatus[] cabinStatuses;
   /**
    * Instantiates the BuildingControl
    * @param cabins
@@ -22,8 +22,9 @@ public class BuildingControl extends Thread
   {
     buildingState = BuildingState.NORMAL;
     this.cabins = cabins;
-//    this.controlPanel = controlPanel;
+    this.controlPanel = controlPanel;
     this.requestRouter = new RequestRouter();
+    cabinStatuses = new CabinStatus[cabins.length];
     this.start();
   }
 
@@ -76,7 +77,7 @@ public class BuildingControl extends Thread
         }
       }
       
-//      controlPanel.update(getStatuses(), buildingState);
+      controlPanel.update(getStatuses(), buildingState);
       
 //      stillRunning();
     }
@@ -85,8 +86,6 @@ public class BuildingControl extends Thread
   
   private CabinStatus [] getStatuses()
   {
-    CabinStatus[] cabinStatuses = new CabinStatus[cabins.length];
-  
     for(int i = 0; i < cabins.length; i++)
     {
       cabinStatuses[i] = cabins[i].getStatus();

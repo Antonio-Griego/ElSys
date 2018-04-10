@@ -22,6 +22,7 @@ public class Cabin extends Thread
 
   private boolean hasArrived;
   private CabinMode cabinMode;
+  private CabinStatus cabinStatus;
 
   /**
    * Create a new cabin with {@code numberOfFloors} floors using the {@link SimPhysLocation} specified.
@@ -34,6 +35,11 @@ public class Cabin extends Thread
     this.cabinRequests = new CabinRequests(simButtons);
     motion = new Motion(simPhysLocation);
     cabinMode = CabinMode.NORMAL;
+    cabinStatus = new CabinStatus(motion.getFloor(),
+                                  motion.getDirection(),
+                                  CabinMode.NORMAL,
+                                  requests,
+                                  motion.getDestination());
   }
 
   public void updateRequests()
@@ -73,11 +79,18 @@ public class Cabin extends Thread
    */
   synchronized public CabinStatus getStatus()
   {
-    return new CabinStatus(motion.getFloor(),
-        motion.getDirection(),
-        CabinMode.NORMAL,
-        new HashSet<>(requests),
-        motion.getDestination());
+    cabinStatus.setFloor(motion.getFloor());
+    cabinStatus.setDirection(motion.getDirection());
+    cabinStatus.setMode(CabinMode.NORMAL);
+    cabinStatus.setCabinRequests(requests);
+    cabinStatus.setDestination(motion.getDestination());
+
+    return cabinStatus;
+//    return new CabinStatus(motion.getFloor(),
+//        motion.getDirection(),
+//        CabinMode.NORMAL,
+//        new HashSet<>(requests),
+//        motion.getDestination());
   }
 
   /**

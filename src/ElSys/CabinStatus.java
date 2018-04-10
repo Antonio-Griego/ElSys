@@ -10,11 +10,11 @@ import java.util.Set;
  */
 public class CabinStatus
 {
-  private final int currentFloor;
-  private final CabinDirection cabinDirection;
-  private final CabinMode cabinMode;
-  private final Set<FloorRequest> cabinRequests;
-  private final Integer destination;
+  private int currentFloor;
+  private CabinDirection cabinDirection;
+  private CabinMode cabinMode;
+  private Set<FloorRequest> cabinRequests;
+  private Integer destination;
 
   /**
    * Construct a representation of the cabins current state with the supplied elements.
@@ -43,6 +43,8 @@ public class CabinStatus
     return currentFloor;
   }
 
+  public void setFloor(int floor){currentFloor = floor;}
+
   /**
    * Return the state snapshot's {@link CabinDirection}.
    */
@@ -50,6 +52,8 @@ public class CabinStatus
   {
     return cabinDirection;
   }
+
+  public void setDirection(CabinDirection dir){cabinDirection = dir;}
 
   /**
    * Return the state snapshot's {@link CabinMode}.
@@ -59,10 +63,14 @@ public class CabinStatus
     return cabinMode;
   }
 
+  public void setMode(CabinMode mode){cabinMode = mode;}
+
   /**
    * Return a set of the state snapshot's {@link FloorRequest}s.
    */
   public Set<FloorRequest> getCabinRequests(){ return cabinRequests;}
+
+  public void setCabinRequests(Set<FloorRequest> requests){cabinRequests = requests;}
 
   /**
    * Return the state snapshot's destination, or null if there is none.
@@ -71,4 +79,6 @@ public class CabinStatus
   {
     return destination;
   }
+
+  public void setDestination(Integer dest){destination = dest;}
 }
