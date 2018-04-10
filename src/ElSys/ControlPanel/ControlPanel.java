@@ -41,7 +41,7 @@ public class ControlPanel
 
     addCabins();
     addFloors();
-    //view = new ControlPanelView(cabins);
+    view = new ControlPanelView(cabins);
   }
 
   //Used for testing

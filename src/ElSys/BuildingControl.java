@@ -22,7 +22,7 @@ public class BuildingControl extends Thread
   {
     buildingState = BuildingState.NORMAL;
     this.cabins = cabins;
-//    this.controlPanel = controlPanel;
+    this.controlPanel = controlPanel;
     this.requestRouter = new RequestRouter();
     this.start();
   }
