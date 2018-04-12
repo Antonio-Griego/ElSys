@@ -106,7 +106,7 @@ public class Motion extends Thread
 
       else System.out.println("Destination Rejected! Current Floor: "+floorAlignment.getCurrentFloor());
     }
-
+    this.destination = destination;
     return false;
   }
 

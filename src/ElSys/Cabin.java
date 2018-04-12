@@ -153,6 +153,7 @@ public class Cabin extends Thread
 
   private void movingRun()
   {
+    if (motion.getDestination() == null) return;
     if (motion.isAligned() && motion.getFloor() == motion.getDestination())
     {
       final Set<FloorRequest> satisfied = getCurrentlySatisfiedRequests();
