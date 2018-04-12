@@ -69,7 +69,7 @@ public class Motion extends Thread
           estimatedLocation = new BigDecimal(Integer.toString(floorAlignment.getCurrentFloor()));
         }
 
-        if(estimatedLocation.subtract(new BigDecimal(Double.toString(destination))).abs().doubleValue() <= STOPPING_DISTANCE)
+        if(destination != null && estimatedLocation.subtract(new BigDecimal(Double.toString(destination))).abs().doubleValue() <= STOPPING_DISTANCE)
         {
           stopElevator();
           destination = null;
