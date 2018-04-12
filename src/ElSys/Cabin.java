@@ -58,7 +58,7 @@ public class Cabin extends Thread
    * <p>If the elevator isn't moving, the next request will be determined, and the elevator's state will be updated
    * in accordance with the selected request.</p>
    */
-  //@Override
+  @Override
   public void run()
   {
     while (true)
@@ -68,7 +68,15 @@ public class Cabin extends Thread
         // handle special cases
       }
       else normalRun();
-      
+
+      try
+      {
+        sleep((long)(1 / 60d * 1000));
+      } catch (InterruptedException e)
+      {
+        e.printStackTrace();
+      }
+
 //      stillRunning();
 //      printRequests();
     }
@@ -108,7 +116,7 @@ public class Cabin extends Thread
    */
   synchronized public boolean hasArrived()
   {
-    return hasArrived && motion.getDestination() == motion.getFloor() && motion.isAligned();
+    return hasArrived;
   }
 
   /**
@@ -149,7 +157,7 @@ public class Cabin extends Thread
     {
       final Set<FloorRequest> satisfied = getCurrentlySatisfiedRequests();
       processSatisfiedRequests(satisfied);
-
+      setArrival(true);
       motion.setDestination(null);
     }
   }
@@ -172,6 +180,7 @@ public class Cabin extends Thread
     // Not moving, so just start going towards next destination, door code will probably go here.
     if(motion.getDestination() != null)
     {
+      setArrival(false);
       moveTowardDestination(motion.getDestination());
     }
   }

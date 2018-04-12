@@ -26,6 +26,8 @@ public class SimButton
     this.buttonLight = ButtonLight.OFF;
     this.random = random;
     this.floor = floor;
+
+    if (floor % 3 == 0 && floor != 0) isPressed = true;
   }
 
   /**

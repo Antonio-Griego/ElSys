@@ -78,7 +78,7 @@ public class SimPhysLocation
    */
   public synchronized Integer getAlignedFloor()
   {
-    if(location.doubleValue() - location.intValue() >= 0.000000001) return null;
+    if(location.doubleValue() - location.intValue() >= 0.01) return null;
     else return location.stripTrailingZeros().intValue();
   }
   
