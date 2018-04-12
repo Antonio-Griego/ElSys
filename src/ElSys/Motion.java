@@ -34,12 +34,12 @@ public class Motion extends Thread
 
       if(destination != null)
       {
-        if(destination > estimatedLocation.signum())
+        if(destination > estimatedLocation.doubleValue())
         {
           cabinDirection = CabinDirection.UP;
         }
 
-        else if(destination < estimatedLocation.signum())
+        else if(destination < estimatedLocation.doubleValue())
         {
           cabinDirection = CabinDirection.DOWN;
         }

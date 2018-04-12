@@ -41,20 +41,20 @@ public class SimPhysLocation
    */
   public synchronized void move(BigDecimal distance)
   {
-    if(location.add(distance).signum() < 0)
+    if(location.add(distance).doubleValue() < 0)
     {
       location = new BigDecimal(0);
     }
-    else if((location.add(distance)).signum() > floors)
+    else if((location.add(distance)).doubleValue() > floors-1)
     {
-      location = new BigDecimal(floors);
+      location = new BigDecimal(floors-1);
     }
     else
     {
       location = location.add(distance);
     }
     location.stripTrailingZeros();
-//    System.out.println(location.toString());
+    //System.out.println(location.toString());
     printStatus();
   }
 
@@ -87,7 +87,7 @@ public class SimPhysLocation
    */
   private void printStatus()
   {
-    int currentFloor = location.intValue();
+    int currentFloor = location.setScale(0, BigDecimal.ROUND_UP).intValue();
     if(currentFloor != lastFloor)
     {
       if(currentFloor < lastFloor) System.out.println("Elevator is on floor "+currentFloor+" going DOWN");
