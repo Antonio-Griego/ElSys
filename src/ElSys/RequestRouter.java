@@ -55,23 +55,24 @@ public class RequestRouter {
     
     private Set<FloorRequest> getValidRequests(CabinStatus cabinStatus)
     {
+      Set<FloorRequest> floorRequests = new HashSet<>(cabinStatus.getCabinRequests());
       if(cabinStatus.getDirection() == CabinDirection.UP)
       {
-        return cabinStatus.getCabinRequests().stream()
+        return floorRequests.stream()
             .filter(r -> r.getFloor() >= cabinStatus.getFloor())
             .collect(Collectors.toSet());
       }
       
       else if(cabinStatus.getDirection() == CabinDirection.DOWN)
       {
-        return cabinStatus.getCabinRequests().stream()
+        return floorRequests.stream()
             .filter(r -> r.getFloor() <= cabinStatus.getFloor())
             .collect(Collectors.toSet());
       }
       
       else
       {
-        return cabinStatus.getCabinRequests();
+        return floorRequests;
       }
     }
 }
