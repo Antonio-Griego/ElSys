@@ -16,10 +16,10 @@ public class TestDriver extends Application
 //    new CabinRequestsTest();
 //    new FloorRequestTest();
 
-//    new ElSysTest();
+    new ElSysTest();
 //
 //    new ControlPanelTest();
 //
-    new MotionTest();
+//    new MotionTest();
   }
 }

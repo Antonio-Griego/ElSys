@@ -53,8 +53,8 @@ public class SimPhysLocation
     {
       location = location.add(distance);
     }
-    location.stripTrailingZeros();
-    //System.out.println(location.toString());
+//    location.stripTrailingZeros();
+//    System.out.println(location.toString());
     printStatus();
   }
 
@@ -76,9 +76,9 @@ public class SimPhysLocation
    *
    * @return The current floor, or -1 if in between floors.
    */
-  public synchronized Integer getAlignedFloor()
+  public synchronized Integer whatFloor()
   {
-    if(location.doubleValue() - location.intValue() >= 0.01) return null;
+    if(location.doubleValue() - location.intValue() >= 0.0001) return null;
     else return location.stripTrailingZeros().intValue();
   }
   

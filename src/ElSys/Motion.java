@@ -8,8 +8,8 @@ public class Motion extends Thread
 {
   private final double MAX_SPEED = 0.2;
   private final double STOPPING_DISTANCE = 0.2;
+  
   private BigDecimal estimatedLocation;
-  private BigDecimal speed;
   private Integer destination = null;
   private FloorAlignment floorAlignment;
   private MotorControl motorControl;
@@ -20,63 +20,82 @@ public class Motion extends Thread
     floorAlignment = new FloorAlignment(simPhysLocation);
     motorControl = new MotorControl(simPhysLocation);
     estimatedLocation = new BigDecimal("0.0");
-    speed = new BigDecimal("0.0");
     this.start();
   }
   
   public void run()
   {
+    int currentFloor;
+    
     while(true)
     {
 //      System.out.println(destination);
 //      System.out.println("Current Floor: "+floorAlignment.getCurrentFloor());
 //      System.out.println("Estimated Location: "+estimatedLocation.toString());
-
-      if(destination != null)
+      
+      currentFloor = floorAlignment.getCurrentFloor();
+      
+      if(destination == null)
       {
-        if(destination > estimatedLocation.doubleValue())
-        {
-          cabinDirection = CabinDirection.UP;
-        }
-
-        else if(destination < estimatedLocation.doubleValue())
-        {
-          cabinDirection = CabinDirection.DOWN;
-        }
-
+        cabinDirection = CabinDirection.STOPPED;
+      }
+      
+      else
+      {
+        if(destination > currentFloor) cabinDirection = CabinDirection.UP;
+        else if(destination < currentFloor) cabinDirection = CabinDirection.DOWN;
         else cabinDirection = CabinDirection.STOPPED;
+        
+        moveElevator();
       }
-
-      else cabinDirection = CabinDirection.STOPPED;
-
-      if (cabinDirection != CabinDirection.STOPPED)
-      {
-        if(speed.doubleValue() < MAX_SPEED) speed = speed.add(new BigDecimal("0.1"));
-
-        if(cabinDirection == CabinDirection.UP)
-        {
-          moveElevator(speed);
-        }
-
-        if(cabinDirection == CabinDirection.DOWN)
-        {
-          moveElevator(speed.negate());
-        }
-
-        if(floorAlignment.reachedEndOfShaft())
-        {
-          cabinDirection = CabinDirection.STOPPED;
-          estimatedLocation = new BigDecimal(Integer.toString(floorAlignment.getCurrentFloor()));
-        }
-
-        if(destination != null && estimatedLocation.subtract(new BigDecimal(Double.toString(destination))).abs().doubleValue() <= STOPPING_DISTANCE)
-        {
-          stopElevator();
-          destination = null;
-        }
-      }
-
-      else speed = new BigDecimal("0.0");
+//      if(destination != null)
+//      {
+//        if(destination > estimatedLocation.doubleValue())
+//        {
+//          cabinDirection = CabinDirection.UP;
+//        }
+//
+//        else if(destination < estimatedLocation.doubleValue())
+//        {
+//          cabinDirection = CabinDirection.DOWN;
+//        }
+//
+//        else
+//        {
+//          alignWithFloor();
+//          cabinDirection = CabinDirection.STOPPED;
+//        }
+//      }
+//
+//      else cabinDirection = CabinDirection.STOPPED;
+//
+//      if (cabinDirection != CabinDirection.STOPPED)
+//      {
+//        if(speed.doubleValue() < MAX_SPEED) speed = speed.add(new BigDecimal("0.1"));
+//
+//        if(cabinDirection == CabinDirection.UP)
+//        {
+//          moveElevator(speed);
+//        }
+//
+//        if(cabinDirection == CabinDirection.DOWN)
+//        {
+//          moveElevator(speed.negate());
+//        }
+//
+//        if(floorAlignment.reachedEndOfShaft())
+//        {
+//          cabinDirection = CabinDirection.STOPPED;
+//          estimatedLocation = new BigDecimal(Integer.toString(floorAlignment.getCurrentFloor()));
+//        }
+//
+//        if(destination != null && estimatedLocation.subtract(new BigDecimal(Double.toString(destination))).abs().doubleValue() <= STOPPING_DISTANCE)
+//        {
+//          stopElevator();
+//        }
+//      }
+//
+//      else speed = new BigDecimal("0.0");
       //      stillRunning();
     }
   }
@@ -96,15 +115,14 @@ public class Motion extends Thread
     if(destination != null)
     {
       if (cabinDirection == CabinDirection.STOPPED ||
-         (estimatedLocation.subtract(BigDecimal.valueOf(destination)).abs().signum() >= STOPPING_DISTANCE) ||
-         (destination == this.destination))
+         (estimatedLocation.subtract(BigDecimal.valueOf(destination)).abs().signum() >= STOPPING_DISTANCE))
       {
         if(destination != this.destination) System.out.println("New Destination is Floor "+destination);
         this.destination = destination;
         return true;
       }
 
-      else System.out.println("Destination Rejected! Current Floor: "+floorAlignment.getCurrentFloor());
+      //else System.out.println("Destination Rejected! Current Floor: "+floorAlignment.getCurrentFloor());
     }
     this.destination = destination;
     return false;
@@ -131,22 +149,39 @@ public class Motion extends Thread
     cabinDirection = CabinDirection.STOPPED;
   }
 
-  private void moveElevator(BigDecimal distance)
+  private void moveElevator()
   {
-    motorControl.moveElevator(distance);
-    estimatedLocation = estimatedLocation.add(distance);
+    if(cabinDirection != CabinDirection.STOPPED)
+    {
+      if (Math.abs(estimatedLocation.doubleValue() - destination) <= STOPPING_DISTANCE)
+      {
+        stopElevator();
+      }
+
+      else
+      {
+        BigDecimal distance = new BigDecimal(Double.toString(MAX_SPEED));
+        if (cabinDirection == CabinDirection.DOWN) distance = distance.negate();
+  
+        motorControl.moveElevator(distance);
+        estimatedLocation = estimatedLocation.add(distance);
+    
+      }
+    }
   }
 
   private void alignWithFloor()
   {
+    BigDecimal moveDistance = new BigDecimal("0.1");
     if (!floorAlignment.isAligned())
     {
-      while (!floorAlignment.isAligned())
+      if (cabinDirection == CabinDirection.DOWN)
       {
-        if (cabinDirection == CabinDirection.UP) moveElevator(new BigDecimal("0.1"));
-
-        else moveElevator(new BigDecimal("0.1").negate());
+        moveDistance = moveDistance.negate();
       }
+      
+      motorControl.moveElevator(moveDistance);
+      estimatedLocation = estimatedLocation.add(moveDistance);
     }
   }
 

@@ -22,15 +22,10 @@ public class MotionTest
     //
     //    cabin.start();
     Motion motion = new Motion(new SimPhysLocation(10));
-    motion.setDestination(0);
-    motion.setDestination(9);
-    try
+    motion.setDestination(2);
+    
+    while(motion.getFloor() != motion.getDestination())
     {
-      Thread.sleep(10000);
-    } catch (InterruptedException e)
-    {
-      e.printStackTrace();
     }
-    motion.setDestination(1);
   }
 }

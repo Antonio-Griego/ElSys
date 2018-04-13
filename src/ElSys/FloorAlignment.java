@@ -2,7 +2,7 @@ package ElSys;
 
 import java.lang.*;
 
-public class FloorAlignment extends Thread
+public class FloorAlignment //extends Thread
 {
   private SimPhysLocation simPhysLocation;
   private int floor;
@@ -11,31 +11,37 @@ public class FloorAlignment extends Thread
   FloorAlignment(SimPhysLocation simPhysLocation)
   {
     this.simPhysLocation = simPhysLocation;
-    this.start();
+//    this.start();
 //    w = new worker(simPhysLocation);
   }
   
-  public void run()
-  {
-    Integer currentFloor;
-    while(true)
-    {
-      currentFloor = simPhysLocation.getAlignedFloor();
-      if(currentFloor != null)
-      {
-        floor = currentFloor;
-      }
-    }
-  }
+//  public void run()
+//  {
+//    Integer currentFloor;
+//    while(true)
+//    {
+//      currentFloor = simPhysLocation.whatFloor();
+//      if(currentFloor != null)
+//      {
+//        floor = currentFloor;
+//      }
+//    }
+//  }
   
-  synchronized public int getCurrentFloor()
+  synchronized public Integer getCurrentFloor()
   {
+//    return floor;
+    if(simPhysLocation.whatFloor() != null)
+    {
+      floor = simPhysLocation.whatFloor();
+    }
+    
     return floor;
   }
 
   synchronized public boolean isAligned()
   {
-    return (simPhysLocation.getAlignedFloor() != null);
+    return (simPhysLocation.whatFloor() != null);
   }
 
   synchronized public boolean reachedEndOfShaft()
