@@ -7,8 +7,6 @@ import ElSys.FloorRequest;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,16 +18,17 @@ import javafx.scene.shape.Polygon;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 public class ControlPanelCabin
 {
-  private int currentFloor = 0;
   private IntegerProperty currFloor = new SimpleIntegerProperty(0);
   private CabinMode mode;
   private CabinDirection currDirection = CabinDirection.STOPPED;
   private ControlPanelCabinView view;
-  private Set<FloorRequest> floorRequests;
+  private Set<FloorRequest> currFloorRequests = new HashSet<>();
+  private Set<FloorRequest> newFloorRequests = new HashSet<>();
 
 
 
@@ -43,8 +42,22 @@ public class ControlPanelCabin
   ControlPanelCabin(CabinStatus cabinStatus, int cabinNumber)
   {
     view = new ControlPanelCabinView(cabinNumber, this);
-    currFloor.addListener((obs, oldVal, newVal) -> view.updateFloorLight((int)oldVal,(int)newVal));
     update(cabinStatus);
+    currFloor.addListener((obs, oldVal, newVal) -> view.updateFloorLight((int)oldVal,(int)newVal));
+  }
+
+  private void addNewRequest(int floor)
+  {
+    boolean pressed = checkIfPressed(floor);
+
+    if(!pressed)
+    {
+      view.updateButtonLight(floor, true);
+
+      //TODO: verify null value is correct as cabinDirection.
+      //Find out where direction is being set.
+      newFloorRequests.add(new FloorRequest(floor, null));
+    }
   }
 
   protected Tab getTab()
@@ -61,42 +74,41 @@ public class ControlPanelCabin
 
   protected void setCurrentFloor(int floor){currFloor.set(floor);}
 
-  private void modeChanged(ActionEvent event)
+  protected boolean checkIfPressed(int floor)
   {
-    RadioButton button = ((RadioButton) event.getSource());
-    switch (button.getText())
-    {
-      case "Normal":
-        this.mode = CabinMode.NORMAL;
-        break;
-      case "Maintenance":
-        this.mode = CabinMode.MAINTENACE;
-        break;
-      case "Emergency":
-        this.mode = CabinMode.EMERGENCY;
-    }
-  }
-
-  protected boolean addFloorRequest(int floor)
-  {
-    //TODO: verify null value is correct.
-    //Find out where direction is being set.
-    return floorRequests.add(new FloorRequest(floor, null));
+    return currFloorRequests
+                    .stream()
+                    .anyMatch(request -> request.getFloor() == floor);
   }
 
   protected void update(CabinStatus cabinStatus)
   {
-    updateFloors(cabinStatus.getFloor());
-    updateDirection(cabinStatus.getDirection());
-    updateMode(cabinStatus.getMode());
+    if(currFloor.get() != cabinStatus.getFloor())
+    {
+      updateFloors(cabinStatus.getFloor());
+    }
+    if(currDirection != cabinStatus.getDirection())
+    {
+      updateDirection(cabinStatus.getDirection());
+    }
+    //We shouldn't be updating the mode from anywhere except the GUI.
+    //Only maintenance should update the mode.
+//    if(mode != cabinStatus.getMode())
+//    {
+//      updateMode(cabinStatus.getMode());
+//    }
+
     updateCabinRequests(cabinStatus.getCabinRequests());
 
   }
 
   private void updateCabinRequests(Set<FloorRequest> floorRequests)
   {
-    this.floorRequests = floorRequests;
-    Platform.runLater(()-> view.updateFloorRequests(floorRequests));
+    if(!currFloorRequests.equals(floorRequests))
+    {
+      currFloorRequests = floorRequests;
+      Platform.runLater(() -> view.updateFloorRequests(currFloorRequests));
+    }
   }
 
   private void updateDirection(CabinDirection newDirection)
@@ -119,6 +131,21 @@ public class ControlPanelCabin
     {
       this.mode = mode;
       Platform.runLater(() -> view.updateModeGroup(mode));
+    }
+  }
+
+  private void userUpdatesMode(String mode)
+  {
+    switch (mode)
+    {
+      case "Normal":
+        this.mode = CabinMode.NORMAL;
+        break;
+      case "Maintenance":
+        this.mode = CabinMode.MAINTENACE;
+        break;
+      case "Emergency":
+        this.mode = CabinMode.EMERGENCY;
     }
   }
 
@@ -193,24 +220,33 @@ public class ControlPanelCabin
 
       cabinButtons.forEach(button -> button.setOnAction(this::cabinRequestPressed));
 
-      normalMode.setOnAction(controller::modeChanged);
-      emergencyMode.setOnAction(controller::modeChanged);
-      maintenanceMode.setOnAction(controller::modeChanged);
+      normalMode.setOnAction(this::modeChanged);
+      emergencyMode.setOnAction(this::modeChanged);
+      maintenanceMode.setOnAction(this::modeChanged);
     }
 
     private void cabinRequestPressed(ActionEvent event)
     {
       Button button = ((Button) event.getSource());
-      boolean newRequest = addFloorRequest(cabinButtons.indexOf(button));
+      addNewRequest(cabinButtons.indexOf(button));
+    }
 
-      if(newRequest)
-      {
-        updateButtonLight(button, true);
-      }
+    private void modeChanged(ActionEvent event)
+    {
+      RadioButton button = ((RadioButton) event.getSource());
+      userUpdatesMode(button.getText());
+    }
+
+    private void updateButtonLight(int floor, boolean turnOn)
+    {
+      Button button = cabinButtons.get(floor);
+      updateButtonLight(button, turnOn);
     }
 
     private void updateButtonLight(Button button, boolean turnOn)
     {
+      button.getStyleClass().clear();
+
       if (turnOn)
       {
         button.getStyleClass().add("active-cabin-button");
@@ -223,6 +259,9 @@ public class ControlPanelCabin
 
     private void updateDirectionLight(CabinDirection newDirection)
     {
+      upArrow.getStyleClass().clear();
+      downArrow.getStyleClass().clear();
+
       switch (newDirection)
       {
         case STOPPED:
@@ -243,16 +282,19 @@ public class ControlPanelCabin
 
     private void updateFloorLight(int prevFloor, int currentFloor)
     {
-      Button prev = floors.get(prevFloor);
-      Button curr = floors.get(currentFloor);
+      if(prevFloor != 0)
+      {
+        Button prev = floors.get(prevFloor - 1);
+        Button curr = floors.get(currentFloor - 1);
 
-      Platform.runLater(()->
-                        {
-                          prev.getStyleClass().clear();
-                          curr.getStyleClass().clear();
-                          prev.getStyleClass().add("inactive-floor");
-                          curr.getStyleClass().add("active-floor");
-                        });
+        Platform.runLater(() ->
+                          {
+                            prev.getStyleClass().clear();
+                            curr.getStyleClass().clear();
+                            prev.getStyleClass().add("inactive-floor");
+                            curr.getStyleClass().add("active-floor");
+                          });
+      }
     }
 
     private void updateModeGroup(CabinMode mode)
@@ -278,7 +320,7 @@ public class ControlPanelCabin
 
       for (FloorRequest request : floorRequests)
       {
-        Button button = cabinButtons.get(request.getFloor());
+        Button button = cabinButtons.get(request.getFloor()-1);
         view.updateButtonLight(button, true);
       }
     }
