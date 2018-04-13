@@ -1,21 +1,20 @@
 package ElSys;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.*;
 
 public class SimActions
 {
-  private static final long SECONDS_BETWEEN_ACTIONS = 15;
+  private static final long SECONDS_BETWEEN_ACTIONS = 20;
 
   private final ArrayList<SimButton> simButtons;
 
   private Future scheduleFuture;
 
   private final Random random;
-
-
 
   public SimActions(final long seed, final Collection<SimButton> buttons)
   {
@@ -27,7 +26,8 @@ public class SimActions
   {
     final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
-    scheduleFuture = executor.scheduleAtFixedRate(this::executeRandomAction, 0, SECONDS_BETWEEN_ACTIONS, TimeUnit.SECONDS);
+//    scheduleFuture = executor.scheduleAtFixedRate(this::executeRandomAction, 0, SECONDS_BETWEEN_ACTIONS, TimeUnit.SECONDS);
+    executeIncreasingButtonPresses();
   }
 
   public void stopRandomActions()
@@ -44,5 +44,13 @@ public class SimActions
     if (sb == null) throw new RuntimeException("Random choice error.");
 
     sb.setLight(true);
+  }
+
+  private void executeIncreasingButtonPresses()
+  {
+    final int[] floors = {3, 6, 9};
+
+    Arrays.stream(floors)
+            .forEach(idx -> simButtons.get(idx).setLight(true));
   }
 }

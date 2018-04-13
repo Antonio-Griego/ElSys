@@ -4,7 +4,8 @@ import ElSys.Enums.ButtonLight;
 import ElSys.Enums.CabinDirection;
 import ElSys.Enums.CabinMode;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -132,6 +133,7 @@ public class Cabin extends Thread
    */
   public boolean setDestination(final Integer destination)
   {
+    moveTowardDestination(motion.getDestination());
     return motion.setDestination(destination);
   }
 
@@ -147,8 +149,7 @@ public class Cabin extends Thread
   private void normalRun()
   {
     requests.addAll(cabinRequests.updateRequests());
-    if (motion.getDirection() == CabinDirection.STOPPED) notMovingRun();
-    else movingRun();
+    movingRun();
   }
 
   private void movingRun()
@@ -166,7 +167,7 @@ public class Cabin extends Thread
   private Set<FloorRequest> getCurrentlySatisfiedRequests()
   {
     return requests.stream()
-            .filter(r -> r.getFloor() == motion.getDestination())
+            .filter(r -> r.getFloor() == motion.getFloor())
             .collect(Collectors.toSet());
   }
 
@@ -174,16 +175,6 @@ public class Cabin extends Thread
   {
     satisfied.forEach(fr -> cabinRequests.setButtonLight(ButtonLight.OFF, fr.getFloor()));
     requests.removeAll(satisfied);
-  }
-
-  private void notMovingRun()
-  {
-    // Not moving, so just start going towards next destination, door code will probably go here.
-    if(motion.getDestination() != null)
-    {
-      setArrival(false);
-      moveTowardDestination(motion.getDestination());
-    }
   }
 
   private void moveTowardDestination(final Integer destination)

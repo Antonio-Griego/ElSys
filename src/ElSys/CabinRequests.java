@@ -32,7 +32,7 @@ public class CabinRequests
   public Set<FloorRequest> updateRequests()
   {
     final Set<Button> activeButtons = cabinButtons.stream()
-            .filter(button -> (button.isPressed() || button.getLight() == ButtonLight.ON))
+            .filter(button -> (button.getLight() == ButtonLight.ON))
             .collect(Collectors.toSet());
 
     return generateFloorRequests(activeButtons);
@@ -49,8 +49,6 @@ public class CabinRequests
 
   private Set<FloorRequest> generateFloorRequests(final Set<Button> activeButtons)
   {
-    activeButtons.stream()
-        .forEach(b -> b.setLight(ButtonLight.ON));
     return activeButtons.stream()
             .map(b -> new FloorRequest(cabinButtons.indexOf(b), null))
             .collect(Collectors.toSet());

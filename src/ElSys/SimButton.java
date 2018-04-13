@@ -9,17 +9,14 @@ import ElSys.Enums.ButtonLight;
  */
 public class SimButton
 {
-  private boolean isPressed;
   private ButtonLight buttonLight;
-  private int floor;
+  private final int floor;
 
   /**
    * Constructor method.
-   *
    */
   public SimButton(int floor)
   {
-    this.isPressed = false;
     this.buttonLight = ButtonLight.OFF;
     this.floor = floor;
   }
@@ -38,27 +35,20 @@ public class SimButton
     {
       if(buttonLight != ButtonLight.ON)
       {
-        System.out.println("Floor "+floor+": ButtonLight = ON");
+        System.out.println("Floor " + floor + ": ButtonLight = ON");
       }
       this.buttonLight = ButtonLight.ON;
-      isPressed = true;
     }
     
     else
     {
-      System.out.println("Floor "+floor+": ButtonLight = OFF");
+      System.out.println("Floor " + floor + ": ButtonLight = OFF");
       this.buttonLight = ButtonLight.OFF;
-      isPressed = false;
     }
   }
 
-  /**
-   * This method returns the pressed status of the button: true = pressed
-   *
-   * @return True = button is pressed; False = button is not pressed
-   */
-  public boolean isPressed()
+  public ButtonLight getLight()
   {
-    return isPressed;
+    return buttonLight;
   }
 }
