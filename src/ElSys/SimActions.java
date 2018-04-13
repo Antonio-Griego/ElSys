@@ -7,33 +7,37 @@ import java.util.concurrent.*;
 
 public class SimActions
 {
+  private static final long SECONDS_BETWEEN_ACTIONS = 15;
+
   private final ArrayList<SimButton> simButtons;
 
   private Future scheduleFuture;
 
   private final Random random;
 
-  SimActions(final long seed, final Collection<SimButton> buttons)
+
+
+  public SimActions(final long seed, final Collection<SimButton> buttons)
   {
     simButtons = new ArrayList<>(buttons);
     random = new Random(seed);
   }
 
-  void beginRandomActions()
+  public void beginRandomActions()
   {
     final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
-    scheduleFuture = executor.schedule(this::executeRandomActions, 1, TimeUnit.SECONDS);
+    scheduleFuture = executor.scheduleAtFixedRate(this::executeRandomAction, 0, SECONDS_BETWEEN_ACTIONS, TimeUnit.SECONDS);
   }
 
-  void stopRandomActions()
+  public void stopRandomActions()
   {
     scheduleFuture.cancel(true);
   }
 
-  private void executeRandomActions()
+  private void executeRandomAction()
   {
-    final int idx = random.nextInt() % (simButtons.size() - 1);
+    final int idx = Math.abs(random.nextInt()) % (simButtons.size() - 1);
 
     final SimButton sb = simButtons.get(idx);
 

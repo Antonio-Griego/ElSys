@@ -18,11 +18,10 @@ class CabinTest
   private void testSetDestinationFromStop()
   {
     final SimButton [] buttons = new SimButton[10];
-    final Random random = new Random();
   
     for(int i = 0; i < buttons.length; i++)
     {
-      buttons[i] = new SimButton(random, i);
+      buttons[i] = new SimButton(i);
     }
     
     final Cabin cabin = new Cabin(buttons, new SimPhysLocation(10));
