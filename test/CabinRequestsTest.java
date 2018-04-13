@@ -19,11 +19,10 @@ class CabinRequestsTest
   {
     final int numFloors = 10;
     final SimButton [] buttons = new SimButton[numFloors];
-    final Random random = new Random();
     
     for(int i = 0; i < numFloors; i++)
     {
-      buttons[i] = new SimButton(random, i);
+      buttons[i] = new SimButton(i);
     }
     
     final CabinRequests cr = new CabinRequests(buttons);

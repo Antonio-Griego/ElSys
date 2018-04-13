@@ -3,11 +3,9 @@ package ElSys.ControlPanel;
 import ElSys.Enums.CabinDirection;
 import ElSys.FloorRequest;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Polygon;
 
@@ -74,27 +72,30 @@ public class ControlPanelFloor
     {
       createRequest(upRequested);
 
-      if(upRequested)
+      if (upRequested)
       {
-        updateArrowLight(upArrow, true);
-        updateArrowLight(downArrow, false);
+        Platform.runLater(() -> updateArrowLights(upRequested));
       }
       else
       {
-        updateArrowLight(upArrow, false);
-        updateArrowLight(downArrow, true);
+        Platform.runLater(() -> updateArrowLights(upRequested));
       }
     }
 
-    private void updateArrowLight(Polygon arrow, boolean turnOn)
+    private void updateArrowLights(boolean goingUp)
     {
-      if(turnOn)
+      upArrow.getStyleClass().clear();
+      downArrow.getStyleClass().clear();
+
+      if(goingUp)
       {
-        Platform.runLater(()->arrow.getStyleClass().add("active-arrow"));
+        upArrow.getStyleClass().add("active-arrow");
+        downArrow.getStyleClass().add("inactive-arrow");
       }
       else
       {
-        Platform.runLater(()->arrow.getStyleClass().add("inactive-arrow"));
+        upArrow.getStyleClass().add("inactive-arrow");
+        downArrow.getStyleClass().add("active-arrow");
       }
     }
 

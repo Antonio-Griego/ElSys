@@ -3,6 +3,7 @@ package ElSys;
 import ElSys.Enums.CabinDirection;
 import ElSys.Enums.CabinMode;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -70,7 +71,13 @@ public class CabinStatus
    */
   public Set<FloorRequest> getCabinRequests(){ return cabinRequests;}
 
-  public void setCabinRequests(Set<FloorRequest> requests){cabinRequests = requests;}
+  public void setCabinRequests(Set<FloorRequest> requests)
+  {
+    if(!cabinRequests.equals(requests))
+    {
+      cabinRequests = new HashSet<>(requests);
+    }
+  }
 
   /**
    * Return the state snapshot's destination, or null if there is none.

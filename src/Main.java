@@ -4,6 +4,7 @@ import ElSys.Enums.BuildingState;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class Main extends Application
@@ -18,7 +19,6 @@ public class Main extends Application
   
     SimButton[] buttons = new SimButton[FLOORS];
     SimPhysLocation simPhysLocation;
-    Random rand = new Random();
   
     for(int i = 0; i < CABINS; i++)
     {
@@ -26,7 +26,7 @@ public class Main extends Application
     
       for(int j = 0; j < FLOORS; j++)
       {
-        buttons[j] = new SimButton(rand, j);
+        buttons[j] = new SimButton(j);
       }
     
       cabins[i] = new Cabin(buttons, simPhysLocation);
@@ -42,6 +42,9 @@ public class Main extends Application
     
     ControlPanel controlPanel = new ControlPanel(cabinStatuses, BuildingState.NORMAL);
     buildingControl = new BuildingControl(cabins, controlPanel);
+
+    final SimActions sa = new SimActions(10, Arrays.asList(buttons));
+    sa.beginRandomActions();
   }
 
   public static void main(String[] args)
