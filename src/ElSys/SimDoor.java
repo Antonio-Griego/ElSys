@@ -27,11 +27,25 @@ public class SimDoor
     doorVal = doorVal + amount;
     if (doorVal >= 100)
     {
-      doorVal=100;
+      doorVal = 100;
     }
     if (doorVal <= 0)
     {
       doorVal = 0;
     }
+    
+    //For Debugging
+    if(!name.equals("")) printStatus();
+  }
+  
+  //For Debugging
+  private void printStatus()
+  {
+    String status;
+    if(doorVal >= 100) status = "CLOSED";
+    else if(doorVal <= 0) status = "OPEN";
+    else return;
+    
+    System.out.println(name+" doors are "+status);
   }
 }

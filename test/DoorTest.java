@@ -14,11 +14,11 @@ public class DoorTest
   
   private Doors makeDoors(int floors)
   {
-    Door cabinDoor = new Door(new SimDoor());
+    Door cabinDoor = new Door(new SimDoor("Cabin"));
     Door[] floorDoors = new Door[floors];
     for(int i = 0; i < floors; i++)
     {
-      floorDoors[i] = new Door(new SimDoor());
+      floorDoors[i] = new Door(new SimDoor("Floor "+Integer.toString(i)));
     }
     
     return new Doors(floorDoors, cabinDoor);
