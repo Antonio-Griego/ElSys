@@ -6,25 +6,30 @@ package ElSys;
 public class SimDoor
 {
   // open = 0    closed = 1
-  double doorVal;
+  int doorVal;
+  String name = "";
 
-
+  public SimDoor(String name)
+  {
+    this.name = name;
+    doorVal = 100;
+  }
   // door initialized to closed
   public SimDoor()
   {
-    doorVal=1;
+    doorVal=100;
   }
 
   // positive = close
   // negative = open
-  public void moveDoor(double amount)
+  public void moveDoor(int amount)
   {
     doorVal = doorVal + amount;
-    if (doorVal > 1)
+    if (doorVal >= 100)
     {
-      doorVal=1;
+      doorVal=100;
     }
-    if (doorVal < 0)
+    if (doorVal <= 0)
     {
       doorVal = 0;
     }

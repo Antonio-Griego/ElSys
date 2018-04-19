@@ -1,5 +1,7 @@
 package ElSys;
 
+import java.math.BigDecimal;
+
 /**
  * Created by glennon on 4/18/18.
  */
@@ -7,60 +9,91 @@ public class Doors extends Thread
 {
   private Door [] floorDoors;
   private Door cabinDoor;
-
+  private final int DOOR_SPEED = 10;
 
   public Doors(Door [] floorDoors, Door cabinDoor)
   {
     //init door objects
     this.floorDoors = floorDoors;
     this.cabinDoor = cabinDoor;
+    this.start();
   }
 
 
 
   // how much to open door at a time?
-  public void openDoors(int floor)
+  public synchronized void openDoors(int floor)
   {
-    //open cabin door and floordoor
-    cabinDoor.actuateDoor(-1);
-    floorDoors[floor].actuateDoor(-1);
-
-    // set enum to opening
+    if(floor < floorDoors.length)
+    {
+      cabinDoor.setDoorState(Door.DoorState.OPENING);
+      floorDoors[floor].setDoorState(Door.DoorState.OPENING);
+    }
+    else
+    {
+      System.out.println("Invalid entry");
+    }
   }
 
   // how much to close a door at a time?
-  public void closeDoors(int floor)
+  public synchronized void closeDoors(int floor)
   {
-    //close cabin door and floordoor
-    cabinDoor.actuateDoor(1);
-    floorDoors[floor].actuateDoor(1);
-
-    //set enum to closing
+    if (floor < floorDoors.length)
+    {
+      cabinDoor.setDoorState(Door.DoorState.CLOSING);
+      floorDoors[floor].setDoorState(Door.DoorState.CLOSING);
+    }
+    else
+    {
+      System.out.println("Invalid entry");
+    }
   }
 
   public boolean areClosed()
   {
-    // return true if all doors are closed
-    // return false if any door is not closed
+    if(cabinDoor.getDoorState() != Door.DoorState.CLOSED) return false;
+    
+    for(Door door : floorDoors)
+    {
+      if(door.getDoorState() != Door.DoorState.CLOSED) return false;
+    }
+    
     return true;
   }
-
-
-
+  
+  public boolean areOpen()
+  {
+    if(cabinDoor.getDoorState() == Door.DoorState.OPEN) return true;
+  
+    for(Door door : floorDoors)
+    {
+      if(door.getDoorState() == Door.DoorState.OPEN) return true;
+    }
+  
+    return false;
+  }
+  
   @Override
   public void run()
   {
     while (true)
     {
-      // loop over procedure that checks state of each door and actuates accordingly
-
-
-      // if opening: actuate cabin and floor door in a synchoronized fashion
-      // same for closing
-
-      // if open, wait 3 seconds then closes
-
-      // if closed does nothing
+      if(cabinDoor.getDoorState() != Door.DoorState.CLOSED && cabinDoor.getDoorState() != Door.DoorState.OPEN)
+      {
+        int i;
+        
+        for(i = 0; i < floorDoors.length; i++)
+        {
+          if(floorDoors[i].getDoorState() != Door.DoorState.CLOSED && floorDoors[i].getDoorState() != Door.DoorState.OPEN) break;
+        }
+        
+        int distance = DOOR_SPEED;
+        if(cabinDoor.getDoorState() == Door.DoorState.OPENING) distance = 0-distance;
+        
+        
+        floorDoors[i].actuateDoor(distance);
+        cabinDoor.actuateDoor(distance);
+      }
     }
   }
 }

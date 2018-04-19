@@ -15,20 +15,27 @@ public class Main extends Application
   @Override
   public void start(Stage primaryStage) throws Exception
   {
+    Doors[] shafts = new Doors[CABINS];
     Cabin [] cabins = new Cabin[CABINS];
   
     SimButton[] buttons = new SimButton[FLOORS];
     SimPhysLocation simPhysLocation;
+    Door cabinDoor;
+    Door[] floorDoors;
   
     for(int i = 0; i < CABINS; i++)
     {
       simPhysLocation = new SimPhysLocation(FLOORS);
+      cabinDoor = new Door(new SimDoor());
+      floorDoors = new Door[FLOORS];
     
       for(int j = 0; j < FLOORS; j++)
       {
         buttons[j] = new SimButton(j);
+        floorDoors[i] = new Door(new SimDoor());
       }
     
+      shafts[i] = new Doors(floorDoors, cabinDoor);
       cabins[i] = new Cabin(buttons, simPhysLocation);
       cabins[i].start();
     }
@@ -40,8 +47,10 @@ public class Main extends Application
       cabinStatuses[i] = cabins[i].getStatus();
     }
     
+    
+    
     ControlPanel controlPanel = new ControlPanel(cabinStatuses, BuildingState.NORMAL);
-    buildingControl = new BuildingControl(cabins, controlPanel);
+    buildingControl = new BuildingControl(cabins, controlPanel, shafts);
 
     final SimActions sa = new SimActions(10, Arrays.asList(buttons));
     sa.beginRandomActions();

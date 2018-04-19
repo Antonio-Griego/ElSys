@@ -13,20 +13,20 @@ public class BuildingControl extends Thread
   private BuildingState buildingState;
   private RequestRouter requestRouter;
   private CabinStatus[] cabinStatuses;
-  private Doors doors;
+  private Doors[] shafts;
   /**
    * Instantiates the BuildingControl
    * @param cabins
    * @param controlPanel
    */
-  public BuildingControl(Cabin[] cabins, ControlPanel controlPanel, Doors doors)
+  public BuildingControl(Cabin[] cabins, ControlPanel controlPanel, Doors[] shafts)
   {
     buildingState = BuildingState.NORMAL;
     this.cabins = cabins;
     this.controlPanel = controlPanel;
     this.requestRouter = new RequestRouter();
     cabinStatuses = new CabinStatus[cabins.length];
-    this.doors = doors;
+    this.shafts = shafts;
     this.start();
   }
 

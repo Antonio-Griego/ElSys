@@ -4,16 +4,19 @@ import ElSys.Enums.CabinDirection;
 
 import java.math.BigDecimal;
 
+import static ElSys.Enums.CabinDirection.STOPPED;
+
 public class Motion extends Thread
 {
   private final double MAX_SPEED = 0.2;
   private final double STOPPING_DISTANCE = 0.2;
   
   private BigDecimal estimatedLocation;
+  private int currentFloor;
   private Integer destination = null;
   private FloorAlignment floorAlignment;
   private MotorControl motorControl;
-  private CabinDirection cabinDirection = CabinDirection.STOPPED;
+  private CabinDirection cabinDirection = STOPPED;
   
   public Motion(SimPhysLocation simPhysLocation)
   {
@@ -25,30 +28,40 @@ public class Motion extends Thread
   
   public void run()
   {
-    int currentFloor;
-    
     while(true)
     {
 //      System.out.println(destination);
 //      System.out.println("Current Floor: "+floorAlignment.getCurrentFloor());
 //      System.out.println("Estimated Location: "+estimatedLocation.toString());
+      try
+      {
+        Thread.sleep(1000);
+      } catch (InterruptedException e)
+      {
+        e.printStackTrace();
+      }
       
       currentFloor = floorAlignment.getCurrentFloor();
       
       if(destination == null)
       {
-        cabinDirection = CabinDirection.STOPPED;
+        cabinDirection = STOPPED;
       }
       
       else
       {
         if(destination > currentFloor) cabinDirection = CabinDirection.UP;
         else if(destination < currentFloor) cabinDirection = CabinDirection.DOWN;
-        else cabinDirection = CabinDirection.STOPPED;
         
         moveElevator();
+        
+        if(floorAlignment.reachedEndOfShaft())
+        {
+          stopElevator();
+        }
       }
-//      if(destination != null)
+      
+      //      if(destination != null)
 //      {
 //        if(destination > estimatedLocation.doubleValue())
 //        {
@@ -114,7 +127,7 @@ public class Motion extends Thread
   {
     if(destination != null)
     {
-      if (cabinDirection == CabinDirection.STOPPED ||
+      if (cabinDirection == STOPPED ||
          (estimatedLocation.subtract(BigDecimal.valueOf(destination)).abs().signum() >= STOPPING_DISTANCE))
       {
         if(destination != this.destination) System.out.println("New Destination is Floor "+destination);
@@ -135,7 +148,7 @@ public class Motion extends Thread
 
   synchronized public int getFloor()
   {
-    return floorAlignment.getCurrentFloor();
+    return currentFloor;
   }
 
   synchronized public boolean isAligned()
@@ -146,12 +159,13 @@ public class Motion extends Thread
   synchronized public void stopElevator()
   {
     alignWithFloor();
-    cabinDirection = CabinDirection.STOPPED;
+    destination = null;
+    cabinDirection = STOPPED;
   }
 
   private void moveElevator()
   {
-    if(cabinDirection != CabinDirection.STOPPED)
+    if(cabinDirection != STOPPED)
     {
       if (Math.abs(estimatedLocation.doubleValue() - destination) <= STOPPING_DISTANCE)
       {

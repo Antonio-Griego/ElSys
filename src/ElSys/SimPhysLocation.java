@@ -67,7 +67,7 @@ public class SimPhysLocation
    */
   public synchronized boolean reachedEndOfShaft()
   {
-    return (location.signum() == 0 || location.signum() == floors);
+    return (location.signum() == 0 || location.signum() == floors-1);
   }
 
   /**

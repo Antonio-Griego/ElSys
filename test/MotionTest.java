@@ -1,13 +1,11 @@
-import ElSys.Cabin;
+import ElSys.*;
 import ElSys.Enums.CabinDirection;
-import ElSys.Motion;
-import ElSys.SimButton;
-import ElSys.SimPhysLocation;
 
 import java.util.Random;
 
 public class MotionTest
 {
+  private final Motion motion;
   public MotionTest()
   {
     //    final SimButton[] buttons = new SimButton[10];
@@ -21,11 +19,24 @@ public class MotionTest
     //    Cabin cabin = new Cabin(buttons, new SimPhysLocation(10));
     //
     //    cabin.start();
-    Motion motion = new Motion(new SimPhysLocation(10));
-    motion.setDestination(2);
+    motion = new Motion(new SimPhysLocation(2));
+//    goToFloor(2);
+//    goToFloor(3);
+//    goToFloor(7);
+    goToFloor(18);
     
-    while(motion.getFloor() != motion.getDestination())
+  }
+  
+  
+  private void goToFloor(int floor)
+  {
+    motion.setDestination(floor);
+  
+    while(motion.getDestination() != null)
     {
+      if(motion.getDestination() == null) break;
     }
+  
+    System.out.println(motion.isAligned());
   }
 }

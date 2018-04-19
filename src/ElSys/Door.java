@@ -6,8 +6,16 @@ package ElSys;
 public class Door
 {
   private SimDoor simDoor;
-  private double doorVal;
+  private int doorVal;
+  private DoorState doorState;
   // add enums for doorstate
+  
+  public enum DoorState{
+    OPEN,
+    OPENING,
+    CLOSING,
+    CLOSED
+  }
 
 
 
@@ -15,33 +23,38 @@ public class Door
   public Door(SimDoor simDoor)
   {
     this.simDoor = simDoor;
-    doorVal = 1;
-    // set enum to closed
+    doorVal = 100;
+    doorState = DoorState.CLOSED;
+    simDoor.moveDoor(doorVal);
   }
 
 
 
-  public void actuateDoor(double amount)
+  public void actuateDoor(int amount)
   {
     // actuate door by specified amount
     simDoor.moveDoor(amount);
     doorVal = doorVal + amount;
-    if (doorVal > 1)
+    if (doorVal >= 100)
     {
-      doorVal=1;
+      doorVal=100;
+      doorState = DoorState.CLOSED;
     }
-    if (doorVal < 0)
+    
+    if (doorVal <= 0)
     {
       doorVal = 0;
+      doorState = DoorState.OPEN;
     }
-
-    // change enum
   }
-
-  //need to add enums
+  
   public DoorState getDoorState()
   {
-    // return door state enum
-    return null;
+    return doorState;
+  }
+  
+  public void setDoorState(DoorState state)
+  {
+    this.doorState = state;
   }
 }
