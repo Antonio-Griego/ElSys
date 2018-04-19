@@ -57,7 +57,7 @@ public class BuildingControl extends Thread
       
       for(int i = 0; i < cabins.length; i++)
       {
-        cabins[i].setDestination(destinations[i]);
+        if(shafts[i].areClosed()) cabins[i].setDestination(destinations[i]);
       }
       
       if(buildingState == BuildingState.NORMAL)
