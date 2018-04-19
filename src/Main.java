@@ -1,6 +1,8 @@
 import ElSys.*;
 import ElSys.ControlPanel.ControlPanel;
 import ElSys.Enums.BuildingState;
+import ElSys.Enums.CabinDirection;
+import ElSys.ArrivalSignal.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -46,13 +48,27 @@ public class Main extends Application
     {
       cabinStatuses[i] = cabins[i].getStatus();
     }
-    
-    
+  
+    ArrivalSignal[] up_Sigs = new ArrivalSignal[FLOORS-1];
+    ArrivalSignal[] down_Sigs = new ArrivalSignal[FLOORS-1];
+    Button [] up_Buttons = new Button[FLOORS-1];
+    Button [] down_Buttons = new Button[FLOORS-1];
+  
+  
+    for(int i = 0; i < FLOORS-1; i++)
+    {
+      down_Sigs[i] = new ArrivalSignal(new SimSignal(CabinDirection.DOWN, i+1));
+      down_Buttons[i] = new Button(new SimButton(i+1));
+      up_Sigs[i] = new ArrivalSignal(new SimSignal(CabinDirection.UP, i));
+      up_Buttons[i] = new Button(new SimButton(i));
+    }
+  
+    Floors floors = new Floors(up_Buttons, down_Buttons, up_Sigs, down_Sigs);
     
     ControlPanel controlPanel = new ControlPanel(cabinStatuses, BuildingState.NORMAL);
-    buildingControl = new BuildingControl(cabins, controlPanel, shafts);
+    buildingControl = new BuildingControl(cabins, controlPanel, shafts, floors);
 
-    final SimActions sa = new SimActions(10, Arrays.asList(buttons));
+    final SimActions sa = new SimActions(10, Arrays.asList(buttons), Arrays.asList(up_Buttons), Arrays.asList(down_Buttons));
     sa.beginRandomActions();
   }
 

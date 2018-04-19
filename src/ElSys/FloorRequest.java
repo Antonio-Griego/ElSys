@@ -23,6 +23,11 @@ public class FloorRequest
         return cabinDirection;
     }
 
+    public void print()
+    {
+        System.out.println("Rquest for floor "+floor+" going "+cabinDirection);
+    }
+    
     @Override
     public int hashCode()
     {

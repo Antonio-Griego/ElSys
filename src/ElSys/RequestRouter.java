@@ -12,21 +12,20 @@ import java.util.stream.Collectors;
 public class RequestRouter {
 
     private CabinStatus[] cabinStatuses;
-    private Queue<FloorRequest> floorRequests;
+    private Set<FloorRequest> floorRequests;
     private BuildingState buildingState;
 
     public RequestRouter(){
 
     }
 
-    public void update(CabinStatus[] cabinStatuses, Queue<FloorRequest> floorRequests, BuildingState buildingState){
+    public void update(CabinStatus[] cabinStatuses, Set<FloorRequest> floorRequests, BuildingState buildingState){
         this.cabinStatuses = cabinStatuses;
         this.floorRequests = floorRequests;
         this.buildingState = buildingState;
     }
 
     public Integer[] getDestinations(){
-      //TODO make this not suck
       Integer [] destinations = new Integer[cabinStatuses.length];
       
       Set<FloorRequest> validRequests;
@@ -46,8 +45,6 @@ public class RequestRouter {
             }
           }
         }
-          
-        //if(!floorRequests.isEmpty()) destinations[i] = floorRequests.poll().getFloor();
       }
       
       return destinations;
@@ -55,24 +52,25 @@ public class RequestRouter {
     
     private Set<FloorRequest> getValidRequests(CabinStatus cabinStatus)
     {
-      Set<FloorRequest> floorRequests = new HashSet<>(cabinStatus.getCabinRequests());
+      Set<FloorRequest> validRequests = new HashSet<>(cabinStatus.getCabinRequests());
+      validRequests.addAll(floorRequests);
       if(cabinStatus.getDirection() == CabinDirection.UP)
       {
-        return floorRequests.stream()
+        return validRequests.stream()
             .filter(r -> r.getFloor() >= cabinStatus.getFloor())
             .collect(Collectors.toSet());
       }
       
       else if(cabinStatus.getDirection() == CabinDirection.DOWN)
       {
-        return floorRequests.stream()
+        return validRequests.stream()
             .filter(r -> r.getFloor() <= cabinStatus.getFloor())
             .collect(Collectors.toSet());
       }
       
       else
       {
-        return floorRequests;
+        return validRequests;
       }
     }
 }

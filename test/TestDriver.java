@@ -21,6 +21,7 @@ public class TestDriver extends Application
 //    new ControlPanelTest();
 //
 //    new MotionTest();
-    new DoorTest();
+//    new DoorTest();
+    new FloorsTest();
   }
 }

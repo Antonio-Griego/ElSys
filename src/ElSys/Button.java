@@ -6,7 +6,7 @@ public class Button
 {
   private final SimButton simButton;
 
-  Button(final SimButton simButton)
+  public Button(final SimButton simButton)
   {
     this.simButton = simButton;
   }

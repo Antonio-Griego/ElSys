@@ -5,6 +5,7 @@ import ElSys.Enums.BuildingState;
 import ElSys.Enums.CabinMode;
 
 import java.util.Queue;
+import java.util.Set;
 
 public class BuildingControl extends Thread
 {
@@ -14,12 +15,13 @@ public class BuildingControl extends Thread
   private RequestRouter requestRouter;
   private CabinStatus[] cabinStatuses;
   private Doors[] shafts;
+  private Floors floors;
   /**
    * Instantiates the BuildingControl
    * @param cabins
    * @param controlPanel
    */
-  public BuildingControl(Cabin[] cabins, ControlPanel controlPanel, Doors[] shafts)
+  public BuildingControl(Cabin[] cabins, ControlPanel controlPanel, Doors[] shafts, Floors floors)
   {
     buildingState = BuildingState.NORMAL;
     this.cabins = cabins;
@@ -27,17 +29,19 @@ public class BuildingControl extends Thread
     this.requestRouter = new RequestRouter();
     cabinStatuses = new CabinStatus[cabins.length];
     this.shafts = shafts;
+    this.floors = floors;
     this.start();
   }
 
   public void run()
   {
     CabinMode [] cabinModes;
-    Queue<FloorRequest> floorRequests = null;
+    Set<FloorRequest> floorRequests;
     
     while(true)
     {
-//      floorRequests = controlPanel.getFloorRequests();
+      floorRequests = floors.getRequests();
+//      floorRequests.addAll(controlPanel.getFloorRequests());
 //      buildingState = controlPanel.getBuildingState();
 //      cabinModes = controlPanel.getElevatorModes();
 
@@ -47,7 +51,6 @@ public class BuildingControl extends Thread
 //      {
 //        cabins[i].updateMode(cabinModes[i]);
 //      }
-      //TODO address invalid destinations
       
       requestRouter.update(cabinStatuses, floorRequests, buildingState);
       Integer[] destinations = requestRouter.getDestinations();
