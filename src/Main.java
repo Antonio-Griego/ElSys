@@ -34,7 +34,7 @@ public class Main extends Application
       for(int j = 0; j < FLOORS; j++)
       {
         buttons[j] = new SimButton(j);
-        floorDoors[i] = new Door(new SimDoor());
+        floorDoors[j] = new Door(new SimDoor());
       }
     
       shafts[i] = new Doors(floorDoors, cabinDoor);

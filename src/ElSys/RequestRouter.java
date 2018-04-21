@@ -29,6 +29,7 @@ public class RequestRouter {
       Integer [] destinations = new Integer[cabinStatuses.length];
       
       Set<FloorRequest> validRequests;
+      Set<FloorRequest> invalidRequests;
       
       for(int i = 0; i < cabinStatuses.length; i++){
         validRequests = getValidRequests(cabinStatuses[i]);
