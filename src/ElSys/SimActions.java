@@ -54,7 +54,7 @@ public class SimActions
 
   private void executeIncreasingButtonPresses()
   {
-    final int[] floors = {3};
+    final int[] floors = {3, 6};
 
     Arrays.stream(floors)
             .forEach(idx -> up_buttons.get(idx).setLight(ButtonLight.ON));

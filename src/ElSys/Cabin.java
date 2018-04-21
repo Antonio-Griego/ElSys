@@ -128,6 +128,7 @@ public class Cabin extends Thread
   synchronized public void setArrival(final boolean arrived)
   {
     this.hasArrived = arrived;
+    if (arrived) motion.setDirection(CabinDirection.STOPPED);
   }
 
   /**
@@ -135,7 +136,7 @@ public class Cabin extends Thread
    */
   public boolean setDestination(final Integer destination)
   {
-    moveTowardDestination(motion.getDestination());
+    if (!hasArrived) moveTowardDestination(motion.getDestination());
     return motion.setDestination(destination);
   }
 
