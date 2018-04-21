@@ -66,7 +66,7 @@ public class BuildingControl extends Thread
       {
         final Cabin cabin = cabins[i];
         final int idx = i;
-        final CabinDirection directionBeforeStopping = cabin.lastDirection;
+        final CabinDirection directionBeforeStopping = cabin.getLastDirectionBeforeStopping();
         System.out.println("Elevator "+(i+1)+" arrived on floor "+cabins[i].getStatus().getFloor());
         openDoors(cabins[i], i, directionBeforeStopping);
         doorCloseExecutor.schedule(() -> closeDoors(cabin, idx, directionBeforeStopping), SECONDS_DOORS_OPEN_FOR, TimeUnit.SECONDS);

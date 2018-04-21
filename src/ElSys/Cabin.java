@@ -24,6 +24,7 @@ public class Cabin extends Thread
   private boolean hasArrived;
   private CabinMode cabinMode;
   private CabinStatus cabinStatus;
+  private CabinDirection lastDirection;
 
   /**
    * Create a new cabin with {@code numberOfFloors} floors using the {@link SimPhysLocation} specified.
@@ -149,6 +150,20 @@ public class Cabin extends Thread
     processSatisfiedRequests(requests);
   }
 
+  /**
+   * Get direction the elevator was travelling before stopping.
+   *
+   * Required as {@link BuildingControl} polls for direction to actuate lights on floors, but requires the
+   * general direction of the elevator, not necessarily its direction at the time of polling, which is usually
+   * stopped.
+   *
+   * @return Direction elevator was last travelling before stopping.
+   */
+  public CabinDirection getLastDirectionBeforeStopping()
+  {
+    return lastDirection;
+  }
+
   private void normalRun()
   {
     requests.addAll(cabinRequests.updateRequests());
@@ -180,7 +195,6 @@ public class Cabin extends Thread
     requests.removeAll(satisfied);
   }
 
-  public CabinDirection lastDirection;
   private void moveTowardDestination(final Integer destination)
   {
     CabinDirection dir = CabinDirection.STOPPED;
