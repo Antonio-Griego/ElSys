@@ -24,6 +24,7 @@ public class Cabin extends Thread
   private boolean hasArrived;
   private CabinMode cabinMode;
   private CabinStatus cabinStatus;
+
   private CabinDirection lastDirection;
 
   /**
