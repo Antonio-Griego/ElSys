@@ -12,7 +12,7 @@ import java.util.Random;
 public class Main extends Application
 {
   private final int FLOORS = 10;
-  private final int CABINS = 2;
+  private final int CABINS = 1;
   private BuildingControl buildingControl;
   @Override
   public void start(Stage primaryStage) throws Exception

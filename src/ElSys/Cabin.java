@@ -43,9 +43,11 @@ public class Cabin extends Thread
                                   motion.getDestination());
   }
 
+
   public void updateRequests()
   {
-    cabinRequests.updateRequests();
+    requests.clear();
+    requests.addAll(cabinRequests.updateRequests());
   }
   /**
    * Based on current mode, updates state based on current requests.
@@ -152,6 +154,7 @@ public class Cabin extends Thread
     if (!hasArrived) movingRun();
   }
 
+  public CabinDirection lastDirection;
   private void movingRun()
   {
     if (motion.getDestination() == null) return;
@@ -159,6 +162,7 @@ public class Cabin extends Thread
     {
       final Set<FloorRequest> satisfied = getCurrentlySatisfiedRequests();
       processSatisfiedRequests(satisfied);
+      lastDirection = motion.getDirection();
       setArrival(true);
       motion.setDestination(null);
     }

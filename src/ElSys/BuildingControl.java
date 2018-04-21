@@ -2,9 +2,10 @@ package ElSys;
 
 import ElSys.ControlPanel.ControlPanel;
 import ElSys.Enums.BuildingState;
+import ElSys.Enums.CabinDirection;
 import ElSys.Enums.CabinMode;
 
-import java.util.Queue;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.*;
 
@@ -19,11 +20,9 @@ public class BuildingControl extends Thread
   private CabinStatus[] cabinStatuses;
   private Doors[] shafts;
   private Floors floors;
-  /**
-   * Instantiates the BuildingControl
-   * @param cabins
-   * @param controlPanel
-   */
+
+  private final ScheduledExecutorService doorCloseExecutor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+
   public BuildingControl(Cabin[] cabins, ControlPanel controlPanel, Doors[] shafts, Floors floors)
   {
     buildingState = BuildingState.NORMAL;
@@ -38,113 +37,92 @@ public class BuildingControl extends Thread
 
   public void run()
   {
-    CabinMode [] cabinModes;
-    Set<FloorRequest> floorRequests;
-    final ScheduledExecutorService scheduledThreadPoolExecutor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
-    
     while(true)
     {
-      floorRequests = floors.getRequests();
-//      floorRequests.addAll(controlPanel.getFloorRequests());
-//      buildingState = controlPanel.getBuildingState();
-//      cabinModes = controlPanel.getElevatorModes();
-
-      CabinStatus[] cabinStatuses = getStatuses();
+      updateCabinRequests();
+      updateStatuses();
+      setDestinations();
       
-//      for(int i = 0; i < cabins.length; i++)
-//      {
-//        cabins[i].updateMode(cabinModes[i]);
-//      }
+      if (buildingState == BuildingState.NORMAL) checkForArrivals();
+      else setEmergencyModes();
       
-      requestRouter.update(cabinStatuses, floorRequests, buildingState);
-      Integer[] destinations = requestRouter.getDestinations();
-      
-      for(int i = 0; i < cabins.length; i++)
-      {
-        if(shafts[i].areClosed()) cabins[i].setDestination(destinations[i]);
-      }
-      
-      if(buildingState == BuildingState.NORMAL)
-      {
-        for(int i = 0; i < cabins.length; i++)
-        {
-          if(cabins[i].hasArrived())
-          {
-            final Cabin cabin = cabins[i];
-            final int idx = i;
-            System.out.println("Elevator "+(i+1)+" arrived on floor "+cabins[i].getStatus().getFloor());
-            openDoors(cabins[i], i);
-            scheduledThreadPoolExecutor.schedule(() -> closeDoors(cabin, idx), SECONDS_DOORS_OPEN_FOR, TimeUnit.SECONDS);
-          }
-        }
-      }
-      
-      else
-      {
-        for(int i = 0; i < cabins.length; i++)
-        {
-          cabins[i].updateMode(CabinMode.EMERGENCY);
-        }
-      }
-      
-      controlPanel.update(getStatuses(), buildingState);
-      
-//      stillRunning();
+      controlPanel.update(cabinStatuses, buildingState);
     }
+  }
+
+  private void setEmergencyModes()
+  {
+    for(int i = 0; i < cabins.length; i++)
+    {
+      cabins[i].updateMode(CabinMode.EMERGENCY);
+    }
+  }
+
+  private void checkForArrivals()
+  {
+    for(int i = 0; i < cabins.length; i++)
+    {
+      if(cabins[i].hasArrived() && shafts[i].areClosed() && cabinStatuses[i].getDestination() != null)
+      {
+        final Cabin cabin = cabins[i];
+        final int idx = i;
+        final CabinDirection directionBeforeStopping = cabin.lastDirection;
+        System.out.println("Elevator "+(i+1)+" arrived on floor "+cabins[i].getStatus().getFloor());
+        openDoors(cabins[i], i);
+        doorCloseExecutor.schedule(() -> closeDoors(cabin, idx, directionBeforeStopping), SECONDS_DOORS_OPEN_FOR, TimeUnit.SECONDS);
+      }
+    }
+  }
+
+  private void setDestinations()
+  {
+    final Set<FloorRequest> floorRequests = floors.getRequests();
+    requestRouter.update(cabinStatuses, floorRequests, buildingState);
+    final Integer[] destinations = requestRouter.getDestinations();
+
+    for(int i = 0; i < cabins.length; i++)
+    {
+      if(shafts[i].areClosed()) cabins[i].setDestination(destinations[i]);
+    }
+  }
+
+  private void updateCabinRequests()
+  {
+    Arrays.stream(cabins).forEach(Cabin::updateRequests);
   }
 
   private void openDoors(final Cabin cabin, final int cabinIdx)
   {
+    if (cabin.getStatus().getDestination() == null) return;
     final int floorIdx = cabin.getStatus().getFloor();
-    System.out.printf("Doors opening for cabin %d on floor %d.\n", cabinIdx, floorIdx);
+    System.out.printf("Doors opening for cabin %d on floor %d.\n", cabinIdx + 1, floorIdx);
     shafts[cabinIdx].openDoors(floorIdx);
     floors.setArrivalSignal(floorIdx, cabin.getStatus().getDirection(), true);
+    floors.resetButton(floorIdx, CabinDirection.UP);
+    floors.resetButton(floorIdx, CabinDirection.DOWN);
   }
 
-  private void closeDoors(final Cabin cabin, final int cabinIdx)
+  private void closeDoors(final Cabin cabin, final int cabinIdx, final CabinDirection directionBeforeStopping)
   {
     final int floorIdx = cabin.getStatus().getFloor();
-    System.out.printf("Doors closing for cabin %d on floor %d.\n", cabinIdx, floorIdx);
+    System.out.printf("Doors closing for cabin %d on floor %d.\n", cabinIdx + 1, floorIdx);
     shafts[cabinIdx].closeDoors(floorIdx);
-    while(shafts[cabinIdx].areOpen())
+    while(shafts[cabinIdx].areOpen()) // Wait until doors are closed
     {
-      System.out.printf("Waiting for doors to close for cabin %d on floor %d.\n", cabinIdx, floorIdx);
+      System.out.printf("Waiting for doors to close for cabin %d on floor %d.\n", cabinIdx + 1, floorIdx);
       try{Thread.sleep(1000);}catch(InterruptedException e){e.printStackTrace();}
     }
     // Cabin won't move when it is set as arrived.
     cabin.setArrival(false);
-    floors.resetButton(cabin.getStatus().getFloor(), cabin.getStatus().getDirection());
-    floors.setArrivalSignal(floorIdx, cabin.getStatus().getDirection(), false);
+    floors.setArrivalSignal(floorIdx, directionBeforeStopping, false);
   }
 
-  private CabinStatus [] getStatuses()
+  private void updateStatuses()
   {
     for(int i = 0; i < cabins.length; i++)
     {
       cabinStatuses[i] = cabins[i].getStatus();
     }
-    
-    return cabinStatuses;
   }
-  
-  
-  /**
-   * For debugging
-   */
-  private double lastCheck = 0;
-  private void stillRunning()
-  {
-    double currentTime = System.currentTimeMillis();
-    if(lastCheck == 0)
-    {
-      lastCheck = currentTime;
-      System.out.println("BuildingControl Running");
-    }
-    
-    if(currentTime - lastCheck >= 5000)
-    {
-      System.out.println("BuildingControl Running");
-      lastCheck = currentTime;
-    }
-  }
+
 }
