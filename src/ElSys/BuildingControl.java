@@ -68,7 +68,7 @@ public class BuildingControl extends Thread
         final int idx = i;
         final CabinDirection directionBeforeStopping = cabin.lastDirection;
         System.out.println("Elevator "+(i+1)+" arrived on floor "+cabins[i].getStatus().getFloor());
-        openDoors(cabins[i], i);
+        openDoors(cabins[i], i, directionBeforeStopping);
         doorCloseExecutor.schedule(() -> closeDoors(cabin, idx, directionBeforeStopping), SECONDS_DOORS_OPEN_FOR, TimeUnit.SECONDS);
       }
     }
@@ -91,13 +91,13 @@ public class BuildingControl extends Thread
     Arrays.stream(cabins).forEach(Cabin::updateRequests);
   }
 
-  private void openDoors(final Cabin cabin, final int cabinIdx)
+  private void openDoors(final Cabin cabin, final int cabinIdx, final CabinDirection directionBeforeStopping)
   {
     if (cabin.getStatus().getDestination() == null) return;
     final int floorIdx = cabin.getStatus().getFloor();
     System.out.printf("Doors opening for cabin %d on floor %d.\n", cabinIdx + 1, floorIdx);
     shafts[cabinIdx].openDoors(floorIdx);
-    floors.setArrivalSignal(floorIdx, cabin.getStatus().getDirection(), true);
+    floors.setArrivalSignal(floorIdx, directionBeforeStopping, true);
     floors.resetButton(floorIdx, CabinDirection.UP);
     floors.resetButton(floorIdx, CabinDirection.DOWN);
   }

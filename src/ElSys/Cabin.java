@@ -154,7 +154,6 @@ public class Cabin extends Thread
     if (!hasArrived) movingRun();
   }
 
-  public CabinDirection lastDirection;
   private void movingRun()
   {
     if (motion.getDestination() == null) return;
@@ -162,7 +161,6 @@ public class Cabin extends Thread
     {
       final Set<FloorRequest> satisfied = getCurrentlySatisfiedRequests();
       processSatisfiedRequests(satisfied);
-      lastDirection = motion.getDirection();
       setArrival(true);
       motion.setDestination(null);
     }
@@ -181,14 +179,18 @@ public class Cabin extends Thread
     requests.removeAll(satisfied);
   }
 
+  public CabinDirection lastDirection;
   private void moveTowardDestination(final Integer destination)
   {
     CabinDirection dir = CabinDirection.STOPPED;
     
-    if(destination != null)
+    if(destination != null && motion.getFloor() != destination)
     {
       dir = destination - motion.getFloor() > 0 ? CabinDirection.UP : CabinDirection.DOWN;
     }
+
+    if (dir == CabinDirection.STOPPED && motion.getDirection() != CabinDirection.STOPPED) lastDirection = motion.getDirection();
+    else if (motion.getDirection() != CabinDirection.STOPPED) lastDirection = motion.getDirection();
 
     motion.setDirection(dir);
   }
