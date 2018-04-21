@@ -149,7 +149,7 @@ public class Cabin extends Thread
   private void normalRun()
   {
     requests.addAll(cabinRequests.updateRequests());
-    movingRun();
+    if (!hasArrived) movingRun();
   }
 
   private void movingRun()

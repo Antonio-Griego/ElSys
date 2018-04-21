@@ -6,9 +6,12 @@ import ElSys.Enums.CabinMode;
 
 import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.*;
 
 public class BuildingControl extends Thread
 {
+  private static final int SECONDS_DOORS_OPEN_FOR = 5;
+
   private ControlPanel controlPanel;
   private Cabin [] cabins;
   private BuildingState buildingState;
@@ -37,6 +40,7 @@ public class BuildingControl extends Thread
   {
     CabinMode [] cabinModes;
     Set<FloorRequest> floorRequests;
+    final ScheduledExecutorService scheduledThreadPoolExecutor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
     
     while(true)
     {
@@ -66,10 +70,11 @@ public class BuildingControl extends Thread
         {
           if(cabins[i].hasArrived())
           {
+            final Cabin cabin = cabins[i];
+            final int idx = i;
             System.out.println("Elevator "+(i+1)+" arrived on floor "+cabins[i].getStatus().getFloor());
-            System.out.println("Doors Opening");
-            System.out.println("Doors Closing");
-            cabins[i].setArrival(false);
+            openDoors(cabins[i], i);
+            scheduledThreadPoolExecutor.schedule(() -> closeDoors(cabin, idx), SECONDS_DOORS_OPEN_FOR, TimeUnit.SECONDS);
           }
         }
       }
@@ -87,8 +92,31 @@ public class BuildingControl extends Thread
 //      stillRunning();
     }
   }
-  
-  
+
+  private void openDoors(final Cabin cabin, final int cabinIdx)
+  {
+    final int floorIdx = cabin.getStatus().getFloor();
+    System.out.printf("Doors opening for cabin %d on floor %d.\n", cabinIdx, floorIdx);
+    shafts[cabinIdx].openDoors(floorIdx);
+    floors.setArrivalSignal(floorIdx, cabin.getStatus().getDirection(), true);
+  }
+
+  private void closeDoors(final Cabin cabin, final int cabinIdx)
+  {
+    final int floorIdx = cabin.getStatus().getFloor();
+    System.out.printf("Doors closing for cabin %d on floor %d.\n", cabinIdx, floorIdx);
+    shafts[cabinIdx].closeDoors(floorIdx);
+    while(shafts[cabinIdx].areOpen())
+    {
+      System.out.printf("Waiting for doors to close for cabin %d on floor %d.\n", cabinIdx, floorIdx);
+      try{Thread.sleep(1000);}catch(InterruptedException e){e.printStackTrace();}
+    }
+    // Cabin won't move when it is set as arrived.
+    cabin.setArrival(false);
+    floors.resetButton(cabin.getStatus().getFloor(), cabin.getStatus().getDirection());
+    floors.setArrivalSignal(floorIdx, cabin.getStatus().getDirection(), false);
+  }
+
   private CabinStatus [] getStatuses()
   {
     for(int i = 0; i < cabins.length; i++)
