@@ -130,7 +130,7 @@ public class Motion extends Thread
       if (cabinDirection == STOPPED ||
          (estimatedLocation.subtract(BigDecimal.valueOf(destination)).abs().signum() >= STOPPING_DISTANCE))
       {
-        if(destination != this.destination) System.out.println("New Destination is Floor "+(destination+1));
+        if(destination != this.destination) System.out.println("New Destination is Floor "+destination);
         this.destination = destination;
         return true;
       }

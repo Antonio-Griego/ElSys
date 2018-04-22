@@ -202,7 +202,7 @@ public class Cabin extends Thread
     
     if(destination != null && motion.getFloor() != destination)
     {
-      dir = destination - motion.getFloor() > 0 ? CabinDirection.UP : CabinDirection.DOWN;
+      dir = destination - motion.getFloor() < 0 ? CabinDirection.DOWN : CabinDirection.UP;
     }
 
     if (dir == CabinDirection.STOPPED && motion.getDirection() != CabinDirection.STOPPED) lastDirection = motion.getDirection();
