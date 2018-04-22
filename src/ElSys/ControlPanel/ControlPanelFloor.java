@@ -25,19 +25,27 @@ public class ControlPanelFloor
     view = new ControlPanelFloorView(floorNum);
   }
 
-  public GridPane getRoot(){return view.floorRoot;}
-
-  protected void createRequest(boolean up)
+  protected void addRequest(FloorRequest floorRequest)
   {
-    if(up)
+    if(this.floorRequest != floorRequest)
     {
-      floorRequest = new FloorRequest(floorNumber, CabinDirection.UP);
-      controlPanel.getFloorRequests().add(floorRequest);
+      Platform.runLater(()-> view.updateArrowLights(floorRequest.getDirection()));
+      this.floorRequest = floorRequest;
+    }
+  }
 
+  protected GridPane getRoot(){return view.floorRoot;}
+
+  private void createRequest(CabinDirection direction)
+  {
+    if(direction == CabinDirection.UP)
+    {
+      floorRequest = new FloorRequest(floorNumber, direction);
+      controlPanel.getFloorRequests().add(floorRequest);
     }
     else
     {
-      floorRequest = new FloorRequest(floorNumber, CabinDirection.DOWN);
+      floorRequest = new FloorRequest(floorNumber, direction);
       controlPanel.getFloorRequests().add(floorRequest);
     }
   }
@@ -64,38 +72,34 @@ public class ControlPanelFloor
         e.printStackTrace();
       }
 
-      upArrow.setOnMouseClicked(event -> ArrowPressed(true));
-      downArrow.setOnMouseClicked(event -> ArrowPressed(false));
+      upArrow.setOnMouseClicked(event -> arrowPressed(CabinDirection.UP));
+      downArrow.setOnMouseClicked(event -> arrowPressed(CabinDirection.DOWN));
     }
 
-    private void ArrowPressed(boolean upRequested)
+    private void arrowPressed(CabinDirection direction)
     {
-      createRequest(upRequested);
-
-      if (upRequested)
-      {
-        Platform.runLater(() -> updateArrowLights(upRequested));
-      }
-      else
-      {
-        Platform.runLater(() -> updateArrowLights(upRequested));
-      }
+      updateArrowLights(direction);
+      createRequest(direction);
     }
 
-    private void updateArrowLights(boolean goingUp)
+    private void updateArrowLights(CabinDirection direction)
     {
       upArrow.getStyleClass().clear();
       downArrow.getStyleClass().clear();
 
-      if(goingUp)
+      switch (direction)
       {
-        upArrow.getStyleClass().add("active-arrow");
-        downArrow.getStyleClass().add("inactive-arrow");
-      }
-      else
-      {
-        upArrow.getStyleClass().add("inactive-arrow");
-        downArrow.getStyleClass().add("active-arrow");
+        case UP:
+          upArrow.getStyleClass().add("active-arrow");
+          downArrow.getStyleClass().add("inactive-arrow");
+          break;
+        case DOWN:
+          upArrow.getStyleClass().add("inactive-arrow");
+          downArrow.getStyleClass().add("active-arrow");
+          break;
+        case STOPPED:
+          upArrow.getStyleClass().add("inactive-arrow");
+          downArrow.getStyleClass().add("inactive-arrow");
       }
     }
 
