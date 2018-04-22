@@ -21,7 +21,7 @@ class CabinTest
   
     for(int i = 0; i < buttons.length; i++)
     {
-      buttons[i] = new SimButton(i);
+      buttons[i] = new SimButton(Integer.toString(i));
     }
     
     final Cabin cabin = new Cabin(buttons, new SimPhysLocation(10));

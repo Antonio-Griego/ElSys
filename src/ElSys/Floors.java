@@ -44,7 +44,7 @@ public class Floors
   public void resetButton(int floor, CabinDirection direction)
   {
     if(direction == CabinDirection.UP) up_Buttons[floor].setLight(ButtonLight.OFF);
-    else down_Buttons[floor-1].setLight(ButtonLight.OFF);
+    else down_Buttons[floor].setLight(ButtonLight.OFF);
   }
   
   public void setArrivalSignal(int floor, CabinDirection direction, boolean lightOn)

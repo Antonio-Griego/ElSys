@@ -26,9 +26,9 @@ public class FloorsTest
     for(int i = 0; i < FLOORS-1; i++)
     {
       down_Sig[i] = new ArrivalSignal(new SimSignal(CabinDirection.DOWN, i+1));
-      down_Button[i] = new Button(new SimButton(i+1));
+      down_Button[i] = new Button(new SimButton("Floor "+(i+1)+" DOWN button"));
       up_Sig[i] = new ArrivalSignal(new SimSignal(CabinDirection.UP, i));
-      up_Button[i] = new Button(new SimButton(i));
+      up_Button[i] = new Button(new SimButton("Floor "+i+" UP button"));
     }
     
     floors = new Floors(up_Button, down_Button, up_Sig, down_Sig);

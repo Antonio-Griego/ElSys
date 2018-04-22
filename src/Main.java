@@ -33,7 +33,7 @@ public class Main extends Application
     
       for(int j = 0; j < FLOORS; j++)
       {
-        buttons[j] = new SimButton(j);
+        buttons[j] = new SimButton("Floor "+j+" button in Cabin "+i);
         floorDoors[j] = new Door(new SimDoor());
       }
     
@@ -58,9 +58,9 @@ public class Main extends Application
     for(int i = 0; i < FLOORS-1; i++)
     {
       down_Sigs[i] = new ArrivalSignal(new SimSignal(CabinDirection.DOWN, i+1));
-      down_Buttons[i] = new Button(new SimButton(i+1));
+      down_Buttons[i] = new Button(new SimButton("Floor "+(i+1)+" DOWN button"));
       up_Sigs[i] = new ArrivalSignal(new SimSignal(CabinDirection.UP, i));
-      up_Buttons[i] = new Button(new SimButton(i));
+      up_Buttons[i] = new Button(new SimButton("Floor "+i+" UP button"));
     }
   
     Floors floors = new Floors(up_Buttons, down_Buttons, up_Sigs, down_Sigs);
