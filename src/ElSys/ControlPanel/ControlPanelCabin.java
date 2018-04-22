@@ -85,7 +85,7 @@ public class ControlPanelCabin
   {
     if(currFloor.get() != cabinStatus.getFloor())
     {
-      updateFloors(cabinStatus.getFloor());
+      updateFloor(cabinStatus.getFloor());
     }
     if(currDirection != cabinStatus.getDirection())
     {
@@ -120,7 +120,7 @@ public class ControlPanelCabin
     }
   }
 
-  private void updateFloors(int floor)
+  private void updateFloor(int floor)
   {
     currFloor.set(floor);
   }
@@ -282,19 +282,16 @@ public class ControlPanelCabin
 
     private void updateFloorLight(int prevFloor, int currentFloor)
     {
-      if(prevFloor != 0)
-      {
-        Button prev = floors.get(prevFloor - 1);
-        Button curr = floors.get(currentFloor - 1);
+      Button prev = floors.get(prevFloor);
+      Button curr = floors.get(currentFloor);
 
-        Platform.runLater(() ->
-                          {
-                            prev.getStyleClass().clear();
-                            curr.getStyleClass().clear();
-                            prev.getStyleClass().add("inactive-floor");
-                            curr.getStyleClass().add("active-floor");
-                          });
-      }
+      Platform.runLater(() ->
+                        {
+                          prev.getStyleClass().clear();
+                          curr.getStyleClass().clear();
+                          prev.getStyleClass().add("inactive-floor");
+                          curr.getStyleClass().add("active-floor");
+                        });
     }
 
     private void updateModeGroup(CabinMode mode)

@@ -4,6 +4,7 @@ import ElSys.CabinStatus;
 import ElSys.Enums.BuildingState;
 import ElSys.Enums.CabinMode;
 import ElSys.FloorRequest;
+import ElSys.Floors;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,9 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class ControlPanel
 {
@@ -28,7 +27,9 @@ public class ControlPanel
   private ArrayList<ControlPanelFloor> controlFloors = new ArrayList<>();
   private CabinStatus[] cabinStatuses;
   private BuildingState buildingState;
-  private Queue<FloorRequest> floorRequests = new LinkedList<>();
+//  private Queue<FloorRequest> floorRequests = new LinkedList<>();
+
+  private Set<FloorRequest> floorRequests = new HashSet<>();
 
 
   public ControlPanel(CabinStatus[] cabinStatuses, BuildingState buildingState)
@@ -88,9 +89,9 @@ public class ControlPanel
     }
 
   /**
-   * @return A Queue containing Requests.
+   * @return A Set containing Requests.
    */
-  public Queue<FloorRequest> getFloorRequests()
+  public Set<FloorRequest> getFloorRequests()
   {
     return floorRequests;
   }
@@ -116,12 +117,15 @@ public class ControlPanel
   }
 
   //TODO: Must be able to update floor requests from lobby
-  public void update(CabinStatus[] cabinStatuses, BuildingState buildingState)
+  public void update(CabinStatus[] cabinStatuses,
+                     Floors floors,
+                     BuildingState buildingState)
   {
     this.cabinStatuses = cabinStatuses;
     this.buildingState = buildingState;
 
     updateCabins();
+    updateFloors(floors);
   }
 
   private void updateCabins()
@@ -133,6 +137,23 @@ public class ControlPanel
       cabins.get(idx).update(cabinStatus);
       idx++;
     }
+  }
+
+  private void updateFloors(Floors floors)
+  {
+    Set<FloorRequest> newRequests = floors.getRequests();
+
+    if(!newRequests.equals(this.floorRequests))
+    {
+      for (FloorRequest request: newRequests)
+      {
+        ControlPanelFloor floor  = controlFloors.get(request.getFloor()-1);
+        floor.addRequest(request);
+      }
+      this.floorRequests = newRequests;
+    }
+
+
   }
 
   private class ControlPanelView

@@ -46,7 +46,7 @@ public class BuildingControl extends Thread
       if (buildingState == BuildingState.NORMAL) checkForArrivals();
       else setEmergencyModes();
       
-      controlPanel.update(cabinStatuses, buildingState);
+      controlPanel.update(cabinStatuses, floors, buildingState);
     }
   }
 
