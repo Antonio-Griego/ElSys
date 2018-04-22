@@ -30,48 +30,93 @@ public class RequestRouter {
       
       Set<FloorRequest> validRequests;
       Set<FloorRequest> invalidRequests;
-      
-      for(int i = 0; i < cabinStatuses.length; i++){
-        validRequests = getValidRequests(cabinStatuses[i]);
-        destinations[i] = null;
-        for(FloorRequest r : validRequests)
-        {
-          if(destinations[i] == null) destinations[i] = r.getFloor();
-          
-          else
-          {
-            if(Math.abs(cabinStatuses[i].getFloor() - r.getFloor()) < Math.abs(cabinStatuses[i].getFloor() - destinations[i]))
-            {
-              destinations[i] = r.getFloor();
-            }
-          }
+
+        for(int i = 0; i < cabinStatuses.length; i++){
+            CabinStatus cabinStatus = cabinStatuses[i];
+            int bestDest = getNextCabinRequest(cabinStatus);
+            bestDest = checkFloorRequests(cabinStatus, floorRequests, bestDest);
+            //if no good dest stay at same floor
+            if(bestDest == Integer.MAX_VALUE) bestDest = cabinStatus.getFloor();
+            destinations[i] = bestDest;
         }
-      }
       
       return destinations;
     }
-    
-    private Set<FloorRequest> getValidRequests(CabinStatus cabinStatus)
-    {
-      Set<FloorRequest> validRequests = new HashSet<>(cabinStatus.getCabinRequests());
-      validRequests.addAll(floorRequests);
-      if(cabinStatus.getDirection() == CabinDirection.UP)
-      {
-        return validRequests.stream()
-            .filter(r -> r.getFloor() >= cabinStatus.getFloor())
-            .collect(Collectors.toSet());
-      }
-      
-      else if(cabinStatus.getDirection() == CabinDirection.DOWN)
-      {
-        return validRequests.stream()
-            .filter(r -> r.getFloor() <= cabinStatus.getFloor())
-            .collect(Collectors.toSet());
-      }
-      
-      else
-      {
-        return validRequests;
-      }
+
+    private int getNextCabinRequest(CabinStatus cabinStatus){
+        //TODO think about not using intmax
+        int bestDest = Integer.MAX_VALUE;
+        if(cabinStatus.getCabinRequests().isEmpty()) return bestDest;
+        int currentFloor = cabinStatus.getFloor();
+        CabinDirection dir = cabinStatus.getDirection();
+        int oldDif = Math.abs(bestDest - currentFloor);
+        List<Integer> possibleDests = cabinStatus.getCabinRequests().stream()
+                .map(req -> req.getFloor())
+                .collect(Collectors.toList());
+
+        //look at cabin request in the current direction if possible
+        if(dir == CabinDirection.DOWN) {
+            possibleDests = possibleDests.stream()
+                    .filter(floor -> floor < currentFloor)
+                    .collect(Collectors.toList());
+        }
+        else if (dir == CabinDirection.UP) {
+            possibleDests = possibleDests.stream()
+                    .filter(floor -> floor > currentFloor)
+                    .collect(Collectors.toList());
+        }
+        //if there are no cabinRequest in the current direction look at all requests
+        if(possibleDests.isEmpty()){
+            possibleDests = cabinStatus.getCabinRequests().stream()
+                    .map(req -> req.getFloor())
+                    .collect(Collectors.toList());
+        }
+
+        for (Integer dest: possibleDests) {
+            int newDif = Math.abs(currentFloor - dest);
+            if(newDif < oldDif){
+                bestDest = dest;
+            }
+        }
+        return bestDest;
+    }
+
+    private int checkFloorRequests(CabinStatus cabinStatus, Set<FloorRequest> floorRequests, int currDest){
+        if(floorRequests.size() < 1) return currDest;
+        int currentFloor = cabinStatus.getFloor();
+        CabinDirection dir = cabinStatus.getDirection();
+        int bestDest = currDest;
+        FloorRequest bestRequest = null;
+        int oldDif = Math.abs(bestDest - currentFloor);
+        List<FloorRequest> possibleRequests;
+
+        if(dir == CabinDirection.DOWN) {
+            possibleRequests = floorRequests.stream()
+                    .filter(fr -> fr.getDirection() == dir)
+                    //.map(req -> req.getFloor())
+                    .filter(floor -> floor.getFloor() < currentFloor)
+                    .collect(Collectors.toList());
+        }
+        else if(dir == CabinDirection.UP) {
+            possibleRequests = floorRequests.stream()
+                    .filter(fr -> fr.getDirection() == dir)
+                    //.map(req -> req.getFloor())
+                    .filter(floor -> floor.getFloor() > currentFloor)
+                    .collect(Collectors.toList());
+        }
+        else {
+            possibleRequests = floorRequests.stream()
+                    .collect(Collectors.toList());
+        }
+
+        for (FloorRequest dest: possibleRequests) {
+            int newDif = Math.abs(currentFloor - dest.getFloor());
+            if(newDif < oldDif){
+                bestDest = dest.getFloor();
+                bestRequest = dest;
+            }
+        }
+        if(bestRequest != null) floorRequests.remove(bestRequest);
+        return bestDest;
     }
 }
