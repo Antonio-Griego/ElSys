@@ -22,14 +22,13 @@ public class Main extends Application
   
     SimButton[] buttons = new SimButton[FLOORS];
     SimPhysLocation simPhysLocation;
-    Door cabinDoor;
-    Door[] floorDoors;
+    Door[] cabinDoors = new Door[CABINS];
+    Door[] floorDoors = new Door[FLOORS];
   
     for(int i = 0; i < CABINS; i++)
     {
       simPhysLocation = new SimPhysLocation(FLOORS);
-      cabinDoor = new Door(new SimDoor());
-      floorDoors = new Door[FLOORS];
+      cabinDoors[i] = new Door(new SimDoor());
     
       for(int j = 0; j < FLOORS; j++)
       {
@@ -37,7 +36,7 @@ public class Main extends Application
         floorDoors[j] = new Door(new SimDoor());
       }
     
-      shafts[i] = new Doors(floorDoors, cabinDoor);
+      shafts[i] = new Doors(floorDoors, cabinDoors[i]);
       cabins[i] = new Cabin(buttons, simPhysLocation);
       cabins[i].start();
     }
@@ -69,7 +68,7 @@ public class Main extends Application
 
     Floors floors = new Floors(up_Buttons, down_Buttons, up_Sigs, down_Sigs);
     
-    ControlPanel controlPanel = new ControlPanel(cabinStatuses, BuildingState.NORMAL);
+    ControlPanel controlPanel = new ControlPanel(cabinStatuses, floorDoors, cabinDoors, BuildingState.NORMAL);
     buildingControl = new BuildingControl(cabins, controlPanel, shafts, floors);
 
     final SimActions sa = new SimActions(10, Arrays.asList(buttons), Arrays.asList(up_Buttons), Arrays.asList(down_Buttons));

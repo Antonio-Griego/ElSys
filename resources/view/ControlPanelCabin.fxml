@@ -293,7 +293,7 @@
                      </padding>
                   </VBox>
                   <Label text="Door: " GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                  <TextField text="Closed" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                  <TextField fx:id="doorState" text="Closed" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                </children>
                <columnConstraints>
                   <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="80.0" />

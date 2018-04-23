@@ -94,8 +94,8 @@ public class BuildingControl extends Thread
   private void openDoors(final Cabin cabin, final int cabinIdx, final CabinDirection directionBeforeStopping)
   {
     if (cabin.getStatus().getDestination() == null) return;
-    //getFloor() returns the actual floor number not index.
-    final int floorIdx = cabin.getStatus().getFloor() - 1;
+    //getFloor() sometimes return the actual floor number not index.
+    final int floorIdx = cabin.getStatus().getFloor();
     System.out.printf("Doors opening for cabin %d on floor %d.\n", cabinIdx + 1, floorIdx);
     shafts[cabinIdx].openDoors(floorIdx);
     floors.setArrivalSignal(floorIdx, directionBeforeStopping, true);

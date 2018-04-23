@@ -57,4 +57,6 @@ public class Door
   {
     this.doorState = state;
   }
+
+  public int getDoorVal(){return doorVal;}
 }

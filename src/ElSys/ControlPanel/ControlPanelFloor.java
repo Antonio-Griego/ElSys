@@ -1,5 +1,6 @@
 package ElSys.ControlPanel;
 
+import ElSys.Door;
 import ElSys.Enums.CabinDirection;
 import ElSys.FloorRequest;
 import javafx.application.Platform;
@@ -7,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Polygon;
 
@@ -20,6 +22,7 @@ public class ControlPanelFloor
   private FloorRequest floorRequest;
   private boolean callingUp;
   private boolean callingDown;
+  private Door.DoorState currDoorState = Door.DoorState.CLOSED;
 
   ControlPanelFloor(int floorNum, ControlPanel controlPanel)
   {
@@ -32,7 +35,7 @@ public class ControlPanelFloor
   {
     if(this.floorRequest != floorRequest)
     {
-      Platform.runLater(()-> view.updateCallLights(floorRequest.getDirection()));
+      Platform.runLater(()-> view.changeCallLights(floorRequest.getDirection()));
       this.floorRequest = floorRequest;
     }
   }
@@ -52,8 +55,8 @@ public class ControlPanelFloor
       callingUp = false;
       Platform.runLater(()->
                         {
-                          view.updateCallLights(CabinDirection.STOPPED);
-                          view.updateArrivalSignal(true);
+                          view.changeCallLights(CabinDirection.STOPPED);
+                          view.changeArrivalLights(true);
                         });
 
     }
@@ -62,8 +65,8 @@ public class ControlPanelFloor
       callingDown = false;
       Platform.runLater(()->
                         {
-                          view.updateCallLights(CabinDirection.STOPPED);
-                          view.updateArrivalSignal(false);
+                          view.changeCallLights(CabinDirection.STOPPED);
+                          view.changeArrivalLights(false);
                         });
     }
   }
@@ -72,6 +75,16 @@ public class ControlPanelFloor
   {
     callingUp = up;
     callingDown = down;
+  }
+
+  protected void setDoorState(Door door)
+  {
+    if(!currDoorState.equals(door.getDoorState()))
+    {
+      currDoorState = door.getDoorState();
+      Platform.runLater(() -> view.changeDoorState(door));
+
+    }
   }
 
   private class ControlPanelFloorView
@@ -83,6 +96,9 @@ public class ControlPanelFloor
 
     @FXML
     Button callUp, callDown;
+
+    @FXML
+    TextField doorState;
 
     private ControlPanelFloorView(int floorNum)
     {
@@ -110,18 +126,36 @@ public class ControlPanelFloor
       {
         if (goingUP)
         {
-          updateCallLights(CabinDirection.UP);
+          changeCallLights(CabinDirection.UP);
           createRequest(CabinDirection.UP);
         }
         else
         {
-          updateCallLights(CabinDirection.DOWN);
+          changeCallLights(CabinDirection.DOWN);
           createRequest(CabinDirection.DOWN);
         }
       }
     }
 
-    private void updateArrivalSignal(boolean cabinGoingUp)
+    private void changeDoorState(Door door)
+    {
+      switch (door.getDoorState())
+      {
+        case CLOSED:
+          doorState.setText("Closed");
+          break;
+        case OPEN:
+          doorState.setText("Open");
+          break;
+        case OPENING:
+          doorState.setText("Opening...");
+          break;
+        case CLOSING:
+          doorState.setText("Closing...");
+      }
+    }
+
+    private void changeArrivalLights(boolean cabinGoingUp)
     {
       if(cabinGoingUp)
       {
@@ -135,7 +169,7 @@ public class ControlPanelFloor
       }
     }
 
-    private void updateCallLights(CabinDirection direction)
+    private void changeCallLights(CabinDirection direction)
     {
       callUp.getStyleClass().clear();
       callDown.getStyleClass().clear();

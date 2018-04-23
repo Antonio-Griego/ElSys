@@ -1,11 +1,8 @@
 package ElSys.ControlPanel;
 
-import ElSys.ArrivalSignal;
-import ElSys.CabinStatus;
+import ElSys.*;
 import ElSys.Enums.BuildingState;
 import ElSys.Enums.CabinMode;
-import ElSys.FloorRequest;
-import ElSys.Floors;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -29,14 +26,18 @@ public class ControlPanel
   private CabinStatus[] cabinStatuses;
   private BuildingState buildingState;
 //  private Queue<FloorRequest> floorRequests = new LinkedList<>();
+  private Door[] floorDoors;
+  private Door[] cabinDoors;
 
   private Set<FloorRequest> floorRequests = new HashSet<>();
 
 
-  public ControlPanel(CabinStatus[] cabinStatuses, BuildingState buildingState)
+  public ControlPanel(CabinStatus[] cabinStatuses, Door[] floorDoors, Door[] cabinDoors, BuildingState buildingState)
   {
     this.cabinStatuses = cabinStatuses;
     this.buildingState = buildingState;
+    this.floorDoors = floorDoors;
+    this.cabinDoors = cabinDoors;
     numCabins = cabinStatuses.length;
     //TODO: allow variable floors
     totalFloors = 10;
@@ -74,7 +75,7 @@ public class ControlPanel
       int idx = 0;
       for (CabinStatus cabinStatus : cabinStatuses)
       {
-        ControlPanelCabin cabin = new ControlPanelCabin(cabinStatus, idx + 1);
+        ControlPanelCabin cabin = new ControlPanelCabin(cabinStatus, cabinDoors[idx], idx + 1);
         cabins.add(cabin);
         idx++;
       }
@@ -127,6 +128,7 @@ public class ControlPanel
 
     updateCabins();
     updateFloors(floors);
+
   }
 
   private void updateCabins()
@@ -135,7 +137,7 @@ public class ControlPanel
 
     for(CabinStatus cabinStatus: cabinStatuses)
     {
-      cabins.get(idx).update(cabinStatus);
+      cabins.get(idx).update(cabinStatus, cabinDoors[idx]);
       idx++;
     }
   }
@@ -144,16 +146,31 @@ public class ControlPanel
   {
     Set<FloorRequest> newRequests = floors.getRequests();
 
-    if(!newRequests.equals(this.floorRequests))
+    if (!newRequests.equals(this.floorRequests))
     {
-      for (FloorRequest request: newRequests)
+      for (FloorRequest request : newRequests)
       {
-        ControlPanelFloor floor  = controlFloors.get(request.getFloor()-1);
+        ControlPanelFloor floor = controlFloors.get(request.getFloor() - 1);
         floor.addRequest(request);
       }
       this.floorRequests = newRequests;
     }
 
+    updateArrivals(floors);
+    updateFloorDoors();
+  }
+
+  private void updateFloorDoors()
+  {
+
+    for (int i =0; i<controlFloors.size(); i++)
+    {
+      controlFloors.get(i).setDoorState(floorDoors[i]);
+    }
+  }
+
+  private void updateArrivals(Floors floors)
+  {
     ArrivalSignal[] up = floors.getUp_Signals();
     ArrivalSignal[] down = floors.getDown_Signals();
 
