@@ -22,13 +22,13 @@ public class ControlPanelFloor
   private FloorRequest floorRequest;
   private boolean callingUp;
   private boolean callingDown;
-  private Door.DoorState[] currDoorStates;
+  private Door.DoorState[] prevDoorStates;
 
   ControlPanelFloor(int floorNum, ControlPanel controlPanel)
   {
     this.floorNumber = floorNum;
     this.controlPanel = controlPanel;
-    currDoorStates = new Door.DoorState[]{Door.DoorState.CLOSED, Door.DoorState.CLOSED,
+    prevDoorStates = new Door.DoorState[]{Door.DoorState.CLOSED, Door.DoorState.CLOSED,
                                           Door.DoorState.CLOSED, Door.DoorState.CLOSED};
     view = new ControlPanelFloorView(floorNum);
   }
@@ -58,7 +58,7 @@ public class ControlPanelFloor
       Platform.runLater(()->
                         {
                           view.changeCallLights(CabinDirection.STOPPED);
-                          view.changeArrivalLights(true);
+                          view.changeArrivalLights(CabinDirection.UP);
                         });
 
     }
@@ -68,7 +68,7 @@ public class ControlPanelFloor
       Platform.runLater(()->
                         {
                           view.changeCallLights(CabinDirection.STOPPED);
-                          view.changeArrivalLights(false);
+                          view.changeArrivalLights(CabinDirection.DOWN);
                         });
     }
   }
@@ -81,13 +81,18 @@ public class ControlPanelFloor
 
   protected void setDoorStates(Door door, int doorIdx)
   {
-    if (!currDoorStates[doorIdx].equals(door.getDoorState()))
+    Door.DoorState prevState = prevDoorStates[doorIdx];
+
+    if (!prevState.equals(door.getDoorState()))
     {
-//      int doorNum = i + 1;
-      currDoorStates[doorIdx] = door.getDoorState();
+      if(prevState == Door.DoorState.CLOSING && door.getDoorState() == Door.DoorState.CLOSED)
+      {
+        Platform.runLater(()-> view.changeArrivalLights(CabinDirection.STOPPED));
+      }
+
+      prevDoorStates[doorIdx] = door.getDoorState();
       Platform.runLater(() -> view.changeDoorState(door, doorIdx+1));
     }
-
   }
 
   private class ControlPanelFloorView
@@ -172,17 +177,28 @@ public class ControlPanelFloor
       }
     }
 
-    private void changeArrivalLights(boolean cabinGoingUp)
+    private void changeArrivalLights(CabinDirection direction)
     {
-      if(cabinGoingUp)
+      upArrow.getStyleClass().clear();
+      downArrow.getStyleClass().clear();
+
+      switch (direction)
       {
-        upArrow.getStyleClass().add("active-arrow");
-        downArrow.getStyleClass().add("inactive-arrow");
-      }
-      else
-      {
-        upArrow.getStyleClass().add("inactive-arrow");
-        downArrow.getStyleClass().add("active-arrow");
+        case UP:
+
+          upArrow.getStyleClass().add("active-arrow");
+          downArrow.getStyleClass().add("inactive-arrow");
+          break;
+
+        case DOWN:
+
+          upArrow.getStyleClass().add("inactive-arrow");
+          downArrow.getStyleClass().add("active-arrow");
+          break;
+
+        case STOPPED:
+          upArrow.getStyleClass().add("inactive-arrow");
+          downArrow.getStyleClass().add("inactive-arrow");
       }
     }
 

@@ -28,8 +28,13 @@ public class ControlPanel
 //  private Queue<FloorRequest> floorRequests = new LinkedList<>();
   private Door[][] doorsPerFloor;
   private Door[] cabinDoors;
-
   private Set<FloorRequest> floorRequests = new HashSet<>();
+
+  private ArrivalSignal[][] up_Sigs;
+  private ArrivalSignal[][] down_Sigs;
+  private Button[][] up_Buttons;
+  private Button[][] down_Buttons;
+  private Button[][] cabinButtons;
 
 
   public ControlPanel(CabinStatus[] cabinStatuses, Door[][] floorDoors, Door[] cabinDoors, BuildingState buildingState)
@@ -162,13 +167,6 @@ public class ControlPanel
 
   private void updateFloorDoors()
   {
-//    for(int i = 0; i < doorsPerFloor.length; i++)
-//    {
-//      for (int j = 0; j < doorsPerFloor[i].length; j++)
-//      {
-//        controlFloors.get(j).setDoorStates(doorsPerFloor[i][j], i);
-//      }
-//    }
     for(int i = 0; i < doorsPerFloor.length; i++)
     {
       for (int j = 0; j < doorsPerFloor[i].length; j++)
