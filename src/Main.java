@@ -12,7 +12,7 @@ import java.util.Random;
 public class Main extends Application
 {
   private final int FLOORS = 10;
-  private final int CABINS = 1;
+  private final int CABINS = 4;
   private BuildingControl buildingControl;
   @Override
   public void start(Stage primaryStage) throws Exception
@@ -27,7 +27,7 @@ public class Main extends Application
   
     for(int i = 0; i < CABINS; i++)
     {
-      simPhysLocation = new SimPhysLocation(FLOORS);
+      simPhysLocation = new SimPhysLocation(FLOORS, "Cabin "+(i+1));
       cabinDoors[i] = new Door(new SimDoor());
     
       for(int j = 0; j < FLOORS; j++)

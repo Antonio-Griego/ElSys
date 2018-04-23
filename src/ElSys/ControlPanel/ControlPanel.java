@@ -150,7 +150,7 @@ public class ControlPanel
     {
       for (FloorRequest request : newRequests)
       {
-        ControlPanelFloor floor = controlFloors.get(request.getFloor() - 1);
+        ControlPanelFloor floor = controlFloors.get(request.getFloor());
         floor.addRequest(request);
       }
       this.floorRequests = newRequests;
