@@ -49,20 +49,24 @@ public class Main extends Application
       cabinStatuses[i] = cabins[i].getStatus();
     }
   
-    ArrivalSignal[] up_Sigs = new ArrivalSignal[FLOORS-1];
-    ArrivalSignal[] down_Sigs = new ArrivalSignal[FLOORS-1];
-    Button [] up_Buttons = new Button[FLOORS-1];
-    Button [] down_Buttons = new Button[FLOORS-1];
+    ArrivalSignal[] up_Sigs = new ArrivalSignal[FLOORS];
+    ArrivalSignal[] down_Sigs = new ArrivalSignal[FLOORS];
+    Button [] up_Buttons = new Button[FLOORS];
+    Button [] down_Buttons = new Button[FLOORS];
   
   
     for(int i = 0; i < FLOORS-1; i++)
     {
-      down_Sigs[i] = new ArrivalSignal(new SimSignal(CabinDirection.DOWN, i+1));
-      down_Buttons[i] = new Button(new SimButton(i+1));
       up_Sigs[i] = new ArrivalSignal(new SimSignal(CabinDirection.UP, i));
       up_Buttons[i] = new Button(new SimButton(i));
     }
-  
+
+    for(int i = 1; i < FLOORS; i++)
+    {
+      down_Sigs[i] = new ArrivalSignal(new SimSignal(CabinDirection.DOWN, i));
+      down_Buttons[i] = new Button(new SimButton(i));
+    }
+
     Floors floors = new Floors(up_Buttons, down_Buttons, up_Sigs, down_Sigs);
     
     ControlPanel controlPanel = new ControlPanel(cabinStatuses, BuildingState.NORMAL);
