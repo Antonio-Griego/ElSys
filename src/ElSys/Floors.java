@@ -28,12 +28,12 @@ public class Floors
   {
     Set<FloorRequest> requests = new HashSet<>();
     
-    for(int i = 0; i < up_Buttons.length; i++)
+    for(int i = 0; i < (up_Buttons.length)-1; i++)
     {
       if(up_Buttons[i].getLight() == ButtonLight.ON) requests.add(new FloorRequest(i, CabinDirection.UP));
     }
   
-    for(int i = 0; i < down_Buttons.length; i++)
+    for(int i = 1; i < down_Buttons.length; i++)
     {
       if(down_Buttons[i].getLight() == ButtonLight.ON) requests.add(new FloorRequest(i+1, CabinDirection.DOWN));
     }
@@ -43,13 +43,34 @@ public class Floors
   
   public void resetButton(int floor, CabinDirection direction)
   {
-    if(direction == CabinDirection.UP) up_Buttons[floor].setLight(ButtonLight.OFF);
-    else down_Buttons[floor].setLight(ButtonLight.OFF);
+
+//    if(direction == CabinDirection.UP) up_Buttons[floor].setLight(ButtonLight.OFF);
+//    else down_Buttons[floor].setLight(ButtonLight.OFF);
+    
+    if(direction == CabinDirection.UP && floor < 9)
+    {
+      up_Buttons[floor].setLight(ButtonLight.OFF);
+    }
+    else if(direction == CabinDirection.DOWN && floor > 0)
+    {
+      down_Buttons[floor].setLight(ButtonLight.OFF);
+    }
+
   }
   
   public void setArrivalSignal(int floor, CabinDirection direction, boolean lightOn)
   {
-    if(direction == CabinDirection.UP) up_Signals[floor].setArrivalSignal(lightOn);
-    else down_Signals[floor].setArrivalSignal(lightOn);
+    if(direction == CabinDirection.UP && floor < 9)
+    {
+      up_Signals[floor].setArrivalSignal(lightOn);
+    }
+    else if(direction == CabinDirection.DOWN && floor > 0)
+    {
+      down_Signals[floor].setArrivalSignal(lightOn);
+    }
   }
+
+  public ArrivalSignal[] getDown_Signals() { return down_Signals; }
+
+  public ArrivalSignal[] getUp_Signals() { return up_Signals; }
 }

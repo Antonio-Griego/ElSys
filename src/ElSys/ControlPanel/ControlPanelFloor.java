@@ -1,11 +1,14 @@
 package ElSys.ControlPanel;
 
+import ElSys.Door;
 import ElSys.Enums.CabinDirection;
 import ElSys.FloorRequest;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Polygon;
 
@@ -17,6 +20,9 @@ public class ControlPanelFloor
   private ControlPanel controlPanel;
   private final int floorNumber;
   private FloorRequest floorRequest;
+  private boolean callingUp;
+  private boolean callingDown;
+  private Door.DoorState currDoorState = Door.DoorState.CLOSED;
 
   ControlPanelFloor(int floorNum, ControlPanel controlPanel)
   {
@@ -29,7 +35,7 @@ public class ControlPanelFloor
   {
     if(this.floorRequest != floorRequest)
     {
-      Platform.runLater(()-> view.updateArrowLights(floorRequest.getDirection()));
+      Platform.runLater(()-> view.changeCallLights(floorRequest.getDirection()));
       this.floorRequest = floorRequest;
     }
   }
@@ -38,15 +44,46 @@ public class ControlPanelFloor
 
   private void createRequest(CabinDirection direction)
   {
-    if(direction == CabinDirection.UP)
+    floorRequest = new FloorRequest(floorNumber, direction);
+    controlPanel.getFloorRequests().add(floorRequest);
+  }
+
+  protected void setArrivals(boolean upArrived, boolean downArrived)
+  {
+    if(upArrived && callingUp)
     {
-      floorRequest = new FloorRequest(floorNumber, direction);
-      controlPanel.getFloorRequests().add(floorRequest);
+      callingUp = false;
+      Platform.runLater(()->
+                        {
+                          view.changeCallLights(CabinDirection.STOPPED);
+                          view.changeArrivalLights(true);
+                        });
+
     }
-    else
+    else if (downArrived && callingDown)
     {
-      floorRequest = new FloorRequest(floorNumber, direction);
-      controlPanel.getFloorRequests().add(floorRequest);
+      callingDown = false;
+      Platform.runLater(()->
+                        {
+                          view.changeCallLights(CabinDirection.STOPPED);
+                          view.changeArrivalLights(false);
+                        });
+    }
+  }
+
+  private void setCallFlags(boolean up, boolean down)
+  {
+    callingUp = up;
+    callingDown = down;
+  }
+
+  protected void setDoorState(Door door)
+  {
+    if(!currDoorState.equals(door.getDoorState()))
+    {
+      currDoorState = door.getDoorState();
+      Platform.runLater(() -> view.changeDoorState(door));
+
     }
   }
 
@@ -56,6 +93,12 @@ public class ControlPanelFloor
 
     @FXML
     Polygon upArrow, downArrow;
+
+    @FXML
+    Button callUp, callDown;
+
+    @FXML
+    TextField doorState;
 
     private ControlPanelFloorView(int floorNum)
     {
@@ -72,34 +115,81 @@ public class ControlPanelFloor
         e.printStackTrace();
       }
 
-      upArrow.setOnMouseClicked(event -> arrowPressed(CabinDirection.UP));
-      downArrow.setOnMouseClicked(event -> arrowPressed(CabinDirection.DOWN));
+      callUp.setOnMouseClicked(event -> callButtonPressed(true));
+      callDown.setOnMouseClicked(event -> callButtonPressed(false));
     }
 
-    private void arrowPressed(CabinDirection direction)
+    private void callButtonPressed(boolean goingUP)
     {
-      updateArrowLights(direction);
-      createRequest(direction);
+      //Ignore if a previous request has already been made.
+      if(!callingUp && !callingDown)
+      {
+        if (goingUP)
+        {
+          changeCallLights(CabinDirection.UP);
+          createRequest(CabinDirection.UP);
+        }
+        else
+        {
+          changeCallLights(CabinDirection.DOWN);
+          createRequest(CabinDirection.DOWN);
+        }
+      }
     }
 
-    private void updateArrowLights(CabinDirection direction)
+    private void changeDoorState(Door door)
     {
-      upArrow.getStyleClass().clear();
-      downArrow.getStyleClass().clear();
+      switch (door.getDoorState())
+      {
+        case CLOSED:
+          doorState.setText("Closed");
+          break;
+        case OPEN:
+          doorState.setText("Open");
+          break;
+        case OPENING:
+          doorState.setText("Opening...");
+          break;
+        case CLOSING:
+          doorState.setText("Closing...");
+      }
+    }
+
+    private void changeArrivalLights(boolean cabinGoingUp)
+    {
+      if(cabinGoingUp)
+      {
+        upArrow.getStyleClass().add("active-arrow");
+        downArrow.getStyleClass().add("inactive-arrow");
+      }
+      else
+      {
+        upArrow.getStyleClass().add("inactive-arrow");
+        downArrow.getStyleClass().add("active-arrow");
+      }
+    }
+
+    private void changeCallLights(CabinDirection direction)
+    {
+      callUp.getStyleClass().clear();
+      callDown.getStyleClass().clear();
 
       switch (direction)
       {
         case UP:
-          upArrow.getStyleClass().add("active-arrow");
-          downArrow.getStyleClass().add("inactive-arrow");
+          callUp.getStyleClass().add("active-call-button");
+          callDown.getStyleClass().add("inactive-call-button");
+          setCallFlags(true, false);
           break;
         case DOWN:
-          upArrow.getStyleClass().add("inactive-arrow");
-          downArrow.getStyleClass().add("active-arrow");
+          callUp.getStyleClass().add("inactive-call-button");
+          callDown.getStyleClass().add("active-call-button");
+          setCallFlags(false, true);
           break;
         case STOPPED:
-          upArrow.getStyleClass().add("inactive-arrow");
-          downArrow.getStyleClass().add("inactive-arrow");
+          callUp.getStyleClass().add("inactive-call-button");
+          callDown.getStyleClass().add("inactive-call-button");
+          setCallFlags(false, false);
       }
     }
 

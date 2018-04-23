@@ -1,6 +1,8 @@
 package ElSys.ControlPanel;
 
 import ElSys.CabinStatus;
+import ElSys.Door;
+import ElSys.Doors;
 import ElSys.Enums.CabinDirection;
 import ElSys.Enums.CabinMode;
 import ElSys.FloorRequest;
@@ -13,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Polygon;
 
@@ -29,6 +32,7 @@ public class ControlPanelCabin
   private ControlPanelCabinView view;
   private Set<FloorRequest> currFloorRequests = new HashSet<>();
   private Set<FloorRequest> newFloorRequests = new HashSet<>();
+  private Door.DoorState currDoorState = Door.DoorState.CLOSED;
 
 
 
@@ -39,10 +43,10 @@ public class ControlPanelCabin
   }
 
   //TODO allow for variable floor #'s. Loaded dynamically
-  ControlPanelCabin(CabinStatus cabinStatus, int cabinNumber)
+  ControlPanelCabin(CabinStatus cabinStatus, Door cabinDoor, int cabinNumber)
   {
     view = new ControlPanelCabinView(cabinNumber, this);
-    update(cabinStatus);
+    update(cabinStatus, cabinDoor);
     currFloor.addListener((obs, oldVal, newVal) -> view.updateFloorLight((int)oldVal,(int)newVal));
   }
 
@@ -81,7 +85,7 @@ public class ControlPanelCabin
                     .anyMatch(request -> request.getFloor() == floor);
   }
 
-  protected void update(CabinStatus cabinStatus)
+  protected void update(CabinStatus cabinStatus, Door door)
   {
     if(currFloor.get() != cabinStatus.getFloor())
     {
@@ -91,6 +95,12 @@ public class ControlPanelCabin
     {
       updateDirection(cabinStatus.getDirection());
     }
+    if(!currDoorState.equals(door.getDoorState()))
+    {
+      currDoorState = door.getDoorState();
+      Platform.runLater(() -> view.changeDoorState(door));
+    }
+
     //We shouldn't be updating the mode from anywhere except the GUI.
     //Only maintenance should update the mode.
 //    if(mode != cabinStatus.getMode())
@@ -167,6 +177,9 @@ public class ControlPanelCabin
 
     @FXML
     RadioButton normalMode, maintenanceMode, emergencyMode;
+
+    @FXML
+    TextField doorState;
 
     private ControlPanelCabinView(int cabinNumber, ControlPanelCabin controller)
     {
@@ -277,6 +290,24 @@ public class ControlPanelCabin
         case DOWN:
           upArrow.getStyleClass().add("inactive-arrow");
           downArrow.getStyleClass().add("active-arrow");
+      }
+    }
+
+    private void changeDoorState(Door door)
+    {
+      switch (door.getDoorState())
+      {
+        case CLOSED:
+          doorState.setText("Closed");
+          break;
+        case OPEN:
+          doorState.setText("Open");
+          break;
+        case OPENING:
+          doorState.setText("Opening...");
+          break;
+        case CLOSING:
+          doorState.setText("Closing...");
       }
     }
 

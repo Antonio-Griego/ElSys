@@ -1,4 +1,27 @@
 
+.inactive-call-button
+{
+    -fx-background-color: #e0d8d8;
+    -fx-background-radius: 20px;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+    -fx-alignment: center;
+}
+
+.active-call-button
+{
+    -fx-background-color: white;
+    -fx-background-radius: 20px;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+    -fx-alignment: center;
+
+}
+
 .inactive-floor
 {
     -fx-background-color: #e0d8d8;
@@ -8,7 +31,6 @@
     -fx-max-width: 30px;
     -fx-max-height: 30px;
     -fx-alignment: center;
-
 }
 
 .active-floor

@@ -92,15 +92,15 @@ public class Doors extends Thread
         
         for(i = 0; i < floorDoors.length; i++)
         {
-          if(floorDoors[i].getDoorState() != Door.DoorState.CLOSED && floorDoors[i].getDoorState() != Door.DoorState.OPEN) break;
+          if (floorDoors[i].getDoorState() != Door.DoorState.CLOSED && floorDoors[i].getDoorState() != Door.DoorState.OPEN)
+          {
+            int distance = DOOR_SPEED;
+            if (cabinDoor.getDoorState() == Door.DoorState.OPENING) distance = 0 - distance;
+
+            floorDoors[i].actuateDoor(distance);
+            cabinDoor.actuateDoor(distance);
+          }
         }
-        
-        int distance = DOOR_SPEED;
-        if(cabinDoor.getDoorState() == Door.DoorState.OPENING) distance = 0-distance;
-        
-        
-        floorDoors[i].actuateDoor(distance);
-        cabinDoor.actuateDoor(distance);
       }
     }
   }
