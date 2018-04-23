@@ -69,6 +69,8 @@ public class BuildingControl extends Thread
         final CabinDirection directionBeforeStopping = cabin.getLastDirectionBeforeStopping();
         System.out.println("Elevator "+(i+1)+" arrived on floor "+cabins[i].getStatus().getFloor());
         openDoors(cabin, idx, directionBeforeStopping);
+        cabin.setArrival(false);
+        cabin.setCurrentRequest(null);
         doorCloseExecutor.schedule(() -> closeDoors(cabin, idx, directionBeforeStopping), SECONDS_DOORS_OPEN_FOR, TimeUnit.SECONDS);
       }
     }
@@ -113,7 +115,6 @@ public class BuildingControl extends Thread
       try{Thread.sleep(1000);}catch(InterruptedException e){e.printStackTrace();}
     }
     // Cabin won't move when it is set as arrived.
-    cabin.setArrival(false);
     floors.setArrivalSignal(floorIdx, directionBeforeStopping, false);
   }
 

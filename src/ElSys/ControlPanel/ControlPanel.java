@@ -32,7 +32,7 @@ public class ControlPanel
   private Set<FloorRequest> floorRequests = new HashSet<>();
 
 
-  public ControlPanel(CabinStatus[] cabinStatuses, Door[][] floorDoors, Door[] cabinDoors, BuildingState buildingState)
+  public ControlPanel(CabinStatus[] cabinStatuses, Door[][] floorDoors, Door[] cabinDoors, BuildingState buildingState, SimButton[][] cabinButtons, SimButton[] up_buttons, SimButton[] down_buttons)
   {
     this.cabinStatuses = cabinStatuses;
     this.buildingState = buildingState;
@@ -162,13 +162,7 @@ public class ControlPanel
 
   private void updateFloorDoors()
   {
-//    for(int i = 0; i < doorsPerFloor.length; i++)
-//    {
-//      for (int j = 0; j < doorsPerFloor[i].length; j++)
-//      {
-//        controlFloors.get(j).setDoorStates(doorsPerFloor[i][j], i);
-//      }
-//    }
+
     for(int i = 0; i < doorsPerFloor.length; i++)
     {
       for (int j = 0; j < doorsPerFloor[i].length; j++)

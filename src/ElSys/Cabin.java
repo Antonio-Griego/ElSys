@@ -26,6 +26,8 @@ public class Cabin extends Thread
   private CabinStatus cabinStatus;
 
   private CabinDirection lastDirection;
+  
+  private FloorRequest currentRequest = null;
 
   /**
    * Create a new cabin with {@code numberOfFloors} floors using the {@link SimPhysLocation} specified.
@@ -70,7 +72,7 @@ public class Cabin extends Thread
     {
       if (cabinMode == CabinMode.EMERGENCY || cabinMode == CabinMode.MAINTENACE)
       {
-        // handle special cases
+        setDestination(0);
       }
       else normalRun();
 
@@ -143,7 +145,17 @@ public class Cabin extends Thread
     if (!hasArrived) moveTowardDestination(motion.getDestination());
     return motion.setDestination(destination);
   }
-
+  
+  public FloorRequest getCurrentRequest()
+  {
+    return currentRequest;
+  }
+  
+  public void setCurrentRequest(FloorRequest request)
+  {
+    currentRequest = request;
+  }
+  
   /**
    * Clear cabin's requests.
    */

@@ -19,8 +19,8 @@ public class Main extends Application
   {
     Doors[] shafts = new Doors[CABINS];
     Cabin [] cabins = new Cabin[CABINS];
-  
-    SimButton[] buttons = new SimButton[FLOORS];
+    
+    SimButton[][] cabinButtons = new SimButton[CABINS][];
     SimPhysLocation simPhysLocation;
     Door[] cabinDoors = new Door[CABINS];
     Door[] floorDoors;
@@ -28,18 +28,19 @@ public class Main extends Application
   
     for(int i = 0; i < CABINS; i++)
     {
+      cabinButtons[i] = new SimButton[FLOORS];
       simPhysLocation = new SimPhysLocation(FLOORS, "Cabin "+(i+1));
       cabinDoors[i] = new Door(new SimDoor());
       floorDoors = new Door[FLOORS];
 
       for(int j = 0; j < FLOORS; j++)
       {
-        buttons[j] = new SimButton("Floor "+j+" button in Cabin "+i);
+        cabinButtons[i][j] = new SimButton("Floor "+j+" button in Cabin "+i);
         floorDoors[j] = new Door(new SimDoor());
       }
       floorCabinDoors[i] = floorDoors;
       shafts[i] = new Doors(floorDoors, cabinDoors[i]);
-      cabins[i] = new Cabin(buttons, simPhysLocation);
+      cabins[i] = new Cabin(cabinButtons[i], simPhysLocation);
       cabins[i].start();
     }
   
@@ -54,11 +55,14 @@ public class Main extends Application
     ArrivalSignal[] down_Sigs = new ArrivalSignal[FLOORS];
     Button [] up_Buttons = new Button[FLOORS];
     Button [] down_Buttons = new Button[FLOORS];
+    SimButton [] up_sim_buttons = new SimButton[FLOORS];
+    SimButton [] down_sim_buttons = new SimButton[FLOORS];
   
   
     for(int i = 0; i < FLOORS-1; i++)
     {
       up_Sigs[i] = new ArrivalSignal(new SimSignal(CabinDirection.UP, i));
+      up_sim_buttons[i] = new SimButton("Floor "+i+" UP button");
       up_Buttons[i] = new Button(new SimButton("Floor "+i+" UP button"));
     }
 
@@ -70,10 +74,10 @@ public class Main extends Application
 
     Floors floors = new Floors(up_Buttons, down_Buttons, up_Sigs, down_Sigs);
     
-    ControlPanel controlPanel = new ControlPanel(cabinStatuses, floorCabinDoors, cabinDoors, BuildingState.NORMAL);
+    ControlPanel controlPanel = new ControlPanel(cabinStatuses, floorCabinDoors, cabinDoors, BuildingState.NORMAL, cabinButtons, up_sim_buttons, down_sim_buttons);
     buildingControl = new BuildingControl(cabins, controlPanel, shafts, floors);
 
-    final SimActions sa = new SimActions(10, Arrays.asList(buttons), Arrays.asList(up_Buttons), Arrays.asList(down_Buttons));
+    final SimActions sa = new SimActions(10, cabinButtons, Arrays.asList(up_Buttons), Arrays.asList(down_Buttons));
     sa.beginRandomActions();
   }
 
