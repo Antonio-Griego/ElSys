@@ -22,7 +22,7 @@ class CabinRequestsTest
     
     for(int i = 0; i < numFloors; i++)
     {
-      buttons[i] = new SimButton(i);
+      buttons[i] = new SimButton(Integer.toString(i));
     }
     
     final CabinRequests cr = new CabinRequests(buttons);

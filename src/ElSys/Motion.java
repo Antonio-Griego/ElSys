@@ -60,56 +60,6 @@ public class Motion extends Thread
           stopElevator();
         }
       }
-      
-      //      if(destination != null)
-//      {
-//        if(destination > estimatedLocation.doubleValue())
-//        {
-//          cabinDirection = CabinDirection.UP;
-//        }
-//
-//        else if(destination < estimatedLocation.doubleValue())
-//        {
-//          cabinDirection = CabinDirection.DOWN;
-//        }
-//
-//        else
-//        {
-//          alignWithFloor();
-//          cabinDirection = CabinDirection.STOPPED;
-//        }
-//      }
-//
-//      else cabinDirection = CabinDirection.STOPPED;
-//
-//      if (cabinDirection != CabinDirection.STOPPED)
-//      {
-//        if(speed.doubleValue() < MAX_SPEED) speed = speed.add(new BigDecimal("0.1"));
-//
-//        if(cabinDirection == CabinDirection.UP)
-//        {
-//          moveElevator(speed);
-//        }
-//
-//        if(cabinDirection == CabinDirection.DOWN)
-//        {
-//          moveElevator(speed.negate());
-//        }
-//
-//        if(floorAlignment.reachedEndOfShaft())
-//        {
-//          cabinDirection = CabinDirection.STOPPED;
-//          estimatedLocation = new BigDecimal(Integer.toString(floorAlignment.getCurrentFloor()));
-//        }
-//
-//        if(destination != null && estimatedLocation.subtract(new BigDecimal(Double.toString(destination))).abs().doubleValue() <= STOPPING_DISTANCE)
-//        {
-//          stopElevator();
-//        }
-//      }
-//
-//      else speed = new BigDecimal("0.0");
-      //      stillRunning();
     }
   }
 

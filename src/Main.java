@@ -12,7 +12,7 @@ import java.util.Random;
 public class Main extends Application
 {
   private final int FLOORS = 10;
-  private final int CABINS = 1;
+  private final int CABINS = 4;
   private BuildingControl buildingControl;
   @Override
   public void start(Stage primaryStage) throws Exception
@@ -27,12 +27,12 @@ public class Main extends Application
   
     for(int i = 0; i < CABINS; i++)
     {
-      simPhysLocation = new SimPhysLocation(FLOORS);
+      simPhysLocation = new SimPhysLocation(FLOORS, "Cabin "+(i+1));
       cabinDoors[i] = new Door(new SimDoor());
     
       for(int j = 0; j < FLOORS; j++)
       {
-        buttons[j] = new SimButton(j);
+        buttons[j] = new SimButton("Floor "+j+" button in Cabin "+i);
         floorDoors[j] = new Door(new SimDoor());
       }
     
@@ -57,13 +57,13 @@ public class Main extends Application
     for(int i = 0; i < FLOORS-1; i++)
     {
       up_Sigs[i] = new ArrivalSignal(new SimSignal(CabinDirection.UP, i));
-      up_Buttons[i] = new Button(new SimButton(i));
+      up_Buttons[i] = new Button(new SimButton("Floor "+i+" UP button"));
     }
 
     for(int i = 1; i < FLOORS; i++)
     {
       down_Sigs[i] = new ArrivalSignal(new SimSignal(CabinDirection.DOWN, i));
-      down_Buttons[i] = new Button(new SimButton(i));
+      down_Buttons[i] = new Button(new SimButton("Floor "+i+" DOWN button"));
     }
 
     Floors floors = new Floors(up_Buttons, down_Buttons, up_Sigs, down_Sigs);

@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 public class SimPhysLocation
 {
   private final int floors;
+  private final String name;
   private BigDecimal location; // unit of distance = floors
   private int lastFloor; //For Debugging
 
@@ -18,12 +19,14 @@ public class SimPhysLocation
    *
    * @param floors The maximum number of floors in the building.
    */
-  public SimPhysLocation(int floors)
+  public SimPhysLocation(int floors, String name)
   {
     this.floors = floors;
+    this.name = name;
     this.location = new BigDecimal("0.00");
     location.setScale(20);
-    lastFloor = location.intValue();
+    lastFloor = -1;
+    printStatus();
   }
 
   /**
@@ -87,11 +90,13 @@ public class SimPhysLocation
    */
   private void printStatus()
   {
+    String direction;
     int currentFloor = location.setScale(0, BigDecimal.ROUND_UP).intValue();
     if(currentFloor != lastFloor)
     {
-      if(currentFloor < lastFloor) System.out.println("Elevator is on floor "+currentFloor+" going DOWN");
-      else System.out.println("Elevator is on floor "+currentFloor+" going UP");
+      if(currentFloor < lastFloor) direction = "DOWN";
+      else direction = "UP";
+        System.out.println(name+" is on floor "+(currentFloor+1)+" going "+direction);
       lastFloor = currentFloor;
     }
   }

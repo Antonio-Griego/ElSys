@@ -19,7 +19,7 @@ public class MotionTest
     //    Cabin cabin = new Cabin(buttons, new SimPhysLocation(10));
     //
     //    cabin.start();
-    motion = new Motion(new SimPhysLocation(2));
+    motion = new Motion(new SimPhysLocation(2, "Elevator"));
 //    goToFloor(2);
 //    goToFloor(3);
 //    goToFloor(7);

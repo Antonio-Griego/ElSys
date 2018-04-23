@@ -10,15 +10,15 @@ import ElSys.Enums.ButtonLight;
 public class SimButton
 {
   private ButtonLight buttonLight;
-  private final int floor;
+  private final String name;
 
   /**
    * Constructor method.
    */
-  public SimButton(int floor)
+  public SimButton(String name)
   {
+    this.name = name;
     this.buttonLight = ButtonLight.OFF;
-    this.floor = floor;
   }
 
   /**
@@ -35,14 +35,14 @@ public class SimButton
     {
       if(buttonLight != ButtonLight.ON)
       {
-        System.out.println("Floor " + floor + ": ButtonLight = ON");
+        System.out.println(name + ": ButtonLight = ON");
       }
       this.buttonLight = ButtonLight.ON;
     }
     
     else
     {
-      System.out.println("Floor " + floor + ": ButtonLight = OFF");
+      System.out.println(name + ": ButtonLight = OFF");
       this.buttonLight = ButtonLight.OFF;
     }
   }

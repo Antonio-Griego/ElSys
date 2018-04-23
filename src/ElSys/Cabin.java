@@ -138,6 +138,7 @@ public class Cabin extends Thread
    */
   public boolean setDestination(final Integer destination)
   {
+    if(motion.getFloor() == destination) hasArrived = true;
     if (!hasArrived) moveTowardDestination(motion.getDestination());
     return motion.setDestination(destination);
   }
@@ -202,7 +203,7 @@ public class Cabin extends Thread
     
     if(destination != null && motion.getFloor() != destination)
     {
-      dir = destination - motion.getFloor() > 0 ? CabinDirection.UP : CabinDirection.DOWN;
+      dir = destination - motion.getFloor() < 0 ? CabinDirection.DOWN : CabinDirection.UP;
     }
 
     if (dir == CabinDirection.STOPPED && motion.getDirection() != CabinDirection.STOPPED) lastDirection = motion.getDirection();

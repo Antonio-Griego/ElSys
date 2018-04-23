@@ -19,7 +19,7 @@
                         <DropShadow />
                      </effect>
                      <font>
-                        <Font size="12.0" />
+                        <Font size="10.0" />
                      </font>
                   </Button>
                   <Button fx:id="floorTwo" contentDisplay="CENTER" layoutX="30.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="2" textAlignment="CENTER" wrapText="true">
@@ -27,7 +27,7 @@
                         <DropShadow />
                      </effect>
                      <font>
-                        <Font size="12.0" />
+                        <Font size="10.0" />
                      </font>
                   </Button>
                   <Button fx:id="floorThree" contentDisplay="CENTER" layoutX="30.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="3" textAlignment="CENTER" wrapText="true">
@@ -35,7 +35,7 @@
                         <DropShadow />
                      </effect>
                      <font>
-                        <Font size="12.0" />
+                        <Font size="10.0" />
                      </font>
                   </Button>
                   <Button fx:id="floorFour" contentDisplay="CENTER" layoutX="65.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="4" textAlignment="CENTER" wrapText="true">
@@ -43,7 +43,7 @@
                         <DropShadow />
                      </effect>
                      <font>
-                        <Font size="12.0" />
+                        <Font size="10.0" />
                      </font>
                   </Button>
                   <Button fx:id="floorFive" contentDisplay="CENTER" layoutX="268.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="5" textAlignment="CENTER" wrapText="true">
@@ -51,7 +51,7 @@
                         <DropShadow />
                      </effect>
                      <font>
-                        <Font size="12.0" />
+                        <Font size="10.0" />
                      </font>
                   </Button>
                   <Button fx:id="floorSix" contentDisplay="CENTER" layoutX="178.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="6" textAlignment="CENTER" wrapText="true">
@@ -59,7 +59,7 @@
                         <DropShadow />
                      </effect>
                      <font>
-                        <Font size="12.0" />
+                        <Font size="10.0" />
                      </font>
                   </Button>
                   <Button fx:id="floorSeven" contentDisplay="CENTER" layoutX="133.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="7" textAlignment="CENTER" wrapText="true">
@@ -67,7 +67,7 @@
                         <DropShadow />
                      </effect>
                      <font>
-                        <Font size="12.0" />
+                        <Font size="10.0" />
                      </font>
                   </Button>
                   <Button fx:id="floorEight" contentDisplay="CENTER" layoutX="223.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="8" textAlignment="CENTER" wrapText="true">
@@ -75,7 +75,7 @@
                         <DropShadow />
                      </effect>
                      <font>
-                        <Font size="12.0" />
+                        <Font size="10.0" />
                      </font>
                   </Button>
                   <Button fx:id="floorNine" contentDisplay="CENTER" layoutX="313.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="9" textAlignment="CENTER" wrapText="true">
@@ -83,7 +83,7 @@
                         <DropShadow />
                      </effect>
                      <font>
-                        <Font size="12.0" />
+                        <Font size="10.0" />
                      </font>
                   </Button>
                   <Button fx:id="floorTen" alignment="CENTER" contentDisplay="CENTER" layoutX="358.0" layoutY="20.0" mnemonicParsing="false" styleClass="inactive-floor" stylesheets="@../css/styleSheet.css" text="10" textAlignment="CENTER" wrapText="true">
@@ -91,7 +91,7 @@
                         <DropShadow />
                      </effect>
                      <font>
-                        <Font size="12.0" />
+                        <Font size="10.0" />
                      </font>
                   </Button>
                </children>
