@@ -31,11 +31,6 @@ public class RequestRouter {
       Integer [] destinations = new Integer[cabinStatuses.length];
       floorRequestsInUse = new HashSet<>();
       
-      for(int i = 0; i < cabinStatuses.length; i++)
-      {
-        currentDestinations[i] = cabinStatuses[i].getDestination();
-      }
-      
       for(int i = 0; i < cabinStatuses.length; i++){
         CabinStatus cabinStatus = cabinStatuses[i];
         Integer bestDest = getNextCabinRequest(cabinStatus);
