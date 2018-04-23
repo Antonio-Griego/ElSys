@@ -1,5 +1,6 @@
 package ElSys.ControlPanel;
 
+import ElSys.ArrivalSignal;
 import ElSys.CabinStatus;
 import ElSys.Enums.BuildingState;
 import ElSys.Enums.CabinMode;
@@ -153,7 +154,24 @@ public class ControlPanel
       this.floorRequests = newRequests;
     }
 
+    ArrivalSignal[] up = floors.getUp_Signals();
+    ArrivalSignal[] down = floors.getDown_Signals();
 
+    for(int i = 0; i < controlFloors.size(); i++)
+    {
+      if(i==0)
+      {
+        controlFloors.get(i).setArrivals(up[i].isLightOn(), false);
+      }
+      else if (i == 9)
+      {
+        controlFloors.get(i).setArrivals(false, down[i].isLightOn());
+      }
+      else
+      {
+        controlFloors.get(i).setArrivals(up[i].isLightOn(), down[i].isLightOn());
+      }
+    }
   }
 
   private class ControlPanelView
@@ -187,7 +205,7 @@ public class ControlPanel
       }
 
       setTabs(cabins);
-      setFloors(controlFloors);
+      addFloorsToRoot(controlFloors);
 
       stage.show();
     }
@@ -200,7 +218,7 @@ public class ControlPanel
       }
     }
 
-    private void setFloors(ArrayList<ControlPanelFloor> controlFloors)
+    private void addFloorsToRoot(ArrayList<ControlPanelFloor> controlFloors)
     {
 
       for(ControlPanelFloor floor: controlFloors)

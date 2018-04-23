@@ -97,8 +97,7 @@ public class Doors extends Thread
         
         int distance = DOOR_SPEED;
         if(cabinDoor.getDoorState() == Door.DoorState.OPENING) distance = 0-distance;
-        
-        
+
         floorDoors[i].actuateDoor(distance);
         cabinDoor.actuateDoor(distance);
       }
