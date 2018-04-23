@@ -26,7 +26,7 @@ public class ControlPanel
   private CabinStatus[] cabinStatuses;
   private BuildingState buildingState;
 //  private Queue<FloorRequest> floorRequests = new LinkedList<>();
-  private Door[][] floorDoors;
+  private Door[][] doorsPerFloor;
   private Door[] cabinDoors;
 
   private Set<FloorRequest> floorRequests = new HashSet<>();
@@ -36,7 +36,7 @@ public class ControlPanel
   {
     this.cabinStatuses = cabinStatuses;
     this.buildingState = buildingState;
-    this.floorDoors = floorDoors;
+    this.doorsPerFloor = floorDoors;
     this.cabinDoors = cabinDoors;
     numCabins = cabinStatuses.length;
     //TODO: allow variable floors
@@ -162,10 +162,19 @@ public class ControlPanel
 
   private void updateFloorDoors()
   {
-
-    for (int i =0; i<controlFloors.size(); i++)
+//    for(int i = 0; i < doorsPerFloor.length; i++)
+//    {
+//      for (int j = 0; j < doorsPerFloor[i].length; j++)
+//      {
+//        controlFloors.get(j).setDoorStates(doorsPerFloor[i][j], i);
+//      }
+//    }
+    for(int i = 0; i < doorsPerFloor.length; i++)
     {
-      controlFloors.get(i).setDoorState(floorDoors[0][i]);
+      for (int j = 0; j < doorsPerFloor[i].length; j++)
+      {
+        controlFloors.get(j).setDoorStates(doorsPerFloor[i][j], i);
+      }
     }
   }
 

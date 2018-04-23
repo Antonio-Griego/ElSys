@@ -22,12 +22,14 @@ public class ControlPanelFloor
   private FloorRequest floorRequest;
   private boolean callingUp;
   private boolean callingDown;
-  private Door.DoorState currDoorState = Door.DoorState.CLOSED;
+  private Door.DoorState[] currDoorStates;
 
   ControlPanelFloor(int floorNum, ControlPanel controlPanel)
   {
     this.floorNumber = floorNum;
     this.controlPanel = controlPanel;
+    currDoorStates = new Door.DoorState[]{Door.DoorState.CLOSED, Door.DoorState.CLOSED,
+                                          Door.DoorState.CLOSED, Door.DoorState.CLOSED};
     view = new ControlPanelFloorView(floorNum);
   }
 
@@ -77,14 +79,15 @@ public class ControlPanelFloor
     callingDown = down;
   }
 
-  protected void setDoorState(Door door)
+  protected void setDoorStates(Door door, int doorIdx)
   {
-    if(!currDoorState.equals(door.getDoorState()))
+    if (!currDoorStates[doorIdx].equals(door.getDoorState()))
     {
-      currDoorState = door.getDoorState();
-      Platform.runLater(() -> view.changeDoorState(door));
-
+//      int doorNum = i + 1;
+      currDoorStates[doorIdx] = door.getDoorState();
+      Platform.runLater(() -> view.changeDoorState(door, doorIdx+1));
     }
+
   }
 
   private class ControlPanelFloorView
@@ -137,21 +140,35 @@ public class ControlPanelFloor
       }
     }
 
-    private void changeDoorState(Door door)
+    private TextField getCorrectCabinDoor(int doorNum)
     {
+      switch (doorNum)
+      {
+        case 1: return doorState1;
+        case 2: return doorState2;
+        case 3: return doorState3;
+        case 4: return doorState4;
+      }
+      return null;
+    }
+
+    private void changeDoorState(Door door, int doorNum)
+    {
+      TextField doorField = getCorrectCabinDoor(doorNum);
+
       switch (door.getDoorState())
       {
         case CLOSED:
-          doorState1.setText("Closed");
+          doorField.setText("Closed");
           break;
         case OPEN:
-          doorState1.setText("Open");
+          doorField.setText("Open");
           break;
         case OPENING:
-          doorState1.setText("Opening...");
+          doorField.setText("Opening...");
           break;
         case CLOSING:
-          doorState1.setText("Closing...");
+          doorField.setText("Closing...");
       }
     }
 

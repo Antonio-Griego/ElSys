@@ -23,21 +23,21 @@ public class Main extends Application
     SimButton[] buttons = new SimButton[FLOORS];
     SimPhysLocation simPhysLocation;
     Door[] cabinDoors = new Door[CABINS];
-    Door[] floorDoors = new Door[FLOORS];
-    Door[][] shaft_Doors = new Door[CABINS][FLOORS];
-    
+    Door[] floorDoors;
+    Door[][] floorCabinDoors = new Door[CABINS][FLOORS];
+  
     for(int i = 0; i < CABINS; i++)
     {
       simPhysLocation = new SimPhysLocation(FLOORS, "Cabin "+(i+1));
       cabinDoors[i] = new Door(new SimDoor());
-    
+      floorDoors = new Door[FLOORS];
+
       for(int j = 0; j < FLOORS; j++)
       {
         buttons[j] = new SimButton("Floor "+j+" button in Cabin "+i);
         floorDoors[j] = new Door(new SimDoor());
-        shaft_Doors[i][j] = floorDoors[j];
       }
-      
+      floorCabinDoors[i] = floorDoors;
       shafts[i] = new Doors(floorDoors, cabinDoors[i]);
       cabins[i] = new Cabin(buttons, simPhysLocation);
       cabins[i].start();
@@ -70,7 +70,7 @@ public class Main extends Application
 
     Floors floors = new Floors(up_Buttons, down_Buttons, up_Sigs, down_Sigs);
     
-    ControlPanel controlPanel = new ControlPanel(cabinStatuses, shaft_Doors, cabinDoors, BuildingState.NORMAL);
+    ControlPanel controlPanel = new ControlPanel(cabinStatuses, floorCabinDoors, cabinDoors, BuildingState.NORMAL);
     buildingControl = new BuildingControl(cabins, controlPanel, shafts, floors);
 
     final SimActions sa = new SimActions(10, Arrays.asList(buttons), Arrays.asList(up_Buttons), Arrays.asList(down_Buttons));
