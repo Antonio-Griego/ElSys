@@ -15,6 +15,7 @@ public class RequestRouter {
     private Set<FloorRequest> floorRequests;
     private BuildingState buildingState;
     private Set<FloorRequest> floorRequestsInUse;
+    private Integer [] currentDestinations;
 
     public RequestRouter(){
 
@@ -29,15 +30,15 @@ public class RequestRouter {
     public Integer[] getDestinations(){
       Integer [] destinations = new Integer[cabinStatuses.length];
       floorRequestsInUse = new HashSet<>();
-
-        for(int i = 0; i < cabinStatuses.length; i++){
-            CabinStatus cabinStatus = cabinStatuses[i];
-            Integer bestDest = getNextCabinRequest(cabinStatus);
-            bestDest = checkFloorRequests(cabinStatus, floorRequests, bestDest);
-            //if no good dest stay at same floor
-            if(bestDest == Integer.MAX_VALUE) bestDest = null;
-            destinations[i] = bestDest;
-        }
+      
+      for(int i = 0; i < cabinStatuses.length; i++){
+        CabinStatus cabinStatus = cabinStatuses[i];
+        Integer bestDest = getNextCabinRequest(cabinStatus);
+        bestDest = checkFloorRequests(cabinStatus, floorRequests, bestDest);
+        //if no good dest stay at same floor
+        if(bestDest == Integer.MAX_VALUE) bestDest = null;
+        destinations[i] = bestDest;
+      }
       
       return destinations;
     }
