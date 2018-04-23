@@ -98,7 +98,7 @@ public class ControlPanelFloor
     Button callUp, callDown;
 
     @FXML
-    TextField doorState;
+    TextField doorState1, doorState2, doorState3, doorState4;
 
     private ControlPanelFloorView(int floorNum)
     {
@@ -142,16 +142,16 @@ public class ControlPanelFloor
       switch (door.getDoorState())
       {
         case CLOSED:
-          doorState.setText("Closed");
+          doorState1.setText("Closed");
           break;
         case OPEN:
-          doorState.setText("Open");
+          doorState1.setText("Open");
           break;
         case OPENING:
-          doorState.setText("Opening...");
+          doorState1.setText("Opening...");
           break;
         case CLOSING:
-          doorState.setText("Closing...");
+          doorState1.setText("Closing...");
       }
     }
 
