@@ -14,6 +14,7 @@ public class RequestRouter {
     private CabinStatus[] cabinStatuses;
     private Set<FloorRequest> floorRequests;
     private BuildingState buildingState;
+    private Set<FloorRequest> floorRequestsInUse;
 
     public RequestRouter(){
 
@@ -27,16 +28,14 @@ public class RequestRouter {
 
     public Integer[] getDestinations(){
       Integer [] destinations = new Integer[cabinStatuses.length];
-      
-      Set<FloorRequest> validRequests;
-      Set<FloorRequest> invalidRequests;
+      floorRequestsInUse = new HashSet<>();
 
         for(int i = 0; i < cabinStatuses.length; i++){
             CabinStatus cabinStatus = cabinStatuses[i];
-            int bestDest = getNextCabinRequest(cabinStatus);
+            Integer bestDest = getNextCabinRequest(cabinStatus);
             bestDest = checkFloorRequests(cabinStatus, floorRequests, bestDest);
             //if no good dest stay at same floor
-            if(bestDest == Integer.MAX_VALUE) bestDest = cabinStatus.getFloor();
+            if(bestDest == Integer.MAX_VALUE) bestDest = null;
             destinations[i] = bestDest;
         }
       
@@ -82,7 +81,7 @@ public class RequestRouter {
     }
 
     private int checkFloorRequests(CabinStatus cabinStatus, Set<FloorRequest> floorRequests, int currDest){
-        if(floorRequests.size() < 1) return currDest;
+        if(floorRequests.size() == 0) return currDest;
         int currentFloor = cabinStatus.getFloor();
         CabinDirection dir = cabinStatus.getDirection();
         int bestDest = currDest;
@@ -95,6 +94,7 @@ public class RequestRouter {
                     .filter(fr -> fr.getDirection() == dir)
                     //.map(req -> req.getFloor())
                     .filter(floor -> floor.getFloor() < currentFloor)
+                    .filter(req -> !floorRequestsInUse.contains(req))
                     .collect(Collectors.toList());
         }
         else if(dir == CabinDirection.UP) {
@@ -102,10 +102,12 @@ public class RequestRouter {
                     .filter(fr -> fr.getDirection() == dir)
                     //.map(req -> req.getFloor())
                     .filter(floor -> floor.getFloor() > currentFloor)
+                    .filter(req -> !floorRequestsInUse.contains(req))
                     .collect(Collectors.toList());
         }
         else {
             possibleRequests = floorRequests.stream()
+                    .filter(req -> !floorRequestsInUse.contains(req))
                     .collect(Collectors.toList());
         }
 
@@ -116,7 +118,7 @@ public class RequestRouter {
                 bestRequest = dest;
             }
         }
-        if(bestRequest != null) floorRequests.remove(bestRequest);
+        if(bestRequest != null) floorRequestsInUse.add(bestRequest);
         return bestDest;
     }
 }

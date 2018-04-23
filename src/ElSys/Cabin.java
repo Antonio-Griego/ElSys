@@ -138,6 +138,7 @@ public class Cabin extends Thread
    */
   public boolean setDestination(final Integer destination)
   {
+    if(destination == null) return true;
     if(motion.getFloor() == destination) hasArrived = true;
     if (!hasArrived) moveTowardDestination(motion.getDestination());
     return motion.setDestination(destination);

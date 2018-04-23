@@ -26,13 +26,13 @@ public class ControlPanel
   private CabinStatus[] cabinStatuses;
   private BuildingState buildingState;
 //  private Queue<FloorRequest> floorRequests = new LinkedList<>();
-  private Door[] floorDoors;
+  private Door[][] floorDoors;
   private Door[] cabinDoors;
 
   private Set<FloorRequest> floorRequests = new HashSet<>();
 
 
-  public ControlPanel(CabinStatus[] cabinStatuses, Door[] floorDoors, Door[] cabinDoors, BuildingState buildingState)
+  public ControlPanel(CabinStatus[] cabinStatuses, Door[][] floorDoors, Door[] cabinDoors, BuildingState buildingState)
   {
     this.cabinStatuses = cabinStatuses;
     this.buildingState = buildingState;
@@ -165,7 +165,7 @@ public class ControlPanel
 
     for (int i =0; i<controlFloors.size(); i++)
     {
-      controlFloors.get(i).setDoorState(floorDoors[i]);
+      controlFloors.get(i).setDoorState(floorDoors[0][i]);
     }
   }
 
