@@ -31,7 +31,7 @@ public class ControlPanel
   private SimButton[][] cabinButtons;
   private SimButton[] up_Buttons;
   private SimButton[] down_Buttons;
-  private  ArrayList<Set<FloorRequest>> cabinRequests;
+  private  ArrayList<Set<FloorRequest>> cabinRequests = new ArrayList<>();
 
   private Set<FloorRequest> floorRequests = new HashSet<>();
 
@@ -54,10 +54,6 @@ public class ControlPanel
     numCabins = cabinStatuses.length;
     cabinRequests = new ArrayList<>(numCabins);
 
-    for(Set<FloorRequest> requests: cabinRequests)
-    {
-      requests = new HashSet<>();
-    }
     //TODO: allow variable floors
     totalFloors = 10;
 
@@ -101,6 +97,7 @@ public class ControlPanel
                                                         cabinButtons[idx]);
         cabins.add(cabin);
         idx++;
+        cabinRequests.add(new HashSet<FloorRequest>());
       }
     }
 
@@ -124,9 +121,12 @@ public class ControlPanel
   public ArrayList<Set<FloorRequest>> getCabinRequests()
   {
     ArrayList<Set<FloorRequest>> requests = new ArrayList<>(numCabins);
-    requests.addAll(cabinRequests);
 
-    cabinRequests.clear();
+    for(Set<FloorRequest> requestList : cabinRequests)
+    {
+      requests.add(new HashSet<>(requestList));
+      requestList.clear();
+    }
 
     return requests;
   }
@@ -188,7 +188,7 @@ public class ControlPanel
     {
       for (FloorRequest request : newRequests)
       {
-        ControlPanelFloor floor = controlFloors.get(request.getFloor());
+        ControlPanelFloor floor = controlFloors.get(request.getFloor()-1);
         floor.addRequest(request);
       }
       this.floorRequests = newRequests;

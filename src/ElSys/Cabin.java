@@ -49,7 +49,7 @@ public class Cabin extends Thread
   
   public void addRequest(FloorRequest request)
   {
-    cabinRequests.setButtonLight(ButtonLight.ON, request.getFloor());
+    cabinRequests.setButtonLight(ButtonLight.ON, request.getFloor()+1);
   }
 
   public void updateRequests()
