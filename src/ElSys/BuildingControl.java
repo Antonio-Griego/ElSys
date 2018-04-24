@@ -6,6 +6,7 @@ import ElSys.Enums.ButtonLight;
 import ElSys.Enums.CabinDirection;
 import ElSys.Enums.CabinMode;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.*;
@@ -91,11 +92,13 @@ public class BuildingControl extends Thread
     }
   }
 
-  private void updateCabinRequests(Set<FloorRequest>[] cabinRequests)
+  private void updateCabinRequests(ArrayList<Set<FloorRequest>> cabinRequests)
   {
-    for(int i = 0; i < cabins.length; i++)
+    int i = 0;
+    for(Set<FloorRequest> requests : cabinRequests)
     {
-      for(FloorRequest req : cabinRequests[i]) cabins[i].addRequest(req);
+      for (FloorRequest req : requests) cabins[i].addRequest(req);
+      i++;
     }
     
     Arrays.stream(cabins).forEach(Cabin::updateRequests);

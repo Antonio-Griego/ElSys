@@ -28,17 +28,36 @@ public class ControlPanel
 //  private Queue<FloorRequest> floorRequests = new LinkedList<>();
   private Door[][] doorsPerFloor;
   private Door[] cabinDoors;
+  private SimButton[][] cabinButtons;
+  private SimButton[] up_Buttons;
+  private SimButton[] down_Buttons;
+  private  ArrayList<Set<FloorRequest>> cabinRequests;
 
   private Set<FloorRequest> floorRequests = new HashSet<>();
 
 
-  public ControlPanel(CabinStatus[] cabinStatuses, Door[][] floorDoors, Door[] cabinDoors, BuildingState buildingState, SimButton[][] cabinButtons, SimButton[] up_buttons, SimButton[] down_buttons)
+  public ControlPanel(CabinStatus[] cabinStatuses,
+                      Door[][] floorDoors,
+                      Door[] cabinDoors,
+                      BuildingState buildingState,
+                      SimButton[][] cabinButtons,
+                      SimButton[] up_buttons,
+                      SimButton[] down_buttons)
   {
     this.cabinStatuses = cabinStatuses;
     this.buildingState = buildingState;
     this.doorsPerFloor = floorDoors;
     this.cabinDoors = cabinDoors;
+    this.cabinButtons = cabinButtons;
+    this.up_Buttons = up_buttons;
+    this.down_Buttons = down_buttons;
     numCabins = cabinStatuses.length;
+    cabinRequests = new ArrayList<>(numCabins);
+
+    for(Set<FloorRequest> requests: cabinRequests)
+    {
+      requests = new HashSet<>();
+    }
     //TODO: allow variable floors
     totalFloors = 10;
 
@@ -75,7 +94,11 @@ public class ControlPanel
       int idx = 0;
       for (CabinStatus cabinStatus : cabinStatuses)
       {
-        ControlPanelCabin cabin = new ControlPanelCabin(cabinStatus, cabinDoors[idx], idx + 1);
+        ControlPanelCabin cabin = new ControlPanelCabin(this,
+                                                        cabinStatus,
+                                                        cabinDoors[idx],
+                                                        idx + 1,
+                                                        cabinButtons[idx]);
         cabins.add(cabin);
         idx++;
       }
@@ -96,6 +119,21 @@ public class ControlPanel
   public Set<FloorRequest> getFloorRequests()
   {
     return floorRequests;
+  }
+
+  public ArrayList<Set<FloorRequest>> getCabinRequests()
+  {
+    ArrayList<Set<FloorRequest>> requests = new ArrayList<>(numCabins);
+    requests.addAll(cabinRequests);
+
+    cabinRequests.clear();
+
+    return requests;
+  }
+
+  public void addCabinRequest(FloorRequest request, int cabinNum)
+  {
+    cabinRequests.get(cabinNum).add(request);
   }
 
   /**

@@ -28,6 +28,8 @@ import java.util.Set;
 public class ControlPanelCabin
 {
   private IntegerProperty currFloor = new SimpleIntegerProperty(0);
+  private int cabinNumber;
+  private ControlPanel controlPanel;
   private CabinMode mode;
   private CabinDirection currDirection = CabinDirection.STOPPED;
   private ControlPanelCabinView view;
@@ -46,10 +48,16 @@ public class ControlPanelCabin
   }
 
   //TODO allow for variable floor #'s. Loaded dynamically
-  ControlPanelCabin(CabinStatus cabinStatus, Door cabinDoor, int cabinNumber, SimButton[] cabinButtons)
+  ControlPanelCabin(ControlPanel panel,
+                    CabinStatus cabinStatus,
+                    Door cabinDoor,
+                    int cabinNumber,
+                    SimButton[] cabinButtons)
   {
     view = new ControlPanelCabinView(cabinNumber, this);
     this.cabinButtons = cabinButtons;
+    this.controlPanel = panel;
+    this.cabinNumber = cabinNumber;
     buttonsActivated = new boolean[cabinButtons.length];
     update(cabinStatus, cabinDoor);
     currFloor.addListener((obs, oldVal, newVal) -> view.updateFloorLight((int)oldVal,(int)newVal));
@@ -58,15 +66,12 @@ public class ControlPanelCabin
   private void addNewRequest(int floor)
   {
 //    boolean pressed = checkIfPressed(floor);
-    synchronized (cabinButtons)
-    {
-      cabinButtons[floor].setLight(true);
-    }
-    Platform.runLater(()->view.updateButtonLight(floor, true));
+//    cabinButtons[floor].setLight(true);
+    Platform.runLater(() -> view.updateButtonLight(floor, true));
 
-//      //TODO: verify null value is correct as cabinDirection.
-//      //Find out where direction is being set.
-//      newFloorRequests.add(new FloorRequest(floor, null));
+    controlPanel.addCabinRequest(new FloorRequest(floor, null), cabinNumber-1);
+
+//    newFloorRequests.add();
   }
 
   protected Tab getTab()
@@ -78,6 +83,8 @@ public class ControlPanelCabin
   {
     return mode;
   }
+
+  protected Set<FloorRequest> getNewFloorRequests() {return newFloorRequests;}
 
   protected int getCurrentFloor(){return currFloor.get();}
 
@@ -106,7 +113,7 @@ public class ControlPanelCabin
       Platform.runLater(() -> view.changeDoorState(door));
     }
 
-    updateCabinButtons();
+//    updateCabinButtons();
 
     //We shouldn't be updating the mode from anywhere except the GUI.
     //Only maintenance should update the mode.
@@ -115,7 +122,7 @@ public class ControlPanelCabin
 //      updateMode(cabinStatus.getMode());
 //    }
 
-//    updateCabinRequests(cabinStatus.getCabinRequests());
+    updateCabinRequests(cabinStatus.getCabinRequests());
   }
 
   private void updateCabinButtons()
@@ -126,11 +133,11 @@ public class ControlPanelCabin
       SimButton cabinButton = cabinButtons[i];
       int floor = i;
 
-      if(buttonOn && (cabinButton.getLight() == ButtonLight.OFF))
+      if(buttonOn && (!cabinButton.getLight()))
       {
         Platform.runLater(()-> view.updateButtonLight(floor, false));
       }
-      else if(!buttonOn && (cabinButton.getLight() == ButtonLight.ON))
+      else if(!buttonOn && (cabinButton.getLight()))
       {
         Platform.runLater(()-> view.updateButtonLight(floor, true));
       }

@@ -12,7 +12,7 @@ public class SimActions
 {
   private static final long SECONDS_BETWEEN_ACTIONS = 20;
 
-  private final ArrayList<SimButton> simButtons;
+  private final SimButton[][] simButtons;
   private final ArrayList<Button> up_buttons;
   private final ArrayList<Button> down_buttons;
   
@@ -20,9 +20,9 @@ public class SimActions
 
   private final Random random;
 
-  public SimActions(final long seed, final Collection<SimButton> buttons, final Collection<Button> up_floor_buttons, final Collection<Button> down_floor_buttons)
+  public SimActions(final long seed, final SimButton[][] buttons, final Collection<Button> up_floor_buttons, final Collection<Button> down_floor_buttons)
   {
-    simButtons = new ArrayList<>(buttons);
+    simButtons = buttons;
     up_buttons = new ArrayList<>(up_floor_buttons);
     down_buttons = new ArrayList<>(down_floor_buttons);
     random = new Random(seed);
@@ -43,9 +43,10 @@ public class SimActions
 
   private void executeRandomAction()
   {
-    final int idx = Math.abs(random.nextInt()) % (simButtons.size() - 1);
+    final int idx = Math.abs(random.nextInt()) % (simButtons.length - 1);
+    final int jdx = Math.abs(random.nextInt()) % (simButtons[idx].length - 1);
 
-    final SimButton sb = simButtons.get(idx);
+    final SimButton sb = simButtons[idx][jdx];
 
     if (sb == null) throw new RuntimeException("Random choice error.");
 
