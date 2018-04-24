@@ -96,7 +96,7 @@ public class Motion extends Thread
     return destination;
   }
 
-  synchronized public int getFloor()
+  synchronized public Integer getFloor()
   {
     return currentFloor;
   }

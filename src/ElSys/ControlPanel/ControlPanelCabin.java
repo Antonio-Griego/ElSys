@@ -380,7 +380,7 @@ public class ControlPanelCabin
 
       for (FloorRequest request : floorRequests)
       {
-        Button button = cabinButtons.get(request.getFloor()-1);
+        Button button = cabinButtons.get(request.getFloor());
         view.updateButtonLight(button, true);
       }
     }

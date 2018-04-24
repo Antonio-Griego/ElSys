@@ -49,7 +49,7 @@ public class Cabin extends Thread
   
   public void addRequest(FloorRequest request)
   {
-    cabinRequests.setButtonLight(ButtonLight.ON, request.getFloor()+1);
+    cabinRequests.setButtonLight(ButtonLight.ON, request.getFloor());
   }
 
   public void updateRequests()
@@ -101,7 +101,7 @@ public class Cabin extends Thread
     cabinStatus.setFloor(motion.getFloor());
     cabinStatus.setDirection(motion.getDirection());
     cabinStatus.setMode(CabinMode.NORMAL);
-    cabinStatus.setCabinRequests(new HashSet<>(requests));
+    cabinStatus.setCabinRequests(new HashSet<>(cabinRequests.updateRequests()));
     cabinStatus.setDestination(motion.getDestination());
 
     return cabinStatus;
@@ -203,7 +203,7 @@ public class Cabin extends Thread
 
   private Set<FloorRequest> getCurrentlySatisfiedRequests()
   {
-    return requests.stream()
+    return cabinRequests.updateRequests().stream()
             .filter(r -> r.getFloor() == motion.getFloor())
             .collect(Collectors.toSet());
   }
