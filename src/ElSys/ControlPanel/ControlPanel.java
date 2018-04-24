@@ -32,7 +32,7 @@ public class ControlPanel
   private SimButton[] up_Buttons;
   private SimButton[] down_Buttons;
   private  ArrayList<Set<FloorRequest>> cabinRequests = new ArrayList<>();
-  private ArrayList<Set<FloorRequest>> floorRequests = new ArrayList<>();
+  private ArrayList<FloorRequest> floorRequests = new ArrayList<>();
 
   private Set<FloorRequest> simFloorRequests = new HashSet<>();
 
@@ -114,15 +114,9 @@ public class ControlPanel
   /**
    * @return A Set containing Requests.
    */
-  public ArrayList<Set<FloorRequest>> getFloorRequests()
+  public ArrayList<FloorRequest> getFloorRequests()
   {
-    ArrayList<Set<FloorRequest>> requests = new ArrayList<>(numCabins);
-
-    for(Set<FloorRequest> requestList : floorRequests)
-    {
-      requests.add(new HashSet<>(requestList));
-      requestList.clear();
-    }
+    ArrayList<FloorRequest> requests = new ArrayList<FloorRequest>(floorRequests);
 
     return requests;
   }
@@ -145,9 +139,9 @@ public class ControlPanel
     cabinRequests.get(cabinNum).add(request);
   }
 
-  public void addFloorRequest(FloorRequest request, int cabinNum)
+  public void addFloorRequest(FloorRequest request)
   {
-    floorRequests.get(cabinNum).add(request);
+    floorRequests.add(request);
   }
 
   /**

@@ -104,7 +104,7 @@ public class BuildingControl extends Thread
     Arrays.stream(cabins).forEach(Cabin::updateRequests);
   }
   
-  private void updateFloors(Set<FloorRequest> requests)
+  private void updateFloors(ArrayList<FloorRequest> requests)
   {
     for(FloorRequest req : requests)
     {

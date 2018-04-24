@@ -48,7 +48,7 @@ public class ControlPanelFloor
   {
     floorRequest = new FloorRequest(floorNumber, direction);
 
-    controlPanel.addFloorRequest(floorRequest, floorNum-1);
+    controlPanel.addFloorRequest(floorRequest);
   }
 
   protected void setArrivals(boolean upArrived, boolean downArrived)
