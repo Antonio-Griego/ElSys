@@ -18,6 +18,7 @@ public class Button
 
   public ButtonLight getLight()
   {
-    return simButton.getLight();
+    if(simButton.getLight()) return ButtonLight.ON;
+    else return ButtonLight.OFF;
   }
 }

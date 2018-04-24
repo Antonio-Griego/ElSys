@@ -2,6 +2,8 @@ package ElSys;
 
 import ElSys.Enums.ButtonLight;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * This class represents a simulated button in an elevator cabin.
  *
@@ -9,7 +11,7 @@ import ElSys.Enums.ButtonLight;
  */
 public class SimButton
 {
-  private ButtonLight buttonLight;
+  private AtomicBoolean buttonLight;
   private final String name;
 
   /**
@@ -18,7 +20,7 @@ public class SimButton
   public SimButton(String name)
   {
     this.name = name;
-    this.buttonLight = ButtonLight.OFF;
+    this.buttonLight = new AtomicBoolean(false);
   }
 
   /**
@@ -33,22 +35,22 @@ public class SimButton
   {
     if(isButtonLightOn)
     {
-      if(buttonLight != ButtonLight.ON)
+      if(buttonLight.get())
       {
         System.out.println(name + ": ButtonLight = ON");
       }
-      this.buttonLight = ButtonLight.ON;
+      buttonLight.set(isButtonLightOn);
     }
     
     else
     {
       System.out.println(name + ": ButtonLight = OFF");
-      this.buttonLight = ButtonLight.OFF;
+      buttonLight.set(isButtonLightOn);
     }
   }
 
-  public ButtonLight getLight()
+  public boolean getLight()
   {
-    return buttonLight;
+    return buttonLight.get();
   }
 }
