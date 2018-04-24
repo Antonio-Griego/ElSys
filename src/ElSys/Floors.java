@@ -58,6 +58,19 @@ public class Floors
 
   }
   
+  public void setButton(int floor, CabinDirection direction, ButtonLight light)
+  {
+    if(direction == CabinDirection.UP && floor < 9)
+    {
+      up_Buttons[floor].setLight(light);
+    }
+    else if(direction == CabinDirection.DOWN && floor > 0)
+    {
+      down_Buttons[floor].setLight(light);
+    }
+    
+  }
+  
   public void setArrivalSignal(int floor, CabinDirection direction, boolean lightOn)
   {
     if(direction == CabinDirection.UP && floor < 9)

@@ -2,6 +2,7 @@ package ElSys;
 
 import ElSys.ControlPanel.ControlPanel;
 import ElSys.Enums.BuildingState;
+import ElSys.Enums.ButtonLight;
 import ElSys.Enums.CabinDirection;
 import ElSys.Enums.CabinMode;
 
@@ -37,9 +38,11 @@ public class BuildingControl extends Thread
 
   public void run()
   {
+    Set<FloorRequest>[] controlPanelCabinRequests;
     while(true)
     {
-      updateCabinRequests();
+      updateCabinRequests(controlPanel.getCabinRequests());
+      updateFloors(controlPanel.getFloorRequests());
       updateStatuses();
       setDestinations();
       
@@ -88,9 +91,22 @@ public class BuildingControl extends Thread
     }
   }
 
-  private void updateCabinRequests()
+  private void updateCabinRequests(Set<FloorRequest>[] cabinRequests)
   {
+    for(int i = 0; i < cabins.length; i++)
+    {
+      for(FloorRequest req : cabinRequests[i]) cabins[i].addRequest(req);
+    }
+    
     Arrays.stream(cabins).forEach(Cabin::updateRequests);
+  }
+  
+  private void updateFloors(Set<FloorRequest> requests)
+  {
+    for(FloorRequest req : requests)
+    {
+      floors.setButton(req.getFloor(), req.getDirection(), ButtonLight.ON);
+    }
   }
 
   private void openDoors(final Cabin cabin, final int cabinIdx, final CabinDirection directionBeforeStopping)

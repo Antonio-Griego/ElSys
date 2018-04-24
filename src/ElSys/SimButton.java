@@ -35,7 +35,7 @@ public class SimButton
   {
     if(isButtonLightOn)
     {
-      if(buttonLight.get())
+      if(!buttonLight.get())
       {
         System.out.println(name + ": ButtonLight = ON");
       }

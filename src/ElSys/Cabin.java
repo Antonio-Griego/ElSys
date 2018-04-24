@@ -46,7 +46,11 @@ public class Cabin extends Thread
                                   requests,
                                   motion.getDestination());
   }
-
+  
+  public void addRequest(FloorRequest request)
+  {
+    cabinRequests.setButtonLight(ButtonLight.ON, request.getFloor());
+  }
 
   public void updateRequests()
   {
@@ -97,7 +101,7 @@ public class Cabin extends Thread
     cabinStatus.setFloor(motion.getFloor());
     cabinStatus.setDirection(motion.getDirection());
     cabinStatus.setMode(CabinMode.NORMAL);
-    cabinStatus.setCabinRequests(requests);
+    cabinStatus.setCabinRequests(new HashSet<>(requests));
     cabinStatus.setDestination(motion.getDestination());
 
     return cabinStatus;
