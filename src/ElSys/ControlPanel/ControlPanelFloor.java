@@ -44,10 +44,11 @@ public class ControlPanelFloor
 
   protected GridPane getRoot(){return view.floorRoot;}
 
-  private void createRequest(CabinDirection direction)
+  private void addNewRequest(CabinDirection direction, int floorNum)
   {
     floorRequest = new FloorRequest(floorNumber, direction);
-    controlPanel.getFloorRequests().add(floorRequest);
+
+    controlPanel.addFloorRequest(floorRequest, floorNum-1);
   }
 
   protected void setArrivals(boolean upArrived, boolean downArrived)
@@ -123,24 +124,24 @@ public class ControlPanelFloor
         e.printStackTrace();
       }
 
-      callUp.setOnMouseClicked(event -> callButtonPressed(true));
-      callDown.setOnMouseClicked(event -> callButtonPressed(false));
+      callUp.setOnMouseClicked(event -> callButtonPressed(true, floorNumber));
+      callDown.setOnMouseClicked(event -> callButtonPressed(false, floorNumber));
     }
 
-    private void callButtonPressed(boolean goingUP)
+    private void callButtonPressed(boolean goingUP, int floorNum)
     {
       //Ignore if a previous request has already been made.
       if(!callingUp && !callingDown)
       {
         if (goingUP)
         {
-          changeCallLights(CabinDirection.UP);
-          createRequest(CabinDirection.UP);
+          Platform.runLater(()->changeCallLights(CabinDirection.UP));
+          addNewRequest(CabinDirection.UP, floorNum);
         }
         else
         {
-          changeCallLights(CabinDirection.DOWN);
-          createRequest(CabinDirection.DOWN);
+          Platform.runLater(()->changeCallLights(CabinDirection.DOWN));
+          addNewRequest(CabinDirection.DOWN, floorNum);
         }
       }
     }
