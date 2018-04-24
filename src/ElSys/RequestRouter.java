@@ -15,7 +15,7 @@ public class RequestRouter {
     private Set<FloorRequest> floorRequests;
     private BuildingState buildingState;
     private Set<FloorRequest> floorRequestsInUse;
-    private Integer [] currentDestinations;
+    private FloorRequest [] currentDestinations;
 
     public RequestRouter(){
 

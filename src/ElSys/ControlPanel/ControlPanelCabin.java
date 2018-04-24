@@ -2,19 +2,20 @@ package ElSys.ControlPanel;
 
 import ElSys.CabinStatus;
 import ElSys.Door;
-import ElSys.Doors;
+import ElSys.Enums.ButtonLight;
 import ElSys.Enums.CabinDirection;
 import ElSys.Enums.CabinMode;
 import ElSys.FloorRequest;
+import ElSys.SimButton;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Polygon;
@@ -33,6 +34,8 @@ public class ControlPanelCabin
   private Set<FloorRequest> currFloorRequests = new HashSet<>();
   private Set<FloorRequest> newFloorRequests = new HashSet<>();
   private Door.DoorState currDoorState = Door.DoorState.CLOSED;
+  private SimButton[] cabinButtons;
+  private boolean[] buttonsActivated;
 
 
 
@@ -43,25 +46,27 @@ public class ControlPanelCabin
   }
 
   //TODO allow for variable floor #'s. Loaded dynamically
-  ControlPanelCabin(CabinStatus cabinStatus, Door cabinDoor, int cabinNumber)
+  ControlPanelCabin(CabinStatus cabinStatus, Door cabinDoor, int cabinNumber, SimButton[] cabinButtons)
   {
     view = new ControlPanelCabinView(cabinNumber, this);
+    this.cabinButtons = cabinButtons;
+    buttonsActivated = new boolean[cabinButtons.length];
     update(cabinStatus, cabinDoor);
     currFloor.addListener((obs, oldVal, newVal) -> view.updateFloorLight((int)oldVal,(int)newVal));
   }
 
   private void addNewRequest(int floor)
   {
-    boolean pressed = checkIfPressed(floor);
-
-    if(!pressed)
+//    boolean pressed = checkIfPressed(floor);
+    synchronized (cabinButtons)
     {
-      view.updateButtonLight(floor, true);
-
-      //TODO: verify null value is correct as cabinDirection.
-      //Find out where direction is being set.
-      newFloorRequests.add(new FloorRequest(floor, null));
+      cabinButtons[floor].setLight(true);
     }
+    Platform.runLater(()->view.updateButtonLight(floor, true));
+
+//      //TODO: verify null value is correct as cabinDirection.
+//      //Find out where direction is being set.
+//      newFloorRequests.add(new FloorRequest(floor, null));
   }
 
   protected Tab getTab()
@@ -101,6 +106,8 @@ public class ControlPanelCabin
       Platform.runLater(() -> view.changeDoorState(door));
     }
 
+    updateCabinButtons();
+
     //We shouldn't be updating the mode from anywhere except the GUI.
     //Only maintenance should update the mode.
 //    if(mode != cabinStatus.getMode())
@@ -108,8 +115,26 @@ public class ControlPanelCabin
 //      updateMode(cabinStatus.getMode());
 //    }
 
-    updateCabinRequests(cabinStatus.getCabinRequests());
+//    updateCabinRequests(cabinStatus.getCabinRequests());
+  }
 
+  private void updateCabinButtons()
+  {
+    for(int i = 0; i< buttonsActivated.length; i++)
+    {
+      boolean buttonOn = buttonsActivated[i];
+      SimButton cabinButton = cabinButtons[i];
+      int floor = i;
+
+      if(buttonOn && (cabinButton.getLight() == ButtonLight.OFF))
+      {
+        Platform.runLater(()-> view.updateButtonLight(floor, false));
+      }
+      else if(!buttonOn && (cabinButton.getLight() == ButtonLight.ON))
+      {
+        Platform.runLater(()-> view.updateButtonLight(floor, true));
+      }
+    }
   }
 
   private void updateCabinRequests(Set<FloorRequest> floorRequests)
@@ -162,8 +187,8 @@ public class ControlPanelCabin
   private class ControlPanelCabinView
   {
     ControlPanelCabin controller;
-    private ArrayList<Button> floors = new ArrayList<>();
-    private ArrayList<Button> cabinButtons = new ArrayList<>();
+    private ArrayList<javafx.scene.control.Button> floors = new ArrayList<>();
+    private ArrayList<javafx.scene.control.Button> cabinButtons = new ArrayList<>();
     private Tab tab;
 
     @FXML
